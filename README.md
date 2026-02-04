@@ -1,5 +1,7 @@
 # Context.ai Frontend
 
+[![CI](https://github.com/gromeroalfonso/context-ai-front/actions/workflows/ci.yml/badge.svg)](https://github.com/gromeroalfonso/context-ai-front/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/gromeroalfonso/context-ai-front/actions/workflows/codeql.yml/badge.svg)](https://github.com/gromeroalfonso/context-ai-front/actions/workflows/codeql.yml)
 [![Node.js](https://img.shields.io/badge/Node.js-22.x-green.svg)](https://nodejs.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-16.x-black.svg)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
