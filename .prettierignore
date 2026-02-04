@@ -1,0 +1,13 @@
+node_modules
+.next
+.vercel
+dist
+build
+coverage
+*.lock
+pnpm-lock.yaml
+public
+.husky
+playwright-report
+test-results
+
