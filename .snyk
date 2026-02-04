@@ -1,0 +1,33 @@
+# Snyk (https://snyk.io) policy file
+
+# Specifies the Snyk CLI version this file is compatible with
+version: v1.29.0
+
+# Ignores specific vulnerabilities
+ignore: {}
+
+# Patches for specific vulnerabilities
+patch: {}
+
+# Language settings
+language-settings:
+  javascript:
+    # Ignore devDependencies
+    ignoreDevDependencies: true
+
+# Severity threshold
+severity-threshold: high
+
+# Exclude directories
+exclude:
+  global:
+    - .next/**
+    - node_modules/**
+    - dist/**
+    - build/**
+    - coverage/**
+    - .vscode/**
+    - .husky/**
+    - playwright-report/**
+    - test-results/**
+
