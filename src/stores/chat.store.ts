@@ -132,3 +132,20 @@ export const useMessages = () => useChatStore((state) => state.messages);
  * Hook to get current sector ID
  */
 export const useCurrentSectorId = () => useChatStore((state) => state.currentSectorId);
+
+/**
+ * Hook to get all actions
+ */
+export const useChatActions = () =>
+  useChatStore((state) => ({
+    addMessage: state.addMessage,
+    addMessages: state.addMessages,
+    setMessages: state.setMessages,
+    setConversationId: state.setConversationId,
+    setCurrentSectorId: state.setCurrentSectorId,
+    setLoading: state.setLoading,
+    setError: state.setError,
+    clearError: state.clearError,
+    clearMessages: state.clearMessages,
+    reset: state.reset,
+  }));

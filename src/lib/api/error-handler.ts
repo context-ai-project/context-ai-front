@@ -58,6 +58,13 @@ export function getErrorMessage(error: unknown): string {
 }
 
 /**
+ * Type guard to check if an error is an APIError
+ */
+export function isApiError(error: unknown): error is APIError {
+  return error instanceof APIError;
+}
+
+/**
  * Log error for monitoring (Sentry, etc.)
  */
 export function logError(error: unknown, context?: Record<string, unknown>) {
