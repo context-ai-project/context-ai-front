@@ -4,7 +4,15 @@ import { useState } from 'react';
 import { MessageList } from './MessageList';
 import { MessageInput } from './MessageInput';
 import { SectorSelector } from './SectorSelector';
-import { useChatStore, useChatActions } from '@/stores/chat.store';
+import {
+  useConversationId,
+  useCurrentSectorId,
+  useAddMessage,
+  useSetConversationId,
+  useSetLoading,
+  useSetError,
+  useResetChat,
+} from '@/stores/chat.store';
 import { chatApi } from '@/lib/api/chat.api';
 import { MessageRole } from '@/types/message.types';
 import { isApiError } from '@/lib/api/error-handler';
@@ -15,8 +23,13 @@ import { isApiError } from '@/lib/api/error-handler';
  * Issue 5.7: Integrate State with API and Components
  */
 export function ChatContainer() {
-  const { conversationId, currentSectorId } = useChatStore();
-  const { addMessage, setConversationId, setLoading, setError, reset } = useChatActions();
+  const conversationId = useConversationId();
+  const currentSectorId = useCurrentSectorId();
+  const addMessage = useAddMessage();
+  const setConversationId = useSetConversationId();
+  const setLoading = useSetLoading();
+  const setError = useSetError();
+  const reset = useResetChat();
 
   // Local error state for UI feedback
   const [localError, setLocalError] = useState<string | null>(null);

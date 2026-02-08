@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, FormEvent, KeyboardEvent } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Send, Trash2 } from 'lucide-react';
-import { useIsLoading, useChatActions } from '@/stores/chat.store';
+import { useIsLoading, useClearMessages } from '@/stores/chat.store';
 import { cn } from '@/lib/utils';
 
 /**
@@ -25,7 +25,7 @@ export function MessageInput({ onSendMessage, onClearConversation }: MessageInpu
   const [isFocused, setIsFocused] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const isLoading = useIsLoading();
-  const { clearMessages } = useChatActions();
+  const clearMessages = useClearMessages();
 
   // Auto-grow textarea based on content
   useEffect(() => {

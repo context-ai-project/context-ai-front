@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useChatStore, useChatActions } from '@/stores/chat.store';
+import { useCurrentSectorId, useSetCurrentSectorId } from '@/stores/chat.store';
 import { Button } from '@/components/ui/button';
 import { Building2, Check } from 'lucide-react';
 
@@ -14,8 +14,8 @@ import { Building2, Check } from 'lucide-react';
 const TEST_SECTOR_ID = '440e8400-e29b-41d4-a716-446655440000';
 
 export function SectorSelector() {
-  const { currentSectorId } = useChatStore();
-  const { setCurrentSectorId } = useChatActions();
+  const currentSectorId = useCurrentSectorId();
+  const setCurrentSectorId = useSetCurrentSectorId();
   const [isOpen, setIsOpen] = useState(false);
 
   // Auto-set sector on mount if not already set
@@ -23,7 +23,8 @@ export function SectorSelector() {
     if (!currentSectorId) {
       setCurrentSectorId(TEST_SECTOR_ID);
     }
-  }, [currentSectorId, setCurrentSectorId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (!isOpen && currentSectorId) {
     return (
