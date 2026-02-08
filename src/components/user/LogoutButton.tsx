@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { signOut } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { LogOut } from 'lucide-react';
 import {
@@ -17,7 +18,7 @@ import {
 
 /**
  * Logout button with confirmation dialog
- * Issue 5.13: User Profile and Session Management
+ * Updated to use NextAuth.js v5
  */
 
 interface LogoutButtonProps {
@@ -33,10 +34,9 @@ export function LogoutButton({
 }: LogoutButtonProps) {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setIsLoggingOut(true);
-    // Redirect to Auth0 logout endpoint
-    window.location.href = '/api/auth/logout';
+    await signOut({ callbackUrl: '/' });
   };
 
   return (

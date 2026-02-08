@@ -3,7 +3,7 @@
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { UserAvatar } from '@/components/shared/UserAvatar';
 import { LogoutButton } from './LogoutButton';
-import { Building2, Mail, User } from 'lucide-react';
+import { Building2, Mail } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
@@ -47,23 +47,12 @@ export function UserProfile() {
           </div>
         ) : null}
 
-        {/* User Role (from Auth0 metadata if available) */}
-        {'role' in user && user.role ? (
-          <div className="flex items-center gap-2 text-sm">
-            <User className="text-muted-foreground h-4 w-4" />
-            <span className="text-muted-foreground">Role:</span>
-            <Badge>{String(user.role)}</Badge>
-          </div>
-        ) : null}
-
-        {/* Email verification status */}
-        {user.email_verified !== undefined ? (
+        {/* Email */}
+        {userEmail ? (
           <div className="flex items-center gap-2 text-sm">
             <Mail className="text-muted-foreground h-4 w-4" />
             <span className="text-muted-foreground">Email:</span>
-            <Badge variant={user.email_verified ? 'default' : 'destructive'}>
-              {user.email_verified ? 'Verified' : 'Not Verified'}
-            </Badge>
+            <span className="text-sm">{userEmail}</span>
           </div>
         ) : null}
       </CardContent>

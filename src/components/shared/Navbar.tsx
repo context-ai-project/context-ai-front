@@ -60,7 +60,7 @@ export function Navbar() {
 
             {!isLoading && !user && (
               <Button asChild>
-                <Link href="/api/auth/login">Sign In</Link>
+                <Link href="/auth/signin">Sign In</Link>
               </Button>
             )}
 

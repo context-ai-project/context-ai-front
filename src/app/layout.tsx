@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import { UserProvider } from '@auth0/nextjs-auth0/client';
+import { SessionProvider } from 'next-auth/react';
 import { QueryProvider } from '@/lib/providers/query-provider';
 import { Toaster } from '@/components/ui/toaster';
 import './globals.css';
@@ -24,12 +24,12 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning>
       <body className={`${inter.variable} font-sans antialiased`}>
-        <UserProvider>
+        <SessionProvider>
           <QueryProvider>
             {children}
             <Toaster />
           </QueryProvider>
-        </UserProvider>
+        </SessionProvider>
       </body>
     </html>
   );

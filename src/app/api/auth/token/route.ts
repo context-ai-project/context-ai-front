@@ -1,4 +1,4 @@
-import { getAccessToken } from '@auth0/nextjs-auth0';
+import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
 
 /**
@@ -11,23 +11,24 @@ const NO_CACHE_HEADERS = {
 };
 
 /**
- * API route to get Auth0 access token
- * Used by the API client to authenticate requests
+ * API route to get NextAuth access token
+ * Used by the API client to authenticate requests to the backend
  *
  * Returns access token with no-cache headers to ensure fresh tokens
+ * Compatible with Next.js 16 and NextAuth.js v5
  */
 export async function GET() {
   try {
-    const { accessToken } = await getAccessToken();
+    const session = await auth();
 
-    if (!accessToken) {
+    if (!session || !session.accessToken) {
       return NextResponse.json(
         { error: 'No access token available' },
         { status: 401, headers: NO_CACHE_HEADERS },
       );
     }
 
-    return NextResponse.json({ accessToken }, { headers: NO_CACHE_HEADERS });
+    return NextResponse.json({ accessToken: session.accessToken }, { headers: NO_CACHE_HEADERS });
   } catch (error) {
     console.error('Error getting access token:', error);
     return NextResponse.json(
