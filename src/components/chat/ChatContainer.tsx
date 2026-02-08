@@ -29,7 +29,7 @@ export function ChatContainer() {
 
   const handleSendMessage = async (messageContent: string) => {
     // Validate user session
-    if (!session?.user?.email) {
+    if (!session?.user?.id) {
       setError('User session not found. Please sign in again.');
       return;
     }
@@ -49,7 +49,7 @@ export function ChatContainer() {
 
     try {
       const response = await chatApi.sendMessage({
-        userId: session.user.email, // Use email as userId for now
+        userId: session.user.id, // Use Auth0 user ID (sub)
         conversationId: conversationId || undefined,
         sectorId: TEST_SECTOR_ID,
         query: messageContent, // Backend expects 'query', not 'message'
