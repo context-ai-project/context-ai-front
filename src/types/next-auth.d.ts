@@ -29,6 +29,9 @@ declare module 'next-auth/jwt' {
     accessToken?: string;
     idToken?: string;
     picture?: string;
-    sub?: string; // Auth0 user ID
+    sub?: string; // Auth0 user ID (e.g., "auth0|123456")
+    userId?: string; // Internal UUID from backend
+    email?: string;
+    name?: string;
   }
 }

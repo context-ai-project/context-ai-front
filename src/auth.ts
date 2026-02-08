@@ -34,6 +34,38 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (profile) {
         token.picture = profile.picture;
         token.sub = profile.sub ?? undefined; // Auth0 user ID (e.g., "auth0|123456")
+        token.email = profile.email ?? undefined;
+        token.name = profile.name ?? undefined;
+
+        // Sync user with backend on first sign-in to get internal UUID
+        if (account && profile.sub && profile.email && profile.name) {
+          try {
+            const response = await fetch(
+              `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1'}/users/sync`,
+              {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${account.access_token}`,
+                },
+                body: JSON.stringify({
+                  auth0UserId: profile.sub,
+                  email: profile.email,
+                  name: profile.name,
+                }),
+              },
+            );
+
+            if (response.ok) {
+              const userData = await response.json();
+              token.userId = userData.id; // Store internal UUID
+            } else {
+              console.error('Failed to sync user with backend:', response.statusText);
+            }
+          } catch (error) {
+            console.error('Error syncing user:', error);
+          }
+        }
       }
       return token;
     },
@@ -41,7 +73,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       // Send properties to the client, including user ID
       session.accessToken = token.accessToken as string;
       session.user.image = token.picture as string;
-      session.user.id = token.sub as string; // Auth0 user ID
+      session.user.id = token.userId as string; // Internal UUID from backend
       return session;
     },
   },
