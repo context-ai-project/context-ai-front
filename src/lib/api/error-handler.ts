@@ -1,4 +1,16 @@
-import { APIError } from './client';
+/**
+ * Custom API Error class
+ */
+export class APIError extends Error {
+  constructor(
+    message: string,
+    public status: number,
+    public data?: unknown,
+  ) {
+    super(message);
+    this.name = 'APIError';
+  }
+}
 
 /**
  * Error types for better error handling

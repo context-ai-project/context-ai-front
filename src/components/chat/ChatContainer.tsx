@@ -69,12 +69,7 @@ export function ChatContainer() {
       <div className="flex-1 overflow-y-auto p-4">
         {error && (
           <div className="mb-4">
-            <ErrorState
-              error={error}
-              onRetry={() => setError(null)}
-              onDismiss={() => setError(null)}
-              variant="inline"
-            />
+            <ErrorState error={error} onDismiss={() => setError(null)} variant="inline" />
           </div>
         )}
 

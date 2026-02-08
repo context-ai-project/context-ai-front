@@ -76,7 +76,7 @@ export const chatApi = {
     },
   ): Promise<ConversationsListResponse> => {
     const params = new URLSearchParams({
-      userId,
+      userId: encodeURIComponent(userId),
       limit: String(options?.limit ?? 10),
       offset: String(options?.offset ?? 0),
       includeInactive: String(options?.includeInactive ?? false),
@@ -89,9 +89,9 @@ export const chatApi = {
    * Get a specific conversation by ID
    */
   getConversation: async (conversationId: string, userId: string): Promise<ConversationDetail> => {
-    const params = new URLSearchParams({ userId });
+    const params = new URLSearchParams({ userId: encodeURIComponent(userId) });
     return apiClient.get<ConversationDetail>(
-      `/interaction/conversations/${conversationId}?${params}`,
+      `/interaction/conversations/${encodeURIComponent(conversationId)}?${params}`,
     );
   },
 
@@ -99,7 +99,9 @@ export const chatApi = {
    * Delete a conversation (soft delete)
    */
   deleteConversation: async (conversationId: string, userId: string): Promise<void> => {
-    const params = new URLSearchParams({ userId });
-    return apiClient.delete<void>(`/interaction/conversations/${conversationId}?${params}`);
+    const params = new URLSearchParams({ userId: encodeURIComponent(userId) });
+    return apiClient.delete<void>(
+      `/interaction/conversations/${encodeURIComponent(conversationId)}?${params}`,
+    );
   },
 };

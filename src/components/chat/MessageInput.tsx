@@ -138,18 +138,20 @@ export function MessageInput({ onSendMessage, onClearConversation }: MessageInpu
             <Send className="h-5 w-5" />
           </Button>
 
-          {/* Clear conversation button */}
-          <Button
-            type="button"
-            size="icon"
-            variant="outline"
-            className="h-[60px] w-[60px]"
-            onClick={handleClearConversation}
-            disabled={isLoading}
-            aria-label="Clear conversation"
-          >
-            <Trash2 className="h-5 w-5" />
-          </Button>
+          {/* Clear conversation button - only show if handler is provided */}
+          {onClearConversation && (
+            <Button
+              type="button"
+              size="icon"
+              variant="outline"
+              className="h-[60px] w-[60px]"
+              onClick={handleClearConversation}
+              disabled={isLoading}
+              aria-label="Clear conversation"
+            >
+              <Trash2 className="h-5 w-5" />
+            </Button>
+          )}
         </div>
       </form>
 
