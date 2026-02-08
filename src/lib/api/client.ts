@@ -3,6 +3,9 @@
  * Base client for all API requests using native fetch
  */
 
+import { APIError } from '@/lib/api/error-handler';
+export { APIError };
+
 /**
  * API client configuration
  */
@@ -10,20 +13,6 @@ const API_CONFIG = {
   baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1',
   timeout: 30000, // 30 seconds
 };
-
-/**
- * Custom API Error class
- */
-export class APIError extends Error {
-  constructor(
-    message: string,
-    public status: number,
-    public data?: unknown,
-  ) {
-    super(message);
-    this.name = 'APIError';
-  }
-}
 
 /**
  * Request options interface

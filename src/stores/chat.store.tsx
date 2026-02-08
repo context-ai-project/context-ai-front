@@ -28,14 +28,18 @@ interface ChatState {
 }
 
 /**
- * Initial state
+ * Factory function to create fresh initial state
+ * Prevents accidental shared references across resets
  */
-const initialState = {
+const getInitialState = (): Pick<
+  ChatState,
+  'messages' | 'conversationId' | 'isLoading' | 'error'
+> => ({
   messages: [],
   conversationId: null,
   isLoading: false,
   error: null,
-};
+});
 
 /**
  * Create chat store
@@ -44,7 +48,7 @@ type ChatStore = ReturnType<typeof createChatStore>;
 
 const createChatStore = () => {
   return createStore<ChatState>()((set) => ({
-    ...initialState,
+    ...getInitialState(),
 
     setMessages: (messages) =>
       set({
@@ -89,7 +93,7 @@ const createChatStore = () => {
 
     reset: () =>
       set({
-        ...initialState,
+        ...getInitialState(),
       }),
   }));
 };

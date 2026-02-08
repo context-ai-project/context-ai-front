@@ -81,17 +81,22 @@ export function UserStoreProvider({ children }: { children: ReactNode }) {
   });
 
   // Subscribe to store changes and persist to sessionStorage
+  // Tracks previous sectorId to only persist on changes
   useEffect(() => {
+    let previousSectorId = store.getState().currentSectorId;
+
     const unsubscribe = store.subscribe((state) => {
-      if (typeof window !== 'undefined') {
+      const currentSectorId = state.currentSectorId;
+
+      // Only persist if currentSectorId actually changed
+      if (currentSectorId !== previousSectorId && typeof window !== 'undefined') {
         try {
-          sessionStorage.setItem(
-            'user-storage',
-            JSON.stringify({
-              currentSectorId: state.currentSectorId,
-              sectors: state.sectors,
-            }),
-          );
+          if (currentSectorId) {
+            sessionStorage.setItem('user-storage-currentSectorId', currentSectorId);
+          } else {
+            sessionStorage.removeItem('user-storage-currentSectorId');
+          }
+          previousSectorId = currentSectorId;
         } catch (error) {
           console.warn('Failed to save user data to sessionStorage:', error);
         }
