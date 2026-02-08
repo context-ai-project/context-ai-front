@@ -370,8 +370,23 @@ const validated = schema.parse(formData);
 1. ✅ Run `pnpm lint:fix`
 2. ✅ Run `pnpm format`
 3. ✅ Run `pnpm type-check`
-4. ✅ Write meaningful commit messages
-5. ✅ Keep commits atomic and focused
+4. ✅ Run `pnpm audit` (optional, will run automatically on push)
+5. ✅ Write meaningful commit messages
+6. ✅ Keep commits atomic and focused
+
+### Automated Git Hooks (Husky)
+
+The following checks run automatically:
+
+**pre-commit** (runs on `git commit`):
+- `pnpm lint-staged` - Lints and formats only staged files
+
+**pre-push** (runs on `git push`):
+- `pnpm type-check` - Ensures TypeScript compilation succeeds
+- `pnpm lint` - Validates code quality across entire codebase
+- `pnpm audit --audit-level=high` - Checks for high/critical security vulnerabilities
+
+> 💡 **Tip**: To bypass hooks in emergencies (not recommended), use `--no-verify` flag
 
 ### Code Review Checklist
 
