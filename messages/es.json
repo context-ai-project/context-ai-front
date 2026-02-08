@@ -1,0 +1,139 @@
+{
+  "common": {
+    "appName": "Context.AI",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "retry": "Reintentar",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "close": "Cerrar",
+    "send": "Enviar",
+    "clear": "Limpiar"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "chat": "Chat",
+    "knowledge": "Base de Conocimiento",
+    "profile": "Perfil",
+    "settings": "Configuración",
+    "signIn": "Iniciar Sesión",
+    "signOut": "Cerrar Sesión"
+  },
+  "chat": {
+    "title": "Chat Asistente",
+    "placeholder": "Escribe tu mensaje... (presiona Enter para enviar)",
+    "placeholderLoading": "Esperando respuesta...",
+    "send": "Enviar mensaje",
+    "clear": "Limpiar conversación",
+    "newConversation": "Nueva conversación",
+    "typing": "El asistente está escribiendo...",
+    "emptyState": {
+      "title": "¡Bienvenido a Context.AI Chat!",
+      "description": "Soy tu asistente inteligente, listo para ayudarte con tus necesidades de gestión de conocimiento. Pregúntame lo que quieras sobre tus documentos y datos.",
+      "suggestionsTitle": "Inicia una conversación:"
+    },
+    "errors": {
+      "networkError": "Error de conexión. Por favor verifica tu conexión a internet.",
+      "authError": "Error de autenticación. Por favor inicia sesión de nuevo.",
+      "validationError": "Entrada inválida. Por favor verifica tus datos.",
+      "timeoutError": "Tiempo de espera agotado. Por favor intenta de nuevo.",
+      "serverError": "Error del servidor. Por favor intenta más tarde.",
+      "unknownError": "Ocurrió un error inesperado.",
+      "noSectorSelected": "No hay sector seleccionado. Por favor selecciona un sector desde tu perfil."
+    },
+    "messages": {
+      "user": "Tú",
+      "assistant": "Asistente"
+    },
+    "sources": {
+      "title": "Fuentes:",
+      "viewSource": "Ver fuente",
+      "similarity": "coincidencia",
+      "page": "Página",
+      "metadata": "Metadata:",
+      "andMore": "Y {count} fuentes más."
+    },
+    "input": {
+      "enterToSend": "Presiona Enter para enviar",
+      "shiftEnterForNewLine": "Shift+Enter para nueva línea",
+      "characterLimit": "El mensaje excede la longitud máxima de {max} caracteres. Por favor acorta tu mensaje."
+    }
+  },
+  "user": {
+    "profile": "Perfil de Usuario",
+    "currentSector": "Sector Actual:",
+    "role": "Rol:",
+    "email": "Correo:",
+    "selectSector": "Seleccionar Sector",
+    "pleaseLogin": "Por favor inicia sesión para ver tu perfil."
+  },
+  "sector": {
+    "humanResources": "Recursos Humanos",
+    "engineering": "Ingeniería",
+    "sales": "Ventas",
+    "selectSector": "Selecciona un Sector"
+  },
+  "auth": {
+    "signInTitle": "Iniciar Sesión",
+    "signInDescription": "Inicia sesión para acceder a tu cuenta",
+    "signOutConfirm": "¿Estás seguro de que quieres cerrar sesión?",
+    "signOutDescription": "Cerrar sesión terminará tu sesión y necesitarás iniciar sesión de nuevo para acceder al contenido protegido."
+  },
+  "errors": {
+    "title": "¡Ups! Algo salió mal.",
+    "description": "Lo sentimos, pero ocurrió un error inesperado. Por favor intenta de nuevo.",
+    "tryAgain": "Intentar de nuevo",
+    "details": "Detalles del Error"
+  },
+  "suggestedQuestions": {
+    "contextAI": {
+      "benefits": "¿Cuáles son los beneficios clave de Context.AI?",
+      "privacy": "¿Cómo maneja Context.AI la privacidad de datos?",
+      "integration": "¿Puede Context.AI integrarse con mis sistemas existentes?",
+      "architecture": "Háblame sobre la arquitectura de Context.AI.",
+      "rag": "¿Qué es RAG (Generación Aumentada por Recuperación)?",
+      "getStarted": "¿Cómo puedo empezar con Context.AI?"
+    },
+    "hr": {
+      "vacation": "¿Cómo solicito vacaciones?",
+      "benefits": "¿Qué beneficios ofrece la empresa?",
+      "remote": "¿Cuál es la política de trabajo remoto?",
+      "performance": "¿Cuándo son las evaluaciones de desempeño?",
+      "training": "¿Qué programas de capacitación están disponibles?",
+      "policies": "¿Dónde puedo encontrar las políticas de RRHH?"
+    },
+    "engineering": {
+      "deploy": "¿Cómo despliego a producción?",
+      "architecture": "¿Cuál es la arquitectura del sistema?",
+      "testing": "¿Cuáles son los estándares de testing?",
+      "codeReview": "¿Cuál es el proceso de revisión de código?",
+      "cicd": "¿Cómo funciona el pipeline CI/CD?",
+      "docs": "¿Dónde está la documentación técnica?"
+    },
+    "sales": {
+      "pricing": "¿Cuál es nuestra estructura de precios?",
+      "competitors": "¿Quiénes son nuestros principales competidores?",
+      "demo": "¿Cómo programo una demo?",
+      "objections": "¿Cómo manejo objeciones comunes?",
+      "crm": "¿Cómo uso el sistema CRM?",
+      "targets": "¿Cuáles son las metas de ventas?"
+    }
+  },
+  "language": {
+    "select": "Seleccionar idioma",
+    "en": "English",
+    "es": "Español"
+  },
+  "accessibility": {
+    "skipToContent": "Saltar al contenido",
+    "menu": "Menú",
+    "closeMenu": "Cerrar menú",
+    "openMenu": "Abrir menú",
+    "loading": "Cargando",
+    "errorBoundary": "Límite de error"
+  }
+}
+

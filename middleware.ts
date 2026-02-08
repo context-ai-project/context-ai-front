@@ -3,6 +3,9 @@ import { withMiddlewareAuthRequired } from '@auth0/nextjs-auth0/edge';
 /**
  * Middleware to protect routes that require authentication
  * Runs on Edge Runtime for better performance
+ *
+ * Note: i18n is configured separately via next-intl's configuration
+ * without middleware to avoid conflicts with Auth0 edge middleware
  */
 export default withMiddlewareAuthRequired();
 
@@ -17,7 +20,7 @@ export const config = {
      * - robots.txt (robots file)
      * - manifest.json (PWA manifest)
      * - public folder
-     * - fonts (woff, woff2, ttf, otf, eot)
+     * - fonts and images
      */
     '/((?!api/auth|_next/static|_next/image|favicon.ico|robots.txt|manifest.json|.*\\.(?:svg|png|jpg|jpeg|gif|webp|woff|woff2|ttf|otf|eot)$).*)',
   ],
