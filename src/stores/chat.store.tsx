@@ -196,3 +196,27 @@ export const useResetChat = () => {
   const store = useChatStoreContext();
   return useStore(store, (state) => state.reset);
 };
+
+/**
+ * Hook to set messages (replaces entire messages array)
+ */
+export const useSetMessages = () => {
+  const store = useChatStoreContext();
+  return useStore(store, (state) => state.setMessages);
+};
+
+/**
+ * Hook to add both user and assistant messages at once
+ */
+export const useAddMessages = () => {
+  const store = useChatStoreContext();
+  return useStore(store, (state) => state.addMessages);
+};
+
+/**
+ * Hook to clear error state
+ */
+export const useClearError = () => {
+  const store = useChatStoreContext();
+  return useStore(store, (state) => state.clearError);
+};

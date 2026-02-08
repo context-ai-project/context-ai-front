@@ -19,6 +19,9 @@ export interface SourceFragment {
 
 /**
  * Message DTO
+ *
+ * Note: createdAt is a string (ISO 8601) to match API response format
+ * and avoid serialization issues
  */
 export interface MessageDto {
   id: string;
@@ -28,7 +31,7 @@ export interface MessageDto {
   sourcesUsed?: SourceFragment[];
   sentimentScore?: number;
   metadata?: Record<string, unknown>;
-  createdAt: Date;
+  createdAt: string;
 }
 
 /**

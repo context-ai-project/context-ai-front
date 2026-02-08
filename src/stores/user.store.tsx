@@ -67,14 +67,14 @@ export function UserStoreProvider({ children }: { children: ReactNode }) {
   // Initialize store with sessionStorage data (client-side only)
   const [store] = useState(() => {
     if (typeof window !== 'undefined') {
-      const stored = sessionStorage.getItem('user-storage');
-      if (stored) {
-        try {
+      try {
+        const stored = sessionStorage.getItem('user-storage');
+        if (stored) {
           const parsed = JSON.parse(stored);
           return createUserStore(parsed);
-        } catch {
-          return createUserStore();
         }
+      } catch (error) {
+        console.warn('Failed to load user data from sessionStorage:', error);
       }
     }
     return createUserStore();
@@ -84,13 +84,17 @@ export function UserStoreProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const unsubscribe = store.subscribe((state) => {
       if (typeof window !== 'undefined') {
-        sessionStorage.setItem(
-          'user-storage',
-          JSON.stringify({
-            currentSectorId: state.currentSectorId,
-            sectors: state.sectors,
-          }),
-        );
+        try {
+          sessionStorage.setItem(
+            'user-storage',
+            JSON.stringify({
+              currentSectorId: state.currentSectorId,
+              sectors: state.sectors,
+            }),
+          );
+        } catch (error) {
+          console.warn('Failed to save user data to sessionStorage:', error);
+        }
       }
     });
 

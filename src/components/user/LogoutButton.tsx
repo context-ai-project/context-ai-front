@@ -42,7 +42,12 @@ export function LogoutButton({
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant={variant} size={size} disabled={isLoggingOut}>
+        <Button
+          variant={variant}
+          size={size}
+          disabled={isLoggingOut}
+          aria-label={showLabel ? undefined : 'Logout'}
+        >
           <LogOut className="h-4 w-4" />
           {showLabel && <span className="ml-2">Logout</span>}
         </Button>

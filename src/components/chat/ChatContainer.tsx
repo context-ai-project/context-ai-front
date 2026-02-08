@@ -5,7 +5,9 @@ import { MessageList } from './MessageList';
 import { MessageInput } from './MessageInput';
 import {
   useConversationId,
+  useMessages,
   useAddMessage,
+  useSetMessages,
   useSetConversationId,
   useSetLoading,
   useSetError,
@@ -23,8 +25,10 @@ import { isApiError } from '@/lib/api/error-handler';
  */
 export function ChatContainer() {
   const conversationId = useConversationId();
+  const messages = useMessages();
   const currentSectorId = useCurrentSectorId(); // From user store
   const addMessage = useAddMessage();
+  const setMessages = useSetMessages();
   const setConversationId = useSetConversationId();
   const setLoading = useSetLoading();
   const setError = useSetError();
@@ -56,7 +60,7 @@ export function ChatContainer() {
       conversationId: tempConversationId,
       role: MessageRole.USER,
       content: messageContent,
-      createdAt: new Date(),
+      createdAt: new Date().toISOString(),
     });
 
     setLoading(true);
@@ -72,6 +76,13 @@ export function ChatContainer() {
       // Update conversation ID if it's a new conversation
       if (!conversationId) {
         setConversationId(response.conversationId);
+
+        // Reconcile optimistic user message with real conversationId
+        setMessages(
+          messages.map((msg) =>
+            msg.id === tempUserId ? { ...msg, conversationId: response.conversationId } : msg,
+          ),
+        );
       }
 
       // Add assistant message from response
@@ -82,7 +93,7 @@ export function ChatContainer() {
         content: response.assistantMessage.content,
         sourcesUsed: response.sources,
         metadata: response.assistantMessage.metadata,
-        createdAt: new Date(response.assistantMessage.createdAt),
+        createdAt: response.assistantMessage.createdAt,
       });
 
       // Clear any errors

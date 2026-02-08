@@ -34,15 +34,32 @@ interface RequestOptions extends RequestInit {
 
 /**
  * Get access token from Auth0
+ *
+ * @param timeout - Optional timeout in milliseconds (default: 5000ms)
+ * @param signal - Optional AbortSignal for cancellation
+ * @returns Access token or null if failed
  */
-async function getAccessToken(): Promise<string | null> {
+async function getAccessToken(timeout = 5000, signal?: AbortSignal): Promise<string | null> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+  // Bridge external signal to internal controller
+  if (signal) {
+    signal.addEventListener('abort', () => controller.abort());
+  }
+
   try {
-    const response = await fetch('/api/auth/token');
+    const response = await fetch('/api/auth/token', {
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
+
     if (!response.ok) return null;
 
     const data = await response.json();
     return data.accessToken;
   } catch (error) {
+    clearTimeout(timeoutId);
     console.error('Failed to get access token:', error);
     return null;
   }
@@ -57,29 +74,34 @@ async function fetchWithInterceptors(
 ): Promise<Response> {
   const { timeout = API_CONFIG.timeout, ...fetchOptions } = options;
 
-  // Add auth token
-  const token = await getAccessToken();
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-  };
-
-  // Add existing headers
-  if (fetchOptions.headers) {
-    const existingHeaders = new Headers(fetchOptions.headers);
-    existingHeaders.forEach((value, key) => {
-      headers[key] = value;
-    });
-  }
-
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-
   // Create abort controller for timeout
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeout);
 
+  // Bridge external signal if provided
+  if (fetchOptions.signal) {
+    fetchOptions.signal.addEventListener('abort', () => controller.abort());
+  }
+
   try {
+    // Add auth token with shared timeout and signal
+    const token = await getAccessToken(5000, controller.signal);
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+
+    // Add existing headers
+    if (fetchOptions.headers) {
+      const existingHeaders = new Headers(fetchOptions.headers);
+      existingHeaders.forEach((value, key) => {
+        headers[key] = value;
+      });
+    }
+
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
     const url = endpoint.startsWith('http') ? endpoint : `${API_CONFIG.baseURL}${endpoint}`;
 
     const response = await fetch(url, {

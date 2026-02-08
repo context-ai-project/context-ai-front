@@ -51,12 +51,12 @@ export function SectorSelector() {
 
   // Auto-set first sector if none selected
   useEffect(() => {
-    if (!currentSectorId && AVAILABLE_SECTORS.length > 0) {
-      setCurrentSectorId(AVAILABLE_SECTORS[0].id);
+    if (!currentSectorId && sectors.length > 0) {
+      setCurrentSectorId(sectors[0].id);
     }
-  }, [currentSectorId, setCurrentSectorId]);
+  }, [currentSectorId, sectors, setCurrentSectorId]);
 
-  const currentSector = AVAILABLE_SECTORS.find((s) => s.id === currentSectorId);
+  const currentSector = sectors.find((s) => s.id === currentSectorId);
 
   return (
     <div className="flex items-center gap-2">
@@ -73,7 +73,7 @@ export function SectorSelector() {
         <DropdownMenuContent align="end" className="w-56">
           <DropdownMenuLabel>Select Your Sector</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          {AVAILABLE_SECTORS.map((sector) => (
+          {sectors.map((sector) => (
             <DropdownMenuItem
               key={sector.id}
               onClick={() => setCurrentSectorId(sector.id)}
