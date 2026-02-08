@@ -38,9 +38,10 @@ export interface MessageDto {
  * Chat query DTO
  */
 export interface ChatQueryDto {
+  userId: string;
   conversationId?: string;
   sectorId: string;
-  message: string;
+  query: string; // Backend expects 'query', not 'message'
 }
 
 /**
