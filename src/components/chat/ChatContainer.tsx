@@ -2,6 +2,7 @@
 
 import { MessageList } from './MessageList';
 import { MessageInput } from './MessageInput';
+import { ChatTest } from './ChatTest';
 
 /**
  * Main chat container with responsive layout
@@ -9,7 +10,10 @@ import { MessageInput } from './MessageInput';
  */
 export function ChatContainer() {
   return (
-    <div className="mx-auto flex h-full w-full max-w-7xl flex-col">
+    <div className="mx-auto flex h-full w-full max-w-7xl flex-col gap-4">
+      {/* Test component - temporary */}
+      <ChatTest />
+
       {/* Main chat area */}
       <div className="flex flex-1 flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
         {/* Messages area - scrollable */}

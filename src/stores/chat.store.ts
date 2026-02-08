@@ -1,53 +1,134 @@
-/**
- * Chat Store
- * Manages chat messages and state
- */
-
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import type { MessageDto } from '@/types/message.types';
 
-interface Message {
-  id: string;
-  role: 'user' | 'assistant';
-  content: string;
-  timestamp: Date;
-  sources?: Array<{
-    id: string;
-    title: string;
-    excerpt: string;
-  }>;
-}
-
+/**
+ * Chat state interface
+ * Manages messages, conversation state, loading and error states
+ */
 interface ChatState {
-  messages: Message[];
+  // State
+  messages: MessageDto[];
+  conversationId: string | null;
   isLoading: boolean;
   error: string | null;
+  currentSectorId: string | null;
 
-  addMessage: (message: Message) => void;
-  setMessages: (messages: Message[]) => void;
-  setLoading: (isLoading: boolean) => void;
+  // Actions
+  setMessages: (messages: MessageDto[]) => void;
+  addMessage: (message: MessageDto) => void;
+  addMessages: (userMessage: MessageDto, assistantMessage: MessageDto) => void;
+  setConversationId: (id: string | null) => void;
+  setCurrentSectorId: (sectorId: string) => void;
+  setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
   clearMessages: () => void;
+  clearError: () => void;
+  reset: () => void;
 }
 
-export const useChatStore = create<ChatState>((set) => ({
+/**
+ * Initial state
+ */
+const initialState = {
   messages: [],
+  conversationId: null,
   isLoading: false,
   error: null,
+  currentSectorId: null,
+};
 
-  addMessage: (message) =>
-    set((state) => ({
-      messages: [...state.messages, message],
-    })),
+/**
+ * Chat store using Zustand
+ * Persists conversationId and currentSectorId to localStorage
+ */
+export const useChatStore = create<ChatState>()(
+  persist(
+    (set) => ({
+      ...initialState,
 
-  setMessages: (messages) => set({ messages }),
+      setMessages: (messages) =>
+        set({
+          messages,
+        }),
 
-  setLoading: (isLoading) => set({ isLoading }),
+      addMessage: (message) =>
+        set((state) => ({
+          messages: [...state.messages, message],
+        })),
 
-  setError: (error) => set({ error }),
+      addMessages: (userMessage, assistantMessage) =>
+        set((state) => ({
+          messages: [...state.messages, userMessage, assistantMessage],
+        })),
 
-  clearMessages: () =>
-    set({
-      messages: [],
-      error: null,
+      setConversationId: (id) =>
+        set({
+          conversationId: id,
+        }),
+
+      setCurrentSectorId: (sectorId) =>
+        set({
+          currentSectorId: sectorId,
+        }),
+
+      setLoading: (loading) =>
+        set({
+          isLoading: loading,
+        }),
+
+      setError: (error) =>
+        set({
+          error,
+          isLoading: false,
+        }),
+
+      clearMessages: () =>
+        set({
+          messages: [],
+        }),
+
+      clearError: () =>
+        set({
+          error: null,
+        }),
+
+      reset: () =>
+        set({
+          ...initialState,
+        }),
     }),
-}));
+    {
+      name: 'chat-storage',
+      partialize: (state) => ({
+        conversationId: state.conversationId,
+        currentSectorId: state.currentSectorId,
+      }),
+    },
+  ),
+);
+
+/**
+ * Hook to get current conversation ID
+ */
+export const useConversationId = () => useChatStore((state) => state.conversationId);
+
+/**
+ * Hook to get loading state
+ */
+export const useIsLoading = () => useChatStore((state) => state.isLoading);
+
+/**
+ * Hook to get error state
+ */
+export const useError = () => useChatStore((state) => state.error);
+
+/**
+ * Hook to get messages
+ */
+export const useMessages = () => useChatStore((state) => state.messages);
+
+/**
+ * Hook to get current sector ID
+ */
+export const useCurrentSectorId = () => useChatStore((state) => state.currentSectorId);

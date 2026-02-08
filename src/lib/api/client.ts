@@ -1,10 +1,19 @@
 /**
- * HTTP Client for API requests
- * Uses native Fetch API with automatic token injection
+ * API Client Configuration
+ * Base client for all API requests using native fetch
  */
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+/**
+ * API client configuration
+ */
+const API_CONFIG = {
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1',
+  timeout: 30000, // 30 seconds
+};
 
+/**
+ * Custom API Error class
+ */
 export class APIError extends Error {
   constructor(
     message: string,
@@ -16,62 +25,153 @@ export class APIError extends Error {
   }
 }
 
+/**
+ * Request options interface
+ */
 interface RequestOptions extends RequestInit {
-  token?: string;
+  timeout?: number;
 }
 
-async function request<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
-  const { token, headers, ...fetchOptions } = options;
+/**
+ * Get access token from Auth0
+ */
+async function getAccessToken(): Promise<string | null> {
+  try {
+    const response = await fetch('/api/auth/token');
+    if (!response.ok) return null;
 
-  const config: RequestInit = {
-    ...fetchOptions,
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token && { Authorization: `Bearer ${token}` }),
-      ...headers,
-    },
+    const data = await response.json();
+    return data.accessToken;
+  } catch (error) {
+    console.error('Failed to get access token:', error);
+    return null;
+  }
+}
+
+/**
+ * Base fetch function with interceptors
+ */
+async function fetchWithInterceptors(
+  endpoint: string,
+  options: RequestOptions = {},
+): Promise<Response> {
+  const { timeout = API_CONFIG.timeout, ...fetchOptions } = options;
+
+  // Add auth token
+  const token = await getAccessToken();
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
   };
 
-  const response = await fetch(`${API_URL}${endpoint}`, config);
-
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({}));
-    throw new APIError(error.message || 'An error occurred', response.status, error);
+  // Add existing headers
+  if (fetchOptions.headers) {
+    const existingHeaders = new Headers(fetchOptions.headers);
+    existingHeaders.forEach((value, key) => {
+      headers[key] = value;
+    });
   }
 
-  // Handle 204 No Content
-  if (response.status === 204) {
-    return {} as T;
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
   }
 
-  return response.json();
+  // Create abort controller for timeout
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+  try {
+    const url = endpoint.startsWith('http') ? endpoint : `${API_CONFIG.baseURL}${endpoint}`;
+
+    const response = await fetch(url, {
+      ...fetchOptions,
+      headers,
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
+    // Handle HTTP errors
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      throw new APIError(
+        errorData?.message || `HTTP ${response.status}: ${response.statusText}`,
+        response.status,
+        errorData,
+      );
+    }
+
+    return response;
+  } catch (error) {
+    clearTimeout(timeoutId);
+
+    if (error instanceof APIError) {
+      throw error;
+    }
+
+    if (error instanceof Error) {
+      if (error.name === 'AbortError') {
+        throw new APIError('Request timeout', 408);
+      }
+      throw new APIError(error.message, 0);
+    }
+
+    throw new APIError('Unknown error', 0);
+  }
 }
 
+/**
+ * API Client with common HTTP methods
+ */
 export const apiClient = {
-  get: <T>(endpoint: string, options?: RequestOptions) =>
-    request<T>(endpoint, { ...options, method: 'GET' }),
+  /**
+   * GET request
+   */
+  async get<T>(endpoint: string, options?: RequestOptions): Promise<T> {
+    const response = await fetchWithInterceptors(endpoint, {
+      ...options,
+      method: 'GET',
+    });
+    return response.json();
+  },
 
-  post: <T>(endpoint: string, data?: unknown, options?: RequestOptions) =>
-    request<T>(endpoint, {
+  /**
+   * POST request
+   */
+  async post<T>(endpoint: string, data?: unknown, options?: RequestOptions): Promise<T> {
+    const response = await fetchWithInterceptors(endpoint, {
       ...options,
       method: 'POST',
-      body: data ? JSON.stringify(data) : undefined,
-    }),
+      body: JSON.stringify(data),
+    });
+    return response.json();
+  },
 
-  put: <T>(endpoint: string, data?: unknown, options?: RequestOptions) =>
-    request<T>(endpoint, {
+  /**
+   * PUT request
+   */
+  async put<T>(endpoint: string, data?: unknown, options?: RequestOptions): Promise<T> {
+    const response = await fetchWithInterceptors(endpoint, {
       ...options,
       method: 'PUT',
-      body: data ? JSON.stringify(data) : undefined,
-    }),
+      body: JSON.stringify(data),
+    });
+    return response.json();
+  },
 
-  patch: <T>(endpoint: string, data?: unknown, options?: RequestOptions) =>
-    request<T>(endpoint, {
+  /**
+   * DELETE request
+   */
+  async delete<T>(endpoint: string, options?: RequestOptions): Promise<T> {
+    const response = await fetchWithInterceptors(endpoint, {
       ...options,
-      method: 'PATCH',
-      body: data ? JSON.stringify(data) : undefined,
-    }),
+      method: 'DELETE',
+    });
 
-  delete: <T>(endpoint: string, options?: RequestOptions) =>
-    request<T>(endpoint, { ...options, method: 'DELETE' }),
+    // Handle 204 No Content
+    if (response.status === 204) {
+      return undefined as T;
+    }
+
+    return response.json();
+  },
 };
