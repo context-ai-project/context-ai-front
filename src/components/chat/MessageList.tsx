@@ -7,8 +7,11 @@ import { Bot, User, FileText } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 /**
- * Message list component - displays chat messages with auto-scroll
- * Issue 5.3: Message List Component
+ * Renders the chat message list with avatars, aligned message bubbles, timestamps, optional sources, and a typing indicator.
+ *
+ * The list auto-scrolls to the bottom whenever messages or the loading state change. When there are no messages and not loading, a centered empty state is shown. Assistant messages may include a "Sources used" section listing up to three source fragments with similarity percentages and a "+N more sources" indicator when applicable. Timestamps are formatted using the en-US locale with 2-digit hour and minute.
+ *
+ * @returns The React element containing the message list, empty state, typing indicator, and auto-scroll anchor.
  */
 export function MessageList() {
   const messages = useMessages();

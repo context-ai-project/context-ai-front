@@ -17,9 +17,12 @@ import { MessageRole } from '@/types/message.types';
 import { isApiError } from '@/lib/api/error-handler';
 
 /**
- * Main chat container with responsive layout
- * Handles the overall structure and logic of the chat interface
- * Issue 5.7: Integrate State with API and Components
+ * Renders the chat interface and wires it to the store and API for messaging.
+ *
+ * Manages sending messages (optimistic user messages, API request, and assistant response),
+ * global and local error state, loading state, and conversation lifecycle (reset and conversationId).
+ *
+ * @returns The rendered chat container element
  */
 export function ChatContainer() {
   const conversationId = useConversationId();

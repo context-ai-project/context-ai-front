@@ -20,10 +20,13 @@ const sizeMap = {
 };
 
 /**
- * User avatar component with optimized image loading
- * Falls back to user's initial if no picture is available
- * Can accept either a user object or src/alt props
- * Issue 5.13: Enhanced for user profile management
+ * Renders a user avatar: an image when a source is available, otherwise a circular initial fallback.
+ *
+ * @param user - Optional user object; used to derive `picture` for the image source and `name` for the alt text/fallback initial.
+ * @param src - Optional explicit image source that overrides `user.picture` when provided.
+ * @param alt - Optional explicit display name used for the image alt text and fallback initial; falls back to `user.name` or `"User"`.
+ * @param size - Visual size variant (`'sm' | 'md' | 'lg'`) that controls the avatar's dimensions and wrapper classes.
+ * @returns A JSX element containing the avatar image when a source exists, or a styled circular placeholder with the user's initial.
  */
 export function UserAvatar({ user, src, alt, size = 'md' }: UserAvatarProps) {
   const avatarSrc = src || user?.picture || '';

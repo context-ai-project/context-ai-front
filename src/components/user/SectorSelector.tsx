@@ -37,6 +37,15 @@ const AVAILABLE_SECTORS = [
   },
 ];
 
+/**
+ * Render a dropdown control for selecting and displaying the user's current sector.
+ *
+ * Reads and updates the user store: if the store's sectors list is empty it populates it from AVAILABLE_SECTORS,
+ * and if no current sector is set it selects the first available sector. Users can change the active sector via the dropdown;
+ * the component reflects the current selection and shows an "Active" badge when a sector is selected.
+ *
+ * @returns The React element for the sector selector UI.
+ */
 export function SectorSelector() {
   const { currentSectorId, sectors } = useCurrentUser();
   const setCurrentSectorId = useSetCurrentSectorId();

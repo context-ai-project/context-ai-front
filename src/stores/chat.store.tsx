@@ -100,9 +100,11 @@ const createChatStore = () => {
 const ChatStoreContext = createContext<ChatStore | null>(null);
 
 /**
- * Chat store provider - wraps components that need access to chat state
- * This pattern is SSR-safe for Next.js 16 App Router
- * Uses useState with lazy initialization to comply with React hooks rules
+ * Provides a React context-backed chat store to descendant components.
+ *
+ * Lazily initializes the zustand chat store (SSR-safe) and supplies it via ChatStoreContext.
+ *
+ * @param children - React nodes rendered within the provider
  */
 export function ChatStoreProvider({ children }: { children: ReactNode }) {
   const [store] = useState(createChatStore);
@@ -111,8 +113,10 @@ export function ChatStoreProvider({ children }: { children: ReactNode }) {
 }
 
 /**
- * Hook to access chat store
- * Must be used within ChatStoreProvider
+ * Retrieves the chat store instance from React context.
+ *
+ * @returns The zustand chat store instance used by the provider.
+ * @throws Error if called outside of a `ChatStoreProvider`.
  */
 function useChatStoreContext() {
   const store = useContext(ChatStoreContext);

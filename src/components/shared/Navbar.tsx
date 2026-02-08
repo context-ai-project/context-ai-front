@@ -17,8 +17,12 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 /**
- * Navigation bar component with user profile and sector selection
- * Updated for Issue 5.13: User Profile and Session Management
+ * Top navigation bar that displays brand links, sector selection, and user controls.
+ *
+ * Renders the application brand and primary navigation links; on the right side it shows a loading
+ * placeholder while user data is loading, a "Sign In" action when no user is authenticated, or a
+ * user area (sector selector and profile dropdown with profile, settings, and logout) when a user
+ * is signed in. The layout adapts for desktop and mobile screens.
  */
 export function Navbar() {
   const { user, isLoading, userName, userEmail, userPicture } = useCurrentUser();

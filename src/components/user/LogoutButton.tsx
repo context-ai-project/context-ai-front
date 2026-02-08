@@ -26,6 +26,16 @@ interface LogoutButtonProps {
   showLabel?: boolean;
 }
 
+/**
+ * Render a logout button that opens a confirmation dialog.
+ *
+ * When the dialog's Logout action is confirmed, the component sets an internal
+ * "logging out" state (disabling the button) and navigates the browser to
+ * '/api/auth/logout'.
+ *
+ * @param showLabel - Whether to display the "Logout" text next to the icon (default: `true`)
+ * @returns The logout button element that triggers a confirmation dialog and, on confirmation, redirects to '/api/auth/logout'
+ */
 export function LogoutButton({
   variant = 'ghost',
   size = 'default',

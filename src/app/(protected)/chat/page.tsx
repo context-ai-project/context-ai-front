@@ -1,8 +1,12 @@
 import { ChatContainer } from '@/components/chat/ChatContainer';
 
 /**
- * Chat page - Server Component for better SEO and performance
- * Delegates interactivity to ChatContainer client component
+ * Server component that renders the protected chat page.
+ *
+ * Delegates interactivity to a client-side chat container and provides a full-height
+ * column layout for the chat UI.
+ *
+ * @returns The page's JSX element containing a full-height flex column with the chat container
  */
 export default function ChatPage() {
   return (

@@ -20,6 +20,15 @@ interface MessageInputProps {
   onClearConversation?: () => void;
 }
 
+/**
+ * Render a message composer with an auto-resizing textarea, character-count validation, and controls to send or clear the conversation.
+ *
+ * The component enforces minimum and maximum message lengths, disables input while a response is loading, supports Enter to send (Shift+Enter for a newline), and presents accessible feedback for character-limit violations.
+ *
+ * @param onSendMessage - Optional callback invoked with the trimmed message when the user sends a valid message.
+ * @param onClearConversation - Optional callback invoked after the conversation is cleared following user confirmation.
+ * @returns The rendered message input React element.
+ */
 export function MessageInput({ onSendMessage, onClearConversation }: MessageInputProps) {
   const [message, setMessage] = useState('');
   const [isFocused, setIsFocused] = useState(false);

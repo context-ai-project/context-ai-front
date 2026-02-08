@@ -59,9 +59,9 @@ const createUserStore = (initialValues?: Partial<UserState>) => {
 const UserStoreContext = createContext<UserStore | null>(null);
 
 /**
- * User store provider
- * Wraps components that need access to user state
- * Handles sessionStorage persistence manually for SSR compatibility
+ * Provides a React context containing the user Zustand store and persists its relevant state to sessionStorage on the client.
+ *
+ * Initializes the store from sessionStorage when available (client-side only) and subscribes to store updates to keep sessionStorage in sync in a SSR-safe manner.
  */
 export function UserStoreProvider({ children }: { children: ReactNode }) {
   // Initialize store with sessionStorage data (client-side only)
@@ -101,7 +101,10 @@ export function UserStoreProvider({ children }: { children: ReactNode }) {
 }
 
 /**
- * Hook to access user store
+ * Retrieves the UserStore from React context for use in hooks and components.
+ *
+ * @returns The Zustand store instance that holds user state and actions.
+ * @throws Error if called outside of a `UserStoreProvider`.
  */
 function useUserStoreContext() {
   const store = useContext(UserStoreContext);

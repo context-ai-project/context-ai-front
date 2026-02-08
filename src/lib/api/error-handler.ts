@@ -13,7 +13,18 @@ export enum ErrorType {
 }
 
 /**
- * Categorize error by type
+ * Determine the ErrorType for a provided error by inspecting APIError status codes when available.
+ *
+ * When `error` is an `APIError`, the returned type is derived from its HTTP/status code:
+ * - `0` → `NETWORK`
+ * - `401` or `403` → `AUTH`
+ * - `400` or `422` → `VALIDATION`
+ * - `408` → `TIMEOUT`
+ * - `>= 500` → `SERVER`
+ * For all other values or non-`APIError` inputs, `UNKNOWN` is returned.
+ *
+ * @param error - The value to categorize; if it's an `APIError`, its `status` is used.
+ * @returns The corresponding `ErrorType` for the given error.
  */
 export function categorizeError(error: unknown): ErrorType {
   if (error instanceof APIError) {
@@ -28,7 +39,10 @@ export function categorizeError(error: unknown): ErrorType {
 }
 
 /**
- * Get user-friendly error message
+ * Get a user-friendly message describing the provided error.
+ *
+ * @param error - The value to produce a message for; may be an APIError, a generic Error, or any other value
+ * @returns A human-readable message: for APIError values this maps the error category to a user-facing message, for Error values this returns the error's message, and otherwise a generic fallback message
  */
 export function getErrorMessage(error: unknown): string {
   if (error instanceof APIError) {
@@ -65,7 +79,10 @@ export function isApiError(error: unknown): error is APIError {
 }
 
 /**
- * Log error for monitoring (Sentry, etc.)
+ * Record an error for monitoring and diagnostics.
+ *
+ * @param error - The error or value to record for investigation
+ * @param context - Optional key/value metadata to include with the error
  */
 export function logError(error: unknown, context?: Record<string, unknown>) {
   if (process.env.NODE_ENV === 'development') {

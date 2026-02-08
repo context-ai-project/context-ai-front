@@ -33,7 +33,9 @@ interface RequestOptions extends RequestInit {
 }
 
 /**
- * Get access token from Auth0
+ * Retrieve the current access token used for authenticated API requests.
+ *
+ * @returns The access token string if available, `null` if a token could not be obtained.
  */
 async function getAccessToken(): Promise<string | null> {
   try {
@@ -49,7 +51,12 @@ async function getAccessToken(): Promise<string | null> {
 }
 
 /**
- * Base fetch function with interceptors
+ * Performs an HTTP request with automatic token injection, JSON header merging, request timeout, and unified APIError handling.
+ *
+ * @param endpoint - Absolute URL or a path relative to the configured API base URL
+ * @param options - Request init options extended with an optional `timeout` (milliseconds); provided headers are merged with the JSON `Content-Type` header
+ * @returns The successful `Response` object
+ * @throws APIError - Thrown for non-OK HTTP responses (contains `status` and optional `data` parsed from the response), with status `408` for request timeouts and status `0` for other network or unknown errors
  */
 async function fetchWithInterceptors(
   endpoint: string,

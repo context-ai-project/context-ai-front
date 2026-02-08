@@ -8,9 +8,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
 /**
- * User profile component
- * Displays user information, current sector, and logout option
- * Issue 5.13: User Profile and Session Management
+ * Render the current user's profile card with avatar, name, email, logout control, and optional sector, role, and email verification status.
+ *
+ * The card shows the current sector if available, the user's role if present on the user object, and an email verification badge when `email_verified` is defined.
+ *
+ * @returns The component UI as JSX when a user is available, or `null` if no user is present.
  */
 
 export function UserProfile() {
