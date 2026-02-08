@@ -14,14 +14,12 @@ interface ChatState {
   conversationId: string | null;
   isLoading: boolean;
   error: string | null;
-  currentSectorId: string | null;
 
   // Actions
   setMessages: (messages: MessageDto[]) => void;
   addMessage: (message: MessageDto) => void;
   addMessages: (userMessage: MessageDto, assistantMessage: MessageDto) => void;
   setConversationId: (id: string | null) => void;
-  setCurrentSectorId: (sectorId: string) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
   clearMessages: () => void;
@@ -37,7 +35,6 @@ const initialState = {
   conversationId: null,
   isLoading: false,
   error: null,
-  currentSectorId: null,
 };
 
 /**
@@ -67,11 +64,6 @@ const createChatStore = () => {
     setConversationId: (id) =>
       set({
         conversationId: id,
-      }),
-
-    setCurrentSectorId: (sectorId) =>
-      set({
-        currentSectorId: sectorId,
       }),
 
     setLoading: (loading) =>
@@ -165,14 +157,6 @@ export const useMessages = () => {
 };
 
 /**
- * Hook to get current sector ID
- */
-export const useCurrentSectorId = () => {
-  const store = useChatStoreContext();
-  return useStore(store, (state) => state.currentSectorId);
-};
-
-/**
  * Hook to get the full store state (for internal use)
  */
 export const useChatStore = () => {
@@ -191,11 +175,6 @@ export const useAddMessage = () => {
 export const useSetConversationId = () => {
   const store = useChatStoreContext();
   return useStore(store, (state) => state.setConversationId);
-};
-
-export const useSetCurrentSectorId = () => {
-  const store = useChatStoreContext();
-  return useStore(store, (state) => state.setCurrentSectorId);
 };
 
 export const useSetLoading = () => {

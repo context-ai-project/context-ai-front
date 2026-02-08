@@ -1,5 +1,6 @@
 import { Navbar } from '@/components/shared/Navbar';
 import { ChatStoreProvider } from '@/stores/chat.store';
+import { UserStoreProvider } from '@/stores/user.store';
 
 /**
  * Protected layout - requires authentication
@@ -8,11 +9,13 @@ import { ChatStoreProvider } from '@/stores/chat.store';
  */
 export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
   return (
-    <ChatStoreProvider>
-      <div className="flex min-h-screen flex-col bg-gray-50">
-        <Navbar />
-        <main className="flex-1 p-4">{children}</main>
-      </div>
-    </ChatStoreProvider>
+    <UserStoreProvider>
+      <ChatStoreProvider>
+        <div className="flex min-h-screen flex-col bg-gray-50">
+          <Navbar />
+          <main className="flex-1 p-4">{children}</main>
+        </div>
+      </ChatStoreProvider>
+    </UserStoreProvider>
   );
 }

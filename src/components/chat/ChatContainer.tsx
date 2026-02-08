@@ -3,16 +3,15 @@
 import { useState } from 'react';
 import { MessageList } from './MessageList';
 import { MessageInput } from './MessageInput';
-import { SectorSelector } from './SectorSelector';
 import {
   useConversationId,
-  useCurrentSectorId,
   useAddMessage,
   useSetConversationId,
   useSetLoading,
   useSetError,
   useResetChat,
 } from '@/stores/chat.store';
+import { useCurrentSectorId } from '@/stores/user.store';
 import { chatApi } from '@/lib/api/chat.api';
 import { MessageRole } from '@/types/message.types';
 import { isApiError } from '@/lib/api/error-handler';
@@ -24,7 +23,7 @@ import { isApiError } from '@/lib/api/error-handler';
  */
 export function ChatContainer() {
   const conversationId = useConversationId();
-  const currentSectorId = useCurrentSectorId();
+  const currentSectorId = useCurrentSectorId(); // From user store
   const addMessage = useAddMessage();
   const setConversationId = useSetConversationId();
   const setLoading = useSetLoading();
@@ -118,10 +117,7 @@ export function ChatContainer() {
   };
 
   return (
-    <div className="mx-auto flex h-full w-full max-w-7xl flex-col gap-4">
-      {/* Sector selector (temporary - will be replaced in Issue 5.13) */}
-      <SectorSelector />
-
+    <div className="mx-auto flex h-full w-full max-w-7xl flex-col">
       {/* Error banner */}
       {localError && (
         <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4">
