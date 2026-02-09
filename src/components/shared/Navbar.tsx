@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { MessageSquare, ChevronDown } from 'lucide-react';
+import { Brain, ChevronDown } from 'lucide-react';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { UserAvatar } from './UserAvatar';
 import { LanguageSelector } from './LanguageSelector';
@@ -30,9 +30,9 @@ export function Navbar() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo and brand */}
           <div className="flex items-center gap-3">
-            <MessageSquare className="h-8 w-8 text-blue-600" />
+            <Brain className="text-primary h-8 w-8" />
             <Link href="/" className="text-xl font-semibold text-gray-900">
-              Context.AI
+              Context.ai
             </Link>
           </div>
 
