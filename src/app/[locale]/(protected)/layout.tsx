@@ -17,12 +17,10 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
           <AppSidebar />
           <SidebarInset>
             <header className="border-border flex h-14 items-center justify-between gap-3 border-b px-6">
-              <div className="flex items-center gap-3">
-                <SidebarTrigger />
-              </div>
+              <SidebarTrigger />
               <LanguageSelector />
             </header>
-            <div className="flex flex-1 flex-col overflow-auto">{children}</div>
+            <div className="flex-1 overflow-auto">{children}</div>
           </SidebarInset>
         </SidebarProvider>
       </ChatStoreProvider>
