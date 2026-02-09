@@ -56,13 +56,26 @@ export function ChatContainer() {
       });
 
       // Validate response
-      if (!response || !response.conversationId || !response.assistantMessage) {
+      if (!response || !response.conversationId || !response.response) {
         throw new Error('Invalid response from backend');
       }
 
-      // Update conversation ID and add assistant message
+      // Update conversation ID
       setConversationId(response.conversationId);
-      addMessage(response.assistantMessage);
+
+      // Build assistant message from response
+      const assistantMessage = {
+        id: `assistant-${Date.now()}`,
+        conversationId: response.conversationId,
+        role: MessageRole.ASSISTANT,
+        content: response.response, // Backend returns 'response' field
+        sourcesUsed: response.sources || [],
+        createdAt: response.timestamp
+          ? new Date(response.timestamp).toISOString()
+          : new Date().toISOString(),
+      };
+
+      addMessage(assistantMessage);
     } catch (err) {
       logError(err, { context: 'ChatContainer.handleSendMessage' });
       setError(getErrorMessage(err));
