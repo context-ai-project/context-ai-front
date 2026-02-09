@@ -258,6 +258,32 @@
       },
       "copyright": "2026 Context.ai. Construido con propósito."
     }
+  },
+  "dashboard": {
+    "title": "Panel de Control",
+    "subtitle": "Resumen de tu plataforma de conocimiento",
+    "stats": {
+      "queries": {
+        "title": "Consultas Totales",
+        "change": "92% resueltas"
+      },
+      "documents": {
+        "title": "Documentos Totales",
+        "change": "+12 este mes"
+      },
+      "users": {
+        "title": "Usuarios Activos",
+        "change": "+3 esta semana"
+      },
+      "accuracy": {
+        "title": "Tasa de Precisión",
+        "change": "+5% de mejora"
+      }
+    },
+    "comingSoon": {
+      "title": "Más Análisis Próximamente",
+      "description": "Estamos trabajando en funciones detalladas de análisis y reportes para tu base de conocimiento."
+    }
   }
 }
 

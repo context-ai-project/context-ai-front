@@ -258,6 +258,32 @@
       },
       "copyright": "2026 Context.ai. Built with purpose."
     }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Overview of your knowledge platform",
+    "stats": {
+      "queries": {
+        "title": "Total Queries",
+        "change": "92% resolved"
+      },
+      "documents": {
+        "title": "Total Documents",
+        "change": "+12 this month"
+      },
+      "users": {
+        "title": "Active Users",
+        "change": "+3 this week"
+      },
+      "accuracy": {
+        "title": "Accuracy Rate",
+        "change": "+5% improvement"
+      }
+    },
+    "comingSoon": {
+      "title": "More Insights Coming Soon",
+      "description": "We're working on detailed analytics and reporting features for your knowledge base."
+    }
   }
 }
 

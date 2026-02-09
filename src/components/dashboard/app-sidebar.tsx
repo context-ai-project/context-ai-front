@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Brain, MessageSquare, LogOut, ChevronUp } from 'lucide-react';
+import { Brain, MessageSquare, LayoutDashboard, LogOut, ChevronUp } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useLocale } from 'next-intl';
 import {
@@ -37,6 +37,11 @@ export function AppSidebar() {
   const locale = useLocale();
 
   const mainNav = [
+    {
+      title: 'Dashboard',
+      href: `/${locale}/dashboard`,
+      icon: LayoutDashboard,
+    },
     {
       title: 'AI Chat',
       href: `/${locale}/chat`,

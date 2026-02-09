@@ -51,10 +51,10 @@ export function LandingNavbar() {
         <div className="hidden items-center gap-3 md:flex">
           <LanguageSelector />
           <Button variant="ghost" asChild>
-            <Link href="/auth/signin">{t('signIn')}</Link>
+            <Link href={`/${locale}/auth/signin`}>{t('signIn')}</Link>
           </Button>
           <Button asChild>
-            <Link href="/auth/signin">{t('getStarted')}</Link>
+            <Link href={`/${locale}/auth/signin`}>{t('getStarted')}</Link>
           </Button>
         </div>
 
@@ -96,10 +96,10 @@ export function LandingNavbar() {
           <div className="mt-4 flex flex-col gap-2">
             <LanguageSelector />
             <Button variant="ghost" asChild>
-              <Link href="/auth/signin">{t('signIn')}</Link>
+              <Link href={`/${locale}/auth/signin`}>{t('signIn')}</Link>
             </Button>
             <Button asChild>
-              <Link href="/auth/signin">{t('getStarted')}</Link>
+              <Link href={`/${locale}/auth/signin`}>{t('getStarted')}</Link>
             </Button>
           </div>
         </div>

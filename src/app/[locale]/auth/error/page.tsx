@@ -2,6 +2,7 @@
 
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { useLocale } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { AlertCircle } from 'lucide-react';
@@ -11,6 +12,7 @@ import { AlertCircle } from 'lucide-react';
  * Displays friendly error messages when authentication fails
  */
 export default function AuthErrorPage() {
+  const locale = useLocale();
   const searchParams = useSearchParams();
   const error = searchParams.get('error');
 
@@ -37,10 +39,10 @@ export default function AuthErrorPage() {
         </CardHeader>
         <CardContent className="space-y-2">
           <Button asChild className="w-full">
-            <Link href="/auth/signin">Try Again</Link>
+            <Link href={`/${locale}/auth/signin`}>Try Again</Link>
           </Button>
           <Button asChild variant="outline" className="w-full">
-            <Link href="/">Go Home</Link>
+            <Link href={`/${locale}`}>Go Home</Link>
           </Button>
         </CardContent>
       </Card>

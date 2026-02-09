@@ -2,6 +2,7 @@
 
 import { signIn } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
+import { useLocale } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Brain } from 'lucide-react';
@@ -11,8 +12,9 @@ import { Brain } from 'lucide-react';
  * Redirects to Auth0 for authentication
  */
 export default function SignInPage() {
+  const locale = useLocale();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
+  const callbackUrl = searchParams.get('callbackUrl') || `/${locale}/dashboard`;
 
   const handleSignIn = () => {
     signIn('auth0', { callbackUrl });

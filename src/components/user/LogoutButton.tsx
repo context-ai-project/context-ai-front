@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { signOut } from 'next-auth/react';
+import { useLocale } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { LogOut } from 'lucide-react';
 import {
@@ -32,11 +33,12 @@ export function LogoutButton({
   size = 'default',
   showLabel = true,
 }: LogoutButtonProps) {
+  const locale = useLocale();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
-    await signOut({ callbackUrl: '/' });
+    await signOut({ callbackUrl: `/${locale}` });
   };
 
   return (
