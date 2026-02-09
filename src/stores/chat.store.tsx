@@ -56,9 +56,16 @@ const createChatStore = () => {
       }),
 
     addMessage: (message) =>
-      set((state) => ({
-        messages: [...state.messages, message],
-      })),
+      set((state) => {
+        // Validate message before adding
+        if (!message || !message.id || !message.role || !message.content) {
+          console.warn('Attempted to add invalid message:', message);
+          return state; // Don't update state
+        }
+        return {
+          messages: [...state.messages, message],
+        };
+      }),
 
     addMessages: (userMessage, assistantMessage) =>
       set((state) => ({

@@ -40,30 +40,41 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         // Sync user with backend on first sign-in to get internal UUID
         if (account && profile.sub && profile.email && profile.name) {
           try {
-            const response = await fetch(
-              `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1'}/users/sync`,
-              {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: `Bearer ${account.access_token}`,
-                },
-                body: JSON.stringify({
-                  auth0UserId: profile.sub,
-                  email: profile.email,
-                  name: profile.name,
-                }),
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
+            const syncUrl = `${apiUrl}/users/sync`;
+
+            console.log('[NextAuth] Syncing user with backend:', {
+              url: syncUrl,
+              auth0UserId: profile.sub,
+              email: profile.email,
+            });
+
+            const response = await fetch(syncUrl, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
               },
-            );
+              body: JSON.stringify({
+                auth0UserId: profile.sub,
+                email: profile.email,
+                name: profile.name,
+              }),
+            });
 
             if (response.ok) {
               const userData = await response.json();
               token.userId = userData.id; // Store internal UUID
+              console.log('[NextAuth] User synced successfully:', { userId: userData.id });
             } else {
-              console.error('Failed to sync user with backend:', response.statusText);
+              const errorText = await response.text();
+              console.error('[NextAuth] Failed to sync user:', {
+                status: response.status,
+                statusText: response.statusText,
+                error: errorText,
+              });
             }
           } catch (error) {
-            console.error('Error syncing user:', error);
+            console.error('[NextAuth] Error syncing user:', error);
           }
         }
       }
@@ -74,6 +85,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       session.accessToken = token.accessToken as string;
       session.user.image = token.picture as string;
       session.user.id = token.userId as string; // Internal UUID from backend
+
+      // If userId is not available, log warning
+      if (!token.userId) {
+        console.warn('[NextAuth] Session created without userId - user sync may have failed');
+      }
+
       return session;
     },
   },

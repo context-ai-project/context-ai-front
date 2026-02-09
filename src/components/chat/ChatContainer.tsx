@@ -55,6 +55,11 @@ export function ChatContainer() {
         query: messageContent, // Backend expects 'query', not 'message'
       });
 
+      // Validate response
+      if (!response || !response.conversationId || !response.assistantMessage) {
+        throw new Error('Invalid response from backend');
+      }
+
       // Update conversation ID and add assistant message
       setConversationId(response.conversationId);
       addMessage(response.assistantMessage);
