@@ -1,5 +1,6 @@
 'use client';
 
+import { useSession } from 'next-auth/react';
 import { MessageList } from './MessageList';
 import { MessageInput } from './MessageInput';
 import { EmptyState } from './EmptyState';
@@ -13,6 +14,7 @@ import { logError, getErrorMessage } from '@/lib/api/error-handler';
 const TEST_SECTOR_ID = '440e8400-e29b-41d4-a716-446655440000';
 
 export function ChatContainer() {
+  const { data: session } = useSession();
   const {
     messages,
     conversationId,
@@ -26,6 +28,12 @@ export function ChatContainer() {
   } = useChatStore();
 
   const handleSendMessage = async (messageContent: string) => {
+    // Validate user session
+    if (!session?.user?.id) {
+      setError('User session not found. Please sign in again.');
+      return;
+    }
+
     setError(null);
     setLoading(true);
 
@@ -41,14 +49,33 @@ export function ChatContainer() {
 
     try {
       const response = await chatApi.sendMessage({
+        userId: session.user.id, // Internal UUID from backend (synced on login)
         conversationId: conversationId || undefined,
         sectorId: TEST_SECTOR_ID,
-        message: messageContent,
+        query: messageContent, // Backend expects 'query', not 'message'
       });
 
-      // Update conversation ID and add assistant message
+      // Validate response
+      if (!response || !response.conversationId || !response.response) {
+        throw new Error('Invalid response from backend');
+      }
+
+      // Update conversation ID
       setConversationId(response.conversationId);
-      addMessage(response.assistantMessage);
+
+      // Build assistant message from response
+      const assistantMessage = {
+        id: `assistant-${Date.now()}`,
+        conversationId: response.conversationId,
+        role: MessageRole.ASSISTANT,
+        content: response.response, // Backend returns 'response' field
+        sourcesUsed: response.sources || [],
+        createdAt: response.timestamp
+          ? new Date(response.timestamp).toISOString()
+          : new Date().toISOString(),
+      };
+
+      addMessage(assistantMessage);
     } catch (err) {
       logError(err, { context: 'ChatContainer.handleSendMessage' });
       setError(getErrorMessage(err));

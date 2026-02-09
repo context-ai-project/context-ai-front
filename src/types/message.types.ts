@@ -38,17 +38,19 @@ export interface MessageDto {
  * Chat query DTO
  */
 export interface ChatQueryDto {
+  userId: string;
   conversationId?: string;
   sectorId: string;
-  message: string;
+  query: string; // Backend expects 'query', not 'message'
 }
 
 /**
- * Chat response DTO
+ * Chat response DTO (matches backend QueryAssistantResponseDto)
+ * Backend returns the assistant's response text, not full Message objects
  */
 export interface ChatResponseDto {
-  userMessage: MessageDto;
-  assistantMessage: MessageDto;
+  response: string; // Assistant's response text
   conversationId: string;
   sources: SourceFragment[];
+  timestamp: string | Date; // ISO 8601 string or Date object
 }

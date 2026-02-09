@@ -1,0 +1,139 @@
+{
+  "common": {
+    "appName": "Context.AI",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "send": "Send",
+    "clear": "Clear"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "chat": "Chat",
+    "knowledge": "Knowledge Base",
+    "profile": "Profile",
+    "settings": "Settings",
+    "signIn": "Sign In",
+    "signOut": "Sign Out"
+  },
+  "chat": {
+    "title": "Assistant Chat",
+    "placeholder": "Type your message... (press Enter to send)",
+    "placeholderLoading": "Waiting for response...",
+    "send": "Send message",
+    "clear": "Clear conversation",
+    "newConversation": "New conversation",
+    "typing": "Assistant is typing...",
+    "emptyState": {
+      "title": "Welcome to Context.AI Chat!",
+      "description": "I'm your intelligent assistant, ready to help you with your knowledge management needs. Ask me anything about your documents and data.",
+      "suggestionsTitle": "Start a conversation:"
+    },
+    "errors": {
+      "networkError": "Network error. Please check your internet connection.",
+      "authError": "Authentication failed. Please sign in again.",
+      "validationError": "Invalid input. Please check your data.",
+      "timeoutError": "Request timed out. Please try again.",
+      "serverError": "Server error. Please try again later.",
+      "unknownError": "An unexpected error occurred.",
+      "noSectorSelected": "No sector selected. Please select a sector from your profile."
+    },
+    "messages": {
+      "user": "You",
+      "assistant": "Assistant"
+    },
+    "sources": {
+      "title": "Sources:",
+      "viewSource": "View source",
+      "similarity": "match",
+      "page": "Page",
+      "metadata": "Metadata:",
+      "andMore": "And {count} more sources."
+    },
+    "input": {
+      "enterToSend": "Press Enter to send",
+      "shiftEnterForNewLine": "Shift+Enter for new line",
+      "characterLimit": "Message exceeds maximum length of {max} characters. Please shorten your message."
+    }
+  },
+  "user": {
+    "profile": "User Profile",
+    "currentSector": "Current Sector:",
+    "role": "Role:",
+    "email": "Email:",
+    "selectSector": "Select Sector",
+    "pleaseLogin": "Please log in to view your profile."
+  },
+  "sector": {
+    "humanResources": "Human Resources",
+    "engineering": "Engineering",
+    "sales": "Sales",
+    "selectSector": "Select a Sector"
+  },
+  "auth": {
+    "signInTitle": "Sign In",
+    "signInDescription": "Sign in to access your account",
+    "signOutConfirm": "Are you sure you want to sign out?",
+    "signOutDescription": "Signing out will end your session and you will need to sign in again to access protected content."
+  },
+  "errors": {
+    "title": "Oops! Something went wrong.",
+    "description": "We're sorry, but an unexpected error occurred. Please try again.",
+    "tryAgain": "Try again",
+    "details": "Error Details"
+  },
+  "suggestedQuestions": {
+    "contextAI": {
+      "benefits": "What are the key benefits of Context.AI?",
+      "privacy": "How does Context.AI handle data privacy?",
+      "integration": "Can Context.AI integrate with my existing systems?",
+      "architecture": "Tell me about the architecture of Context.AI.",
+      "rag": "What is RAG (Retrieval Augmented Generation)?",
+      "getStarted": "How can I get started with Context.AI?"
+    },
+    "hr": {
+      "vacation": "How do I request vacation time?",
+      "benefits": "What benefits does the company offer?",
+      "remote": "What is the remote work policy?",
+      "performance": "When are performance reviews?",
+      "training": "What training programs are available?",
+      "policies": "Where can I find HR policies?"
+    },
+    "engineering": {
+      "deploy": "How do I deploy to production?",
+      "architecture": "What is the system architecture?",
+      "testing": "What are the testing standards?",
+      "codeReview": "What is the code review process?",
+      "cicd": "How does the CI/CD pipeline work?",
+      "docs": "Where is the technical documentation?"
+    },
+    "sales": {
+      "pricing": "What is our pricing structure?",
+      "competitors": "Who are our main competitors?",
+      "demo": "How do I schedule a demo?",
+      "objections": "How do I handle common objections?",
+      "crm": "How do I use the CRM system?",
+      "targets": "What are the sales targets?"
+    }
+  },
+  "language": {
+    "select": "Select language",
+    "en": "English",
+    "es": "Español"
+  },
+  "accessibility": {
+    "skipToContent": "Skip to content",
+    "menu": "Menu",
+    "closeMenu": "Close menu",
+    "openMenu": "Open menu",
+    "loading": "Loading",
+    "errorBoundary": "Error boundary"
+  }
+}
+
