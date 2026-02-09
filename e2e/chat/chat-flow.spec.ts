@@ -27,7 +27,9 @@ test.describe('Chat Flow - Basic Functionality', () => {
       await route.fulfill({ status: 200, body: '{}' });
     });
 
-    await navigateToChat(page);
+    // Navigate with explicit Spanish locale for i18n-dependent assertions
+    await page.goto('http://localhost:3000/es/chat');
+    await page.waitForLoadState('networkidle');
   });
 
   test('should display empty state when no messages', async ({ page }) => {

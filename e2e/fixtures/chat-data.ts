@@ -2,7 +2,19 @@
  * Test data fixtures for E2E chat tests
  */
 
-export const testMessages = {
+/**
+ * Test message templates for various scenarios
+ */
+export interface TestMessages {
+  simple: string;
+  complex: string;
+  withMarkdown: string;
+  longMessage: string;
+  empty: string;
+  specialChars: string;
+}
+
+export const testMessages: TestMessages = {
   simple: '¿Cómo pido vacaciones?',
   complex: '¿Cuál es el proceso completo para solicitar vacaciones y cuántos días tengo disponibles?',
   withMarkdown: '¿Puedes darme una lista de los beneficios de la empresa?',
@@ -11,7 +23,42 @@ export const testMessages = {
   specialChars: '¿Qué pasa con los caracteres especiales? #$%&*()[]{}',
 };
 
-export const mockResponses = {
+/**
+ * Source fragment metadata for test responses
+ */
+export interface SourceMetadata {
+  title: string;
+  page: number;
+  url: string;
+}
+
+/**
+ * Source fragment structure
+ */
+export interface SourceFragment {
+  id: string;
+  content: string;
+  similarity: number;
+  sourceId: string;
+  metadata: SourceMetadata;
+}
+
+/**
+ * Mock response structure
+ */
+export interface MockResponse {
+  content: string;
+  sources: SourceFragment[];
+}
+
+/**
+ * Collection of mock responses for testing
+ */
+export interface MockResponses {
+  vacationPolicy: MockResponse;
+}
+
+export const mockResponses: MockResponses = {
   vacationPolicy: {
     content: `Para solicitar vacaciones debes:
 
@@ -48,14 +95,32 @@ Tienes **20 días** de vacaciones anuales.`,
   },
 };
 
-export const testUser = {
+/**
+ * Test user structure
+ */
+export interface TestUser {
+  name: string;
+  email: string;
+  picture: string;
+  sub: string;
+}
+
+export const testUser: TestUser = {
   name: 'Test User',
   email: 'test@example.com',
   picture: 'https://example.com/avatar.jpg',
   sub: 'auth0|test123',
 };
 
-export const testSectors = [
+/**
+ * Test sector structure
+ */
+export interface TestSector {
+  id: string;
+  name: string;
+}
+
+export const testSectors: TestSector[] = [
   {
     id: '440e8400-e29b-41d4-a716-446655440000',
     name: 'Human Resources',
@@ -66,7 +131,18 @@ export const testSectors = [
   },
 ];
 
-export const testConversation = {
+/**
+ * Test conversation structure
+ */
+export interface TestConversation {
+  id: string;
+  userId: string;
+  sectorId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export const testConversation: TestConversation = {
   id: '660e8400-e29b-41d4-a716-446655440101',
   userId: 'auth0|test123',
   sectorId: '440e8400-e29b-41d4-a716-446655440000',
@@ -74,7 +150,24 @@ export const testConversation = {
   updatedAt: new Date().toISOString(),
 };
 
-export const expectedUIElements = {
+/**
+ * UI element selectors for testing
+ */
+export interface UIElements {
+  messageInput: string;
+  sendButton: string;
+  clearButton: string;
+  messageList: string;
+  userMessage: string;
+  assistantMessage: string;
+  typingIndicator: string;
+  sourceCard: string;
+  errorState: string;
+  emptyState: string;
+  markdownContent: string;
+}
+
+export const expectedUIElements: UIElements = {
   messageInput: '[data-testid="message-input"]',
   sendButton: '[data-testid="send-button"]',
   clearButton: '[data-testid="clear-button"]',

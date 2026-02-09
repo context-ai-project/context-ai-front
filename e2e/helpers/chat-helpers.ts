@@ -23,10 +23,21 @@ export async function sendMessage(page: Page, message: string) {
 }
 
 /**
- * Wait for assistant response to appear
+ * Wait for a new assistant response to appear
+ * @param page - Playwright page object
+ * @param previousCount - Number of assistant messages before sending (optional, defaults to 0)
+ * @param timeout - Maximum time to wait in milliseconds
  */
-export async function waitForAssistantResponse(page: Page, timeout = 10000) {
-  await page.locator(expectedUIElements.assistantMessage).first().waitFor({ timeout });
+export async function waitForAssistantResponse(page: Page, previousCount = 0, timeout = 10000) {
+  // Wait for the count of assistant messages to increase
+  await page.waitForFunction(
+    ({ selector, count }) => {
+      const messages = document.querySelectorAll(selector);
+      return messages.length > count;
+    },
+    { selector: expectedUIElements.assistantMessage, count: previousCount },
+    { timeout }
+  );
 }
 
 /**

@@ -43,7 +43,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
             const syncUrl = `${apiUrl}/users/sync`;
 
-            console.log('[NextAuth] Syncing user with backend:', {
+            console.warn('[NextAuth] Syncing user with backend:', {
               url: syncUrl,
               auth0UserId: profile.sub,
               email: profile.email,
@@ -64,7 +64,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             if (response.ok) {
               const userData = await response.json();
               token.userId = userData.id; // Store internal UUID
-              console.log('[NextAuth] User synced successfully:', { userId: userData.id });
+              console.warn('[NextAuth] User synced successfully:', { userId: userData.id });
             } else {
               const errorText = await response.text();
               console.error('[NextAuth] Failed to sync user:', {
