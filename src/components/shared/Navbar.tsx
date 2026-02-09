@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { MessageSquare, ChevronDown } from 'lucide-react';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { UserAvatar } from './UserAvatar';
+import { LanguageSelector } from './LanguageSelector';
 import { SectorSelector } from '@/components/user/SectorSelector';
 import { LogoutButton } from '@/components/user/LogoutButton';
 import { Button } from '@/components/ui/button';
@@ -56,6 +57,11 @@ export function Navbar() {
 
           {/* User info and sector selector */}
           <div className="flex items-center gap-4">
+            {/* Language Selector - Always visible */}
+            <div className="hidden sm:block">
+              <LanguageSelector />
+            </div>
+
             {isLoading && <div className="h-10 w-10 animate-pulse rounded-full bg-gray-200" />}
 
             {!isLoading && !user && (
@@ -91,6 +97,12 @@ export function Navbar() {
                       </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
+
+                    {/* Mobile language selector */}
+                    <div className="px-2 py-2 sm:hidden">
+                      <LanguageSelector />
+                    </div>
+                    <DropdownMenuSeparator className="sm:hidden" />
 
                     {/* Mobile sector selector */}
                     <div className="px-2 py-2 lg:hidden">
