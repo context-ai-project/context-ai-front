@@ -18,7 +18,10 @@ interface EmptyStateProps {
  */
 export function EmptyState({ onQuestionClick }: EmptyStateProps) {
   return (
-    <div className="flex min-h-[calc(100vh-20rem)] flex-col items-center justify-center gap-8 p-8">
+    <div
+      className="flex min-h-[calc(100vh-20rem)] flex-col items-center justify-center gap-8 p-8"
+      data-testid="empty-state"
+    >
       {/* Logo and welcome message */}
       <div className="flex flex-col items-center gap-4 text-center">
         <div className="from-primary to-primary/60 rounded-full bg-gradient-to-br p-6 shadow-lg">

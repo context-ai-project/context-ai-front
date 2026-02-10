@@ -124,6 +124,7 @@ export function MessageInput({ onSendMessage, onClearConversation }: MessageInpu
           aria-label="Message input"
           aria-invalid={isOverLimit}
           aria-describedby={isOverLimit ? 'char-limit-error' : undefined}
+          data-testid="message-input"
         />
 
         <div className="flex flex-col gap-2">
@@ -134,6 +135,7 @@ export function MessageInput({ onSendMessage, onClearConversation }: MessageInpu
             className="h-[60px] w-[60px]"
             disabled={!canSend}
             aria-label="Send message"
+            data-testid="send-button"
           >
             <Send className="h-5 w-5" />
           </Button>
@@ -148,6 +150,7 @@ export function MessageInput({ onSendMessage, onClearConversation }: MessageInpu
               onClick={handleClearConversation}
               disabled={isLoading}
               aria-label="Clear conversation"
+              data-testid="clear-button"
             >
               <Trash2 className="h-5 w-5" />
             </Button>

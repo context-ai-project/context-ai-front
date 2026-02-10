@@ -18,7 +18,12 @@ interface TypingIndicatorProps {
 
 export function TypingIndicator({ className }: TypingIndicatorProps) {
   return (
-    <div className={cn('flex gap-3', className)} role="status" aria-live="polite">
+    <div
+      className={cn('flex gap-3', className)}
+      role="status"
+      aria-live="polite"
+      data-testid="typing-indicator"
+    >
       <UserAvatar user={{ name: 'Assistant' }} />
       <div className="flex flex-col rounded-lg bg-gray-100 p-4">
         <div className="flex items-center gap-1">

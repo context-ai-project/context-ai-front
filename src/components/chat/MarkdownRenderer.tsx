@@ -18,11 +18,16 @@ import { cn } from '@/lib/utils';
 interface MarkdownRendererProps {
   content: string;
   className?: string;
+  'data-testid'?: string;
 }
 
-export function MarkdownRenderer({ content, className }: MarkdownRendererProps) {
+export function MarkdownRenderer({
+  content,
+  className,
+  'data-testid': dataTestId,
+}: MarkdownRendererProps) {
   return (
-    <div className={cn('prose prose-sm max-w-none', className)}>
+    <div className={cn('prose prose-sm max-w-none', className)} data-testid={dataTestId}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
