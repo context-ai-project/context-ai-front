@@ -1,8 +1,7 @@
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
-import { usePathname, useRouter } from 'next/navigation';
-import { useTransition } from 'react';
+import { useState } from 'react';
 import {
   Select,
   SelectContent,
@@ -17,24 +16,31 @@ import { Globe } from 'lucide-react';
  * Language Selector Component
  *
  * Allows users to switch between available locales (English/Spanish)
- * Updates the URL with the selected locale and reloads the page content
+ * Uses window.location for full page reload to ensure server re-fetches messages
  */
 export function LanguageSelector() {
   const t = useTranslations('language');
   const locale = useLocale();
-  const router = useRouter();
-  const pathname = usePathname();
-  const [isPending, startTransition] = useTransition();
+  const [isPending, setIsPending] = useState(false);
 
   const handleLocaleChange = (newLocale: string) => {
-    // Replace current locale in pathname with new locale
-    const segments = pathname.split('/');
-    segments[1] = newLocale; // Assuming pathname starts with /[locale]/...
-    const newPathname = segments.join('/');
+    if (newLocale === locale) {
+      return;
+    }
 
-    startTransition(() => {
-      router.replace(newPathname);
-    });
+    setIsPending(true);
+
+    // Get the full pathname from window.location (includes locale)
+    const currentPath = window.location.pathname;
+
+    // Split by / and replace the locale (always at index 1)
+    const segments = currentPath.split('/');
+    segments[1] = newLocale;
+
+    const newPath = segments.join('/');
+
+    // Force full page reload to ensure server re-fetches messages
+    window.location.href = newPath;
   };
 
   return (

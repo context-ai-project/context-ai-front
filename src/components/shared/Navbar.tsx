@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { MessageSquare, ChevronDown } from 'lucide-react';
+import { Brain, ChevronDown } from 'lucide-react';
+import { useLocale } from 'next-intl';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { UserAvatar } from './UserAvatar';
 import { LanguageSelector } from './LanguageSelector';
@@ -22,6 +23,7 @@ import {
  * Updated for Issue 5.13: User Profile and Session Management
  */
 export function Navbar() {
+  const locale = useLocale();
   const { user, isLoading, userName, userEmail, userPicture } = useCurrentUser();
 
   return (
@@ -30,25 +32,28 @@ export function Navbar() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo and brand */}
           <div className="flex items-center gap-3">
-            <MessageSquare className="h-8 w-8 text-blue-600" />
-            <Link href="/" className="text-xl font-semibold text-gray-900">
-              Context.AI
+            <Brain className="text-primary h-8 w-8" />
+            <Link href={`/${locale}`} className="text-xl font-semibold text-gray-900">
+              Context.ai
             </Link>
           </div>
 
           {/* Navigation links - desktop */}
           <div className="hidden items-center gap-6 md:flex">
             <Link
-              href="/dashboard"
+              href={`/${locale}/dashboard`}
               className="text-sm font-medium text-gray-700 hover:text-gray-900"
             >
               Dashboard
             </Link>
-            <Link href="/chat" className="text-sm font-medium text-gray-700 hover:text-gray-900">
+            <Link
+              href={`/${locale}/chat`}
+              className="text-sm font-medium text-gray-700 hover:text-gray-900"
+            >
               Chat
             </Link>
             <Link
-              href="/knowledge"
+              href={`/${locale}/knowledge`}
               className="text-sm font-medium text-gray-700 hover:text-gray-900"
             >
               Knowledge
@@ -66,7 +71,7 @@ export function Navbar() {
 
             {!isLoading && !user && (
               <Button asChild>
-                <Link href="/auth/signin">Sign In</Link>
+                <Link href={`/${locale}/auth/signin`}>Sign In</Link>
               </Button>
             )}
 
@@ -111,12 +116,12 @@ export function Navbar() {
                     <DropdownMenuSeparator className="lg:hidden" />
 
                     <DropdownMenuItem asChild>
-                      <Link href="/profile" className="w-full cursor-pointer">
+                      <Link href={`/${locale}/profile`} className="w-full cursor-pointer">
                         Profile
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link href="/settings" className="w-full cursor-pointer">
+                      <Link href={`/${locale}/settings`} className="w-full cursor-pointer">
                         Settings
                       </Link>
                     </DropdownMenuItem>

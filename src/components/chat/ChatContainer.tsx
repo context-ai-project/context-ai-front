@@ -13,6 +13,10 @@ import { logError, getErrorMessage } from '@/lib/api/error-handler';
 // Temporary hardcoded sector for MVP
 const TEST_SECTOR_ID = '440e8400-e29b-41d4-a716-446655440000';
 
+/**
+ * Main chat container component
+ * Manages message flow, state, and interactions
+ */
 export function ChatContainer() {
   const { data: session } = useSession();
   const {
@@ -49,32 +53,32 @@ export function ChatContainer() {
 
     try {
       const response = await chatApi.sendMessage({
-        userId: session.user.id, // Internal UUID from backend (synced on login)
+        userId: session.user.id,
         conversationId: conversationId || undefined,
         sectorId: TEST_SECTOR_ID,
-        query: messageContent, // Backend expects 'query', not 'message'
+        query: messageContent,
       });
 
-      // Validate response
-      if (!response || !response.conversationId || !response.response) {
-        throw new Error('Invalid response from backend');
+      // Validate backend response
+      if (!response || !response.conversationId) {
+        throw new Error('Invalid response from backend: missing conversationId');
       }
 
-      // Update conversation ID
+      // Update conversation ID if new
       setConversationId(response.conversationId);
 
-      // Build assistant message from response
+      // Add assistant message
       const assistantMessage = {
         id: `assistant-${Date.now()}`,
         conversationId: response.conversationId,
         role: MessageRole.ASSISTANT,
-        content: response.response, // Backend returns 'response' field
-        sourcesUsed: response.sources || [],
-        createdAt: response.timestamp
-          ? new Date(response.timestamp).toISOString()
-          : new Date().toISOString(),
+        content: response.response,
+        createdAt:
+          typeof response.timestamp === 'string'
+            ? response.timestamp
+            : new Date(response.timestamp).toISOString(),
+        sourcesUsed: response.sources,
       };
-
       addMessage(assistantMessage);
     } catch (err) {
       logError(err, { context: 'ChatContainer.handleSendMessage' });
@@ -92,26 +96,32 @@ export function ChatContainer() {
   const showEmptyState = messages.length === 0 && !isLoading && !error;
 
   return (
-    <div className="flex h-full flex-col">
-      <div className="flex-1 overflow-y-auto p-4">
-        {error && (
-          <div className="mb-4">
-            <ErrorState error={error} onDismiss={() => setError(null)} variant="inline" />
-          </div>
-        )}
+    <div className="flex h-[calc(100svh-3.5rem)] flex-col">
+      {/* Messages area with scroll */}
+      <div className="flex-1 overflow-y-auto">
+        <div className="mx-auto max-w-4xl px-4 py-6">
+          {error && (
+            <div className="mb-4">
+              <ErrorState error={error} onDismiss={() => setError(null)} variant="inline" />
+            </div>
+          )}
 
-        {showEmptyState ? (
-          <EmptyState onQuestionClick={handleSendMessage} />
-        ) : (
-          <MessageList messages={messages} isLoading={isLoading} />
-        )}
+          {showEmptyState ? (
+            <EmptyState onQuestionClick={handleSendMessage} />
+          ) : (
+            <MessageList messages={messages} isLoading={isLoading} />
+          )}
+        </div>
       </div>
 
-      <div className="border-t border-gray-200 p-4">
-        <MessageInput
-          onSendMessage={handleSendMessage}
-          onClearConversation={handleClearConversation}
-        />
+      {/* Input area - fixed at bottom */}
+      <div className="border-border bg-background shrink-0 border-t">
+        <div className="mx-auto max-w-4xl px-4 py-4">
+          <MessageInput
+            onSendMessage={handleSendMessage}
+            onClearConversation={handleClearConversation}
+          />
+        </div>
       </div>
     </div>
   );

@@ -1,7 +1,11 @@
 'use client';
 
-import { MessageSquare, Sparkles } from 'lucide-react';
+import { Brain, MessageSquare, Sparkles } from 'lucide-react';
 import { SuggestedQuestions } from './SuggestedQuestions';
+
+interface EmptyStateProps {
+  onQuestionClick?: (question: string) => void;
+}
 
 /**
  * EmptyState component displays a welcome screen when there are no messages
@@ -12,17 +16,13 @@ import { SuggestedQuestions } from './SuggestedQuestions';
  * {messages.length === 0 && <EmptyState onQuestionClick={handleSendMessage} />}
  * ```
  */
-interface EmptyStateProps {
-  onQuestionClick?: (question: string) => void;
-}
-
 export function EmptyState({ onQuestionClick }: EmptyStateProps) {
   return (
     <div className="flex min-h-[calc(100vh-20rem)] flex-col items-center justify-center gap-8 p-8">
       {/* Logo and welcome message */}
       <div className="flex flex-col items-center gap-4 text-center">
-        <div className="rounded-full bg-gradient-to-br from-blue-500 to-purple-600 p-6 shadow-lg">
-          <MessageSquare className="h-12 w-12 text-white" />
+        <div className="from-primary to-primary/60 rounded-full bg-gradient-to-br p-6 shadow-lg">
+          <Brain className="h-12 w-12 text-white" />
         </div>
 
         <div className="space-y-2">

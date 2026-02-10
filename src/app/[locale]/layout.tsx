@@ -39,8 +39,8 @@ export default async function LocaleLayout({
     notFound();
   }
 
-  // Load messages for the locale
-  const messages = await getMessages();
+  // Load messages for the locale - pass locale explicitly
+  const messages = await getMessages({ locale });
 
   return (
     <NextIntlClientProvider messages={messages} locale={locale}>
@@ -52,12 +52,4 @@ export default async function LocaleLayout({
       </SessionProvider>
     </NextIntlClientProvider>
   );
-}
-
-/**
- * Generate static params for all supported locales
- * This enables static generation for each locale
- */
-export function generateStaticParams() {
-  return locales.map((locale) => ({ locale }));
 }

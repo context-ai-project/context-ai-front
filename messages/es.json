@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Context.AI",
+    "appName": "Context.ai",
     "loading": "Cargando...",
     "error": "Error",
     "success": "Éxito",
@@ -77,10 +77,11 @@
     "selectSector": "Selecciona un Sector"
   },
   "auth": {
-    "signInTitle": "Iniciar Sesión",
-    "signInDescription": "Inicia sesión para acceder a tu cuenta",
+    "signInTitle": "Iniciar Sesión con",
+    "signInDescription": "Inicia sesión en tu cuenta para acceder a tu panel de gestión de conocimiento",
     "signOutConfirm": "¿Estás seguro de que quieres cerrar sesión?",
-    "signOutDescription": "Cerrar sesión terminará tu sesión y necesitarás iniciar sesión de nuevo para acceder al contenido protegido."
+    "signOutDescription": "Cerrar sesión terminará tu sesión y necesitarás iniciar sesión de nuevo para acceder al contenido protegido.",
+    "welcomeTitle": "Bienvenido a Context.ai"
   },
   "errors": {
     "title": "¡Ups! Algo salió mal.",
@@ -134,6 +135,156 @@
     "openMenu": "Abrir menú",
     "loading": "Cargando",
     "errorBoundary": "Límite de error"
+  },
+  "landing": {
+    "nav": {
+      "features": "Funcionalidades",
+      "howItWorks": "Cómo Funciona",
+      "useCases": "Casos de Uso",
+      "signIn": "Iniciar Sesión",
+      "getStarted": "Comenzar",
+      "closeMenu": "Cerrar menú",
+      "openMenu": "Abrir menú"
+    },
+    "hero": {
+      "badge": "Orquestación de Conocimiento Potenciada por IA",
+      "title": {
+        "part1": "Del Caos",
+        "part2": "al Contexto"
+      },
+      "subtitle": "Deja de perder conocimiento por rotación y fragmentación. Context.ai convierte tus documentos, procesos y experiencia dispersos en una base de conocimiento viva e inteligente que incorpora y empodera a tu equipo 24/7.",
+      "cta": {
+        "primary": "Comenzar Prueba Gratuita",
+        "secondary": "Ver Demo"
+      },
+      "stats": {
+        "resolution": {
+          "value": "92%",
+          "label": "Tasa de Resolución de Consultas"
+        },
+        "onboarding": {
+          "value": "30%",
+          "label": "Incorporación Más Rápida"
+        },
+        "questions": {
+          "value": "1.2K+",
+          "label": "Preguntas Respondidas"
+        }
+      }
+    },
+    "features": {
+      "title": "Todo lo que Necesitas para Escalar el Conocimiento",
+      "subtitle": "Diseñado específicamente para startups donde todos cumplen múltiples roles y el conocimiento es el activo más valioso — y vulnerable.",
+      "items": {
+        "sectors": {
+          "title": "Sectores de Conocimiento",
+          "description": "Crea bases de conocimiento aisladas para cada departamento. Ingeniería, RRHH, Ventas -- cada uno con su propio contexto y controles de acceso."
+        },
+        "ingestion": {
+          "title": "Ingestión Multimodal",
+          "description": "Sube PDFs, archivos Markdown o enlaces externos. Nuestro pipeline RAG indexa todo en conocimiento inteligente y buscable."
+        },
+        "qa": {
+          "title": "Preguntas y Respuestas con IA",
+          "description": "Los empleados hacen preguntas en lenguaje natural y obtienen respuestas fundamentadas exclusivamente en la documentación de tu empresa."
+        },
+        "capsules": {
+          "title": "Cápsulas Auto-Generadas",
+          "description": "Crea automáticamente scripts de incorporación, guías de audio y materiales de aprendizaje desde tus documentos subidos."
+        },
+        "analytics": {
+          "title": "Análisis de Sentimiento",
+          "description": "Rastrea qué tan útil es tu documentación. El análisis de sentimiento en consultas revela brechas y oportunidades de mejora."
+        },
+        "access": {
+          "title": "Acceso Basado en Roles",
+          "description": "RBAC asegura que la información sensible permanezca compartimentalizada. Los docs de RRHH quedan en RRHH, los de ingeniería en ingeniería."
+        }
+      }
+    },
+    "howItWorks": {
+      "title": "Cómo Funciona",
+      "subtitle": "Tres simples pasos para transformar tu conocimiento fragmentado en un compañero de equipo inteligente y siempre disponible.",
+      "steps": {
+        "upload": {
+          "title": "Sube Tu Conocimiento",
+          "description": "Crea sectores para cada departamento y sube tu documentación — PDFs, Markdown o enlaces. Context.ai se encarga del resto."
+        },
+        "index": {
+          "title": "La IA Indexa y Aprende",
+          "description": "Nuestro pipeline RAG divide documentos en embeddings, construyendo un grafo de conocimiento vectorizado que entiende relaciones y contexto."
+        },
+        "answer": {
+          "title": "Tu Equipo Pregunta, la IA Responde",
+          "description": "Los empleados obtienen respuestas instantáneas y precisas fundamentadas en tu documentación. Cada respuesta incluye citas de fuentes para transparencia."
+        }
+      }
+    },
+    "useCases": {
+      "title": "Diseñado para Desafíos Reales de Startups",
+      "subtitle": "Cada funcionalidad aborda un punto de dolor que experimentamos de primera mano en nuestro propio equipo en rápido movimiento.",
+      "items": {
+        "onboarding": {
+          "persona": "Para Nuevos Empleados",
+          "title": "Incorporación Autónoma",
+          "description": "Jornadas de incorporación autoguiadas con cápsulas generadas por IA, scripts de video y tutor de Q&A interactivo disponible 24/7."
+        },
+        "retention": {
+          "persona": "Para Liderazgo",
+          "title": "Retención de Conocimiento",
+          "description": "Cuando los miembros del equipo se van, su experiencia permanece. Los procesos críticos, decisiones y conocimientos persisten en la plataforma."
+        },
+        "crossFunctional": {
+          "persona": "Para Multitareas",
+          "title": "Roles Multifuncionales",
+          "description": "¿Cumples múltiples roles? Accede rápidamente a procesos de departamentos fuera de tu especialidad sin interrumpir a colegas."
+        },
+        "quality": {
+          "persona": "Para RRHH y Gerentes",
+          "title": "Calidad de Documentación",
+          "description": "El análisis de sentimiento revela qué docs ayudan y cuáles confunden. Mejora continuamente tu base de conocimiento con datos."
+        }
+      }
+    },
+    "cta": {
+      "title": "¿Listo para Dejar de Perder Conocimiento?",
+      "subtitle": "Únete a los equipos que están transformando cómo preservan, comparten y escalan su inteligencia colectiva.",
+      "button": "Comenzar Gratis"
+    },
+    "footer": {
+      "links": {
+        "features": "Funcionalidades",
+        "howItWorks": "Cómo Funciona",
+        "useCases": "Casos de Uso"
+      },
+      "copyright": "2026 Context.ai. Construido con propósito."
+    }
+  },
+  "dashboard": {
+    "title": "Panel de Control",
+    "subtitle": "Resumen de tu plataforma de conocimiento",
+    "stats": {
+      "queries": {
+        "title": "Consultas Totales",
+        "change": "92% resueltas"
+      },
+      "documents": {
+        "title": "Documentos Totales",
+        "change": "+12 este mes"
+      },
+      "users": {
+        "title": "Usuarios Activos",
+        "change": "+3 esta semana"
+      },
+      "accuracy": {
+        "title": "Tasa de Precisión",
+        "change": "+5% de mejora"
+      }
+    },
+    "comingSoon": {
+      "title": "Más Análisis Próximamente",
+      "description": "Estamos trabajando en funciones detalladas de análisis y reportes para tu base de conocimiento."
+    }
   }
 }
 

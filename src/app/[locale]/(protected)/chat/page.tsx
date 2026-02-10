@@ -1,13 +1,18 @@
 import { ChatContainer } from '@/components/chat/ChatContainer';
 
 /**
- * Chat page - Server Component for better SEO and performance
+ * Force dynamic rendering to ensure locale changes are reflected
+ */
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+/**
+ * Chat page - Main interface for AI conversations
+ * Server Component for better SEO and performance
  * Delegates interactivity to ChatContainer client component
  */
-export default function ChatPage() {
-  return (
-    <div className="flex h-[calc(100vh-4rem)] flex-col">
-      <ChatContainer />
-    </div>
-  );
+export default async function ChatPage({ params }: { params: Promise<{ locale: string }> }) {
+  // Await params to ensure this page re-renders when locale changes
+  await params;
+  return <ChatContainer />;
 }
