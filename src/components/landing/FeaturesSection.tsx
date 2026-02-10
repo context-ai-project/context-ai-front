@@ -1,3 +1,5 @@
+'use client';
+
 import { Brain, FileText, MessageSquare, BarChart3, Shield, Layers } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import type { LucideIcon } from 'lucide-react';

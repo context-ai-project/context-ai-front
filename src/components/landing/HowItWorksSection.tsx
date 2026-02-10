@@ -1,3 +1,5 @@
+'use client';
+
 import { Upload, Cpu, MessageCircle } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import type { LucideIcon } from 'lucide-react';
