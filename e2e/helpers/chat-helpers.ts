@@ -1,5 +1,6 @@
 import { type Page, expect } from '@playwright/test';
 import { expectedUIElements } from '../fixtures/chat-data';
+import type { MockChatResponse } from '../fixtures/chat-data';
 
 /**
  * Helper functions for E2E chat tests
@@ -7,9 +8,10 @@ import { expectedUIElements } from '../fixtures/chat-data';
 
 /**
  * Navigate to chat page and wait for it to load
+ * Uses explicit English locale since localePrefix is 'always' and tests use English UI text
  */
 export async function navigateToChat(page: Page) {
-  await page.goto('/chat');
+  await page.goto('/en/chat');
   await page.waitForLoadState('networkidle');
 }
 
@@ -89,8 +91,11 @@ export async function verifyMarkdownRendering(page: Page) {
 
 /**
  * Clear conversation
+ * Handles the window.confirm() dialog that appears when clearing
  */
 export async function clearConversation(page: Page) {
+  // Set up dialog handler BEFORE clicking to accept the confirm dialog
+  page.once('dialog', (dialog) => dialog.accept());
   await page.locator(expectedUIElements.clearButton).click();
 }
 
@@ -129,10 +134,13 @@ export async function takeDebugScreenshot(page: Page, name: string) {
 }
 
 /**
- * Mock API response for testing
+ * Mock API response for the chat interaction endpoint
+ * Uses broad pattern to match both local and CI API URL configurations:
+ * - Local: http://localhost:3001/api/v1/interaction/query
+ * - CI: http://localhost:3001/interaction/query
  */
-export async function mockChatAPIResponse(page: Page, response: unknown) {
-  await page.route('**/api/v1/interaction/query', async (route) => {
+export async function mockChatAPIResponse(page: Page, response: MockChatResponse) {
+  await page.route('**/interaction/query', async (route) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
@@ -145,7 +153,7 @@ export async function mockChatAPIResponse(page: Page, response: unknown) {
  * Mock API error for testing
  */
 export async function mockChatAPIError(page: Page, statusCode: number, errorMessage: string) {
-  await page.route('**/api/v1/interaction/query', async (route) => {
+  await page.route('**/interaction/query', async (route) => {
     await route.fulfill({
       status: statusCode,
       contentType: 'application/json',
@@ -174,4 +182,3 @@ export async function verifyLoadingStates(page: Page) {
   // Typing indicator should be visible
   await expect(page.locator(expectedUIElements.typingIndicator)).toBeVisible();
 }
-
