@@ -35,7 +35,14 @@ export default defineConfig({
   /* Web Server to run before starting tests */
   webServer: {
     command:
-      'E2E_BYPASS_AUTH=true AUTH_SECRET=e2e-test-secret-for-playwright-only NEXTAUTH_URL=http://localhost:3000 pnpm dev',
+      'E2E_BYPASS_AUTH=true ' +
+      'AUTH_SECRET=e2e-test-secret-for-playwright-only ' +
+      'NEXTAUTH_URL=http://localhost:3000 ' +
+      'AUTH0_CLIENT_ID=e2e-test-client-id ' +
+      'AUTH0_CLIENT_SECRET=e2e-test-client-secret ' +
+      'AUTH0_ISSUER=https://e2e-test.auth0.com ' +
+      'AUTH0_AUDIENCE=http://localhost:3001 ' +
+      'pnpm dev',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI, // Don't reuse in CI, allow reuse in local dev
     timeout: 120 * 1000, // 2 minutes

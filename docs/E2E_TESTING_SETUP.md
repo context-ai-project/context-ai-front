@@ -144,7 +144,15 @@ pnpm test --project=webkit
     trace: 'on-first-retry',
   },
   webServer: {
-    command: 'E2E_BYPASS_AUTH=true AUTH_SECRET=e2e-test-secret NEXTAUTH_URL=http://localhost:3000 pnpm dev',
+    command: 
+      'E2E_BYPASS_AUTH=true ' +
+      'AUTH_SECRET=e2e-test-secret ' +
+      'NEXTAUTH_URL=http://localhost:3000 ' +
+      'AUTH0_CLIENT_ID=e2e-test-client-id ' +
+      'AUTH0_CLIENT_SECRET=e2e-test-client-secret ' +
+      'AUTH0_ISSUER=https://e2e-test.auth0.com ' +
+      'AUTH0_AUDIENCE=http://localhost:3001 ' +
+      'pnpm dev',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
@@ -158,9 +166,18 @@ pnpm test --project=webkit
 ```
 
 **Environment Variables for E2E:**
+
+These variables are required by NextAuth but are not actually used during E2E tests due to `E2E_BYPASS_AUTH=true`:
+
 - `E2E_BYPASS_AUTH=true` - Bypasses authentication in protected routes
-- `AUTH_SECRET=e2e-test-secret` - Required by NextAuth (dummy value for tests)
+- `AUTH_SECRET=e2e-test-secret` - Required by NextAuth (dummy value)
 - `NEXTAUTH_URL=http://localhost:3000` - NextAuth base URL
+- `AUTH0_CLIENT_ID=e2e-test-client-id` - Auth0 client ID (dummy value)
+- `AUTH0_CLIENT_SECRET=e2e-test-client-secret` - Auth0 client secret (dummy value)
+- `AUTH0_ISSUER=https://e2e-test.auth0.com` - Auth0 issuer URL (dummy value)
+- `AUTH0_AUDIENCE=http://localhost:3001` - Auth0 API audience (dummy value)
+
+> **Note**: All Auth0 values are dummy values since authentication is bypassed during E2E tests. The real Auth0 configuration is never invoked.
 
 ## Best Practices
 
