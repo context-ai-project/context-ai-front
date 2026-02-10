@@ -5,6 +5,7 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/s
 import { ChatStoreProvider } from '@/stores/chat.store';
 import { UserStoreProvider } from '@/stores/user.store';
 import { LanguageSelector } from '@/components/shared/LanguageSelector';
+import { isE2ETestMode } from '@/lib/test-auth';
 
 /**
  * Force dynamic rendering to ensure locale changes are reflected
@@ -27,11 +28,15 @@ export default async function ProtectedLayout({
   // Await params to get the locale
   const { locale } = await params;
 
-  // Check authentication
-  const session = await auth();
-  if (!session) {
-    redirect(`/${locale}/auth/signin`);
+  // Check authentication (with E2E test bypass)
+  if (!isE2ETestMode()) {
+    // Normal authentication flow
+    const session = await auth();
+    if (!session) {
+      redirect(`/${locale}/auth/signin`);
+    }
   }
+  // E2E test mode: bypass authentication
 
   // Use locale as key to force re-mount when language changes
   return (

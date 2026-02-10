@@ -66,7 +66,7 @@ export function ErrorState({ error, onRetry, onDismiss, variant = 'full' }: Erro
 
   if (variant === 'inline') {
     return (
-      <div className="rounded-lg border border-red-200 bg-red-50 p-4">
+      <div className="rounded-lg border border-red-200 bg-red-50 p-4" data-testid="error-state">
         <div className="flex items-start gap-3">
           <Icon className="h-5 w-5 shrink-0 text-red-500" />
           <div className="flex-1">
@@ -101,7 +101,10 @@ export function ErrorState({ error, onRetry, onDismiss, variant = 'full' }: Erro
   }
 
   return (
-    <div className="flex min-h-[400px] flex-col items-center justify-center gap-6 p-8">
+    <div
+      className="flex min-h-[400px] flex-col items-center justify-center gap-6 p-8"
+      data-testid="error-state"
+    >
       <div className="flex flex-col items-center gap-3 text-center">
         <div className="rounded-full bg-red-100 p-4">
           <Icon className="h-12 w-12 text-red-600" />

@@ -44,54 +44,69 @@ export interface SourceFragment {
 }
 
 /**
- * Mock response structure
+ * Mock response structure matching ChatResponseDto from the backend
+ * This is the format that chatApi.sendMessage() returns
  */
-export interface MockResponse {
-  content: string;
+export interface MockChatResponse {
+  response: string;
+  conversationId: string;
   sources: SourceFragment[];
+  timestamp: string;
 }
 
 /**
- * Collection of mock responses for testing
+ * Pre-built mock response data
  */
-export interface MockResponses {
-  vacationPolicy: MockResponse;
-}
+export const mockSources: SourceFragment[] = [
+  {
+    id: '1',
+    content: 'Los empleados tienen derecho a 20 días de vacaciones pagadas por año...',
+    similarity: 0.95,
+    sourceId: 'hr-manual-2024',
+    metadata: {
+      title: 'Manual de RRHH 2024',
+      page: 42,
+      url: 'https://intranet.company.com/hr/manual',
+    },
+  },
+  {
+    id: '2',
+    content: 'El proceso de solicitud de vacaciones se realiza a través del portal...',
+    similarity: 0.92,
+    sourceId: 'hr-procedures',
+    metadata: {
+      title: 'Procedimientos RRHH',
+      page: 15,
+      url: 'https://intranet.company.com/hr/procedures',
+    },
+  },
+];
 
-export const mockResponses: MockResponses = {
-  vacationPolicy: {
-    content: `Para solicitar vacaciones debes:
+export const mockAssistantContent = `Para solicitar vacaciones debes:
 
 1. Ingresar a nuestro portal de RRHH
 2. Seleccionar "Solicitud de vacaciones"
 3. Elegir las fechas deseadas
 4. Esperar aprobación de tu supervisor
 
-Tienes **20 días** de vacaciones anuales.`,
-    sources: [
-      {
-        id: '1',
-        content: 'Los empleados tienen derecho a 20 días de vacaciones pagadas por año...',
-        similarity: 0.95,
-        sourceId: 'hr-manual-2024',
-        metadata: {
-          title: 'Manual de RRHH 2024',
-          page: 42,
-          url: 'https://intranet.company.com/hr/manual',
-        },
-      },
-      {
-        id: '2',
-        content: 'El proceso de solicitud de vacaciones se realiza a través del portal...',
-        similarity: 0.92,
-        sourceId: 'hr-procedures',
-        metadata: {
-          title: 'Procedimientos RRHH',
-          page: 15,
-          url: 'https://intranet.company.com/hr/procedures',
-        },
-      },
-    ],
+Tienes **20 días** de vacaciones anuales.`;
+
+/**
+ * Mock ChatResponseDto for the vacation policy query
+ * This matches the exact format returned by the backend API
+ */
+export const mockChatResponses: Record<string, MockChatResponse> = {
+  vacationPolicy: {
+    response: mockAssistantContent,
+    conversationId: 'conv-e2e-001',
+    sources: mockSources,
+    timestamp: new Date().toISOString(),
+  },
+  vacationPolicyNoSources: {
+    response: mockAssistantContent,
+    conversationId: 'conv-e2e-001',
+    sources: [],
+    timestamp: new Date().toISOString(),
   },
 };
 
@@ -180,4 +195,3 @@ export const expectedUIElements: UIElements = {
   emptyState: '[data-testid="empty-state"]',
   markdownContent: '[data-testid="markdown-content"]',
 };
-

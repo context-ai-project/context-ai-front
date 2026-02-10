@@ -22,7 +22,7 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
   }, [messages, isLoading]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-testid="message-list">
       {messages
         .filter((message) => message && message.id && message.role && message.content)
         .map((message) => {
@@ -31,7 +31,11 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
           const user = { name: isUser ? 'You' : 'Assistant', picture: null };
 
           return (
-            <div key={message.id} className={cn('flex gap-4', isUser && 'flex-row-reverse')}>
+            <div
+              key={message.id}
+              className={cn('flex gap-4', isUser && 'flex-row-reverse')}
+              data-testid={isUser ? 'user-message' : 'assistant-message'}
+            >
               <UserAvatar user={user} />
 
               <div
@@ -44,7 +48,11 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
               >
                 {/* Message content */}
                 {isAssistant ? (
-                  <MarkdownRenderer content={message.content} className="text-gray-800" />
+                  <MarkdownRenderer
+                    content={message.content}
+                    className="text-gray-800"
+                    data-testid="markdown-content"
+                  />
                 ) : (
                   <p className="text-sm leading-relaxed break-words whitespace-pre-wrap">
                     {message.content}

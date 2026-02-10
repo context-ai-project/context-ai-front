@@ -27,7 +27,10 @@ export function SourceCard({ source, index }: SourceCardProps) {
   const sourceUrl = source.metadata?.url as string | undefined;
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white transition-all hover:border-gray-300">
+    <div
+      className="rounded-lg border border-gray-200 bg-white transition-all hover:border-gray-300"
+      data-testid="source-card"
+    >
       <div className="flex items-center gap-3 p-4">
         <button
           onClick={() => setIsExpanded(!isExpanded)}
