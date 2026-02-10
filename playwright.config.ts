@@ -32,6 +32,14 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
 
+  /* Web Server to run before starting tests */
+  webServer: {
+    command: 'E2E_BYPASS_AUTH=true pnpm dev',
+    url: 'http://localhost:3000',
+    reuseExistingServer: !process.env.CI, // Don't reuse in CI, allow reuse in local dev
+    timeout: 120 * 1000, // 2 minutes
+  },
+
   /* Configure projects for major browsers */
   projects: [
     {

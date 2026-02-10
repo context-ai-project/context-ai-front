@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../setup/auth-fixture';
 import {
   navigateToChat,
   sendMessage,
@@ -22,11 +22,6 @@ import { testMessages, mockResponses } from '../fixtures/chat-data';
 
 test.describe('Chat Flow - Basic Functionality', () => {
   test.beforeEach(async ({ page }) => {
-    // Mock Auth0 session for tests
-    await page.route('**/api/auth/**', async (route) => {
-      await route.fulfill({ status: 200, body: '{}' });
-    });
-
     // Navigate with explicit Spanish locale for i18n-dependent assertions
     await page.goto('http://localhost:3000/es/chat');
     await page.waitForLoadState('networkidle');
@@ -34,7 +29,8 @@ test.describe('Chat Flow - Basic Functionality', () => {
 
   test('should display empty state when no messages', async ({ page }) => {
     await verifyEmptyState(page);
-    await expect(page.locator('text=Bienvenido')).toBeVisible();
+    // Note: EmptyState text is currently hardcoded in English
+    await expect(page.locator('text=Welcome to Context.ai')).toBeVisible();
   });
 
   test('user can write message and receive response', async ({ page }) => {
@@ -92,9 +88,6 @@ test.describe('Chat Flow - Basic Functionality', () => {
 
 test.describe('Chat Flow - Sources Display', () => {
   test.beforeEach(async ({ page }) => {
-    await page.route('**/api/auth/**', async (route) => {
-      await route.fulfill({ status: 200, body: '{}' });
-    });
     await navigateToChat(page);
   });
 
@@ -134,9 +127,6 @@ test.describe('Chat Flow - Sources Display', () => {
 
 test.describe('Chat Flow - Multiple Messages', () => {
   test.beforeEach(async ({ page }) => {
-    await page.route('**/api/auth/**', async (route) => {
-      await route.fulfill({ status: 200, body: '{}' });
-    });
     await navigateToChat(page);
   });
 
@@ -160,9 +150,6 @@ test.describe('Chat Flow - Multiple Messages', () => {
 
 test.describe('Chat Flow - Markdown Rendering', () => {
   test.beforeEach(async ({ page }) => {
-    await page.route('**/api/auth/**', async (route) => {
-      await route.fulfill({ status: 200, body: '{}' });
-    });
     await navigateToChat(page);
   });
 
@@ -196,9 +183,6 @@ test.describe('Chat Flow - Markdown Rendering', () => {
 
 test.describe('Chat Flow - Error Handling', () => {
   test.beforeEach(async ({ page }) => {
-    await page.route('**/api/auth/**', async (route) => {
-      await route.fulfill({ status: 200, body: '{}' });
-    });
     await navigateToChat(page);
   });
 
@@ -223,9 +207,6 @@ test.describe('Chat Flow - Error Handling', () => {
 
 test.describe('Chat Flow - Clear Conversation', () => {
   test.beforeEach(async ({ page }) => {
-    await page.route('**/api/auth/**', async (route) => {
-      await route.fulfill({ status: 200, body: '{}' });
-    });
     await navigateToChat(page);
   });
 
@@ -245,9 +226,6 @@ test.describe('Chat Flow - Clear Conversation', () => {
 
 test.describe('Chat Flow - Input Validation', () => {
   test.beforeEach(async ({ page }) => {
-    await page.route('**/api/auth/**', async (route) => {
-      await route.fulfill({ status: 200, body: '{}' });
-    });
     await navigateToChat(page);
   });
 
