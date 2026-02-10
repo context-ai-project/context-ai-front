@@ -3,6 +3,10 @@
 import { Brain, MessageSquare, Sparkles } from 'lucide-react';
 import { SuggestedQuestions } from './SuggestedQuestions';
 
+interface EmptyStateProps {
+  onQuestionClick?: (question: string) => void;
+}
+
 /**
  * EmptyState component displays a welcome screen when there are no messages
  * in the chat, including suggested questions to get started.
@@ -12,10 +16,6 @@ import { SuggestedQuestions } from './SuggestedQuestions';
  * {messages.length === 0 && <EmptyState onQuestionClick={handleSendMessage} />}
  * ```
  */
-interface EmptyStateProps {
-  onQuestionClick?: (question: string) => void;
-}
-
 export function EmptyState({ onQuestionClick }: EmptyStateProps) {
   return (
     <div className="flex min-h-[calc(100vh-20rem)] flex-col items-center justify-center gap-8 p-8">

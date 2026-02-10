@@ -18,7 +18,7 @@ const intlMiddleware = createMiddleware({
   localeDetection: false,
 });
 
-export default async function middleware(request: NextRequest) {
+export default async function middleware(request: NextRequest): Promise<NextResponse> {
   try {
     // Run i18n middleware to handle locale routing
     const response = intlMiddleware(request);

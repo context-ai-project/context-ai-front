@@ -37,8 +37,14 @@ export function LogoutButton({
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const handleLogout = async () => {
-    setIsLoggingOut(true);
-    await signOut({ callbackUrl: `/${locale}` });
+    try {
+      setIsLoggingOut(true);
+      await signOut({ callbackUrl: `/${locale}` });
+    } catch (error) {
+      console.error('Error during logout:', error);
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
 
   return (

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Brain, MessageSquare, LayoutDashboard, LogOut, ChevronUp } from 'lucide-react';
-import { useSession } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 import { useLocale } from 'next-intl';
 import {
   Sidebar,
@@ -25,7 +25,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { signOut } from 'next-auth/react';
 
 /**
  * Application sidebar component
