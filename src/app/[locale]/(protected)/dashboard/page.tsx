@@ -1,14 +1,24 @@
 import { FileText, MessageSquare, Users, TrendingUp } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
+
+/**
+ * Force dynamic rendering to ensure locale changes are reflected
+ */
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 /**
  * Dashboard overview page
  * Shows key metrics and statistics for the knowledge platform
  * Server Component for better performance
  */
-export default function DashboardPage() {
-  const t = useTranslations('dashboard');
+export default async function DashboardPage({ params }: { params: Promise<{ locale: string }> }) {
+  // Await params to get the locale
+  const { locale } = await params;
+
+  // Get translations for the specific locale
+  const t = await getTranslations({ locale, namespace: 'dashboard' });
 
   // Mock stats for MVP - will be replaced with real API calls
   const stats = [

@@ -77,10 +77,11 @@
     "selectSector": "Selecciona un Sector"
   },
   "auth": {
-    "signInTitle": "Iniciar Sesión",
-    "signInDescription": "Inicia sesión para acceder a tu cuenta",
+    "signInTitle": "Iniciar Sesión con",
+    "signInDescription": "Inicia sesión en tu cuenta para acceder a tu panel de gestión de conocimiento",
     "signOutConfirm": "¿Estás seguro de que quieres cerrar sesión?",
-    "signOutDescription": "Cerrar sesión terminará tu sesión y necesitarás iniciar sesión de nuevo para acceder al contenido protegido."
+    "signOutDescription": "Cerrar sesión terminará tu sesión y necesitarás iniciar sesión de nuevo para acceder al contenido protegido.",
+    "welcomeTitle": "Bienvenido a Context.ai"
   },
   "errors": {
     "title": "¡Ups! Algo salió mal.",

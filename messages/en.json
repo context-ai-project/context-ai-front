@@ -77,10 +77,11 @@
     "selectSector": "Select a Sector"
   },
   "auth": {
-    "signInTitle": "Sign In",
-    "signInDescription": "Sign in to access your account",
+    "signInTitle": "Sign In with",
+    "signInDescription": "Sign in to your account to access your knowledge management dashboard",
     "signOutConfirm": "Are you sure you want to sign out?",
-    "signOutDescription": "Signing out will end your session and you will need to sign in again to access protected content."
+    "signOutDescription": "Signing out will end your session and you will need to sign in again to access protected content.",
+    "welcomeTitle": "Welcome to Context.ai"
   },
   "errors": {
     "title": "Oops! Something went wrong.",

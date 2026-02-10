@@ -1,7 +1,6 @@
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
-import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import {
   Select,
@@ -22,30 +21,26 @@ import { Globe } from 'lucide-react';
 export function LanguageSelector() {
   const t = useTranslations('language');
   const locale = useLocale();
-  const pathname = usePathname();
   const [isPending, setIsPending] = useState(false);
 
   const handleLocaleChange = (newLocale: string) => {
-    if (newLocale === locale) return;
+    if (newLocale === locale) {
+      return;
+    }
 
     setIsPending(true);
 
-    // Replace current locale in pathname with new locale
-    const segments = pathname.split('/').filter(Boolean); // Remove empty segments
+    // Get the full pathname from window.location (includes locale)
+    const currentPath = window.location.pathname;
 
-    // Check if first segment is a locale
-    if (segments.length > 0 && locales.includes(segments[0] as (typeof locales)[number])) {
-      segments[0] = newLocale;
-    } else {
-      // If no locale in path, prepend it
-      segments.unshift(newLocale);
-    }
+    // Split by / and replace the locale (always at index 1)
+    const segments = currentPath.split('/');
+    segments[1] = newLocale;
 
-    const newPathname = '/' + segments.join('/');
+    const newPath = segments.join('/');
 
-    // Use window.location for a full page reload
-    // This ensures the server re-fetches all messages for the new locale
-    window.location.href = newPathname;
+    // Force full page reload to ensure server re-fetches messages
+    window.location.href = newPath;
   };
 
   return (
