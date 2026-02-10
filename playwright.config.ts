@@ -34,7 +34,8 @@ export default defineConfig({
 
   /* Web Server to run before starting tests */
   webServer: {
-    command: 'E2E_BYPASS_AUTH=true pnpm dev',
+    command:
+      'E2E_BYPASS_AUTH=true AUTH_SECRET=e2e-test-secret-for-playwright-only NEXTAUTH_URL=http://localhost:3000 pnpm dev',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI, // Don't reuse in CI, allow reuse in local dev
     timeout: 120 * 1000, // 2 minutes
@@ -77,11 +78,4 @@ export default defineConfig({
     //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
     // },
   ],
-
-  /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'npm run start',
-  //   url: 'http://localhost:3000',
-  //   reuseExistingServer: !process.env.CI,
-  // },
 });

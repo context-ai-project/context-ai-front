@@ -6,7 +6,7 @@ This document describes the E2E testing setup for the Context.ai frontend using 
 
 ## Test Structure
 
-```
+```text
 e2e/
 ├── chat/
 │   └── chat-flow.spec.ts        # Main chat flow E2E tests
@@ -143,6 +143,12 @@ pnpm test --project=webkit
   use: {
     trace: 'on-first-retry',
   },
+  webServer: {
+    command: 'E2E_BYPASS_AUTH=true AUTH_SECRET=e2e-test-secret NEXTAUTH_URL=http://localhost:3000 pnpm dev',
+    url: 'http://localhost:3000',
+    reuseExistingServer: !process.env.CI,
+    timeout: 120 * 1000,
+  },
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
     { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
@@ -150,6 +156,11 @@ pnpm test --project=webkit
   ],
 }
 ```
+
+**Environment Variables for E2E:**
+- `E2E_BYPASS_AUTH=true` - Bypasses authentication in protected routes
+- `AUTH_SECRET=e2e-test-secret` - Required by NextAuth (dummy value for tests)
+- `NEXTAUTH_URL=http://localhost:3000` - NextAuth base URL
 
 ## Best Practices
 

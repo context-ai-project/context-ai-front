@@ -22,14 +22,14 @@ import { testMessages, mockResponses } from '../fixtures/chat-data';
 
 test.describe('Chat Flow - Basic Functionality', () => {
   test.beforeEach(async ({ page }) => {
-    // Navigate with explicit Spanish locale for i18n-dependent assertions
-    await page.goto('http://localhost:3000/es/chat');
+    // Navigate with explicit English locale since EmptyState text is hardcoded in English
+    // TODO: Update EmptyState component to use i18n translations
+    await page.goto('http://localhost:3000/en/chat');
     await page.waitForLoadState('networkidle');
   });
 
   test('should display empty state when no messages', async ({ page }) => {
     await verifyEmptyState(page);
-    // Note: EmptyState text is currently hardcoded in English
     await expect(page.locator('text=Welcome to Context.ai')).toBeVisible();
   });
 
