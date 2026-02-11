@@ -49,10 +49,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               email: profile.email,
             });
 
+            const internalApiKey = process.env.INTERNAL_API_KEY;
+            if (!internalApiKey) {
+              console.error('[NextAuth] INTERNAL_API_KEY is not configured - cannot sync user');
+            }
+
             const response = await fetch(syncUrl, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
+                'X-Internal-API-Key': internalApiKey || '',
               },
               body: JSON.stringify({
                 auth0UserId: profile.sub,
