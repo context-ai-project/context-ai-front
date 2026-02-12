@@ -30,7 +30,7 @@ test.describe('Dashboard Page — Content', () => {
 
     // Active Users
     await expect(page.getByText('Active Users')).toBeVisible();
-    await expect(page.getByText('24')).toBeVisible();
+    await expect(page.getByText('24', { exact: true })).toBeVisible();
 
     // Accuracy Rate
     await expect(page.getByText('Accuracy Rate')).toBeVisible();

@@ -15,13 +15,13 @@ test.describe('Navigation — Protected Routes', () => {
     // Navigate to chat
     const sidebar = page.locator('[data-sidebar]').first();
     await sidebar.getByText('AI Chat').click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForURL(new RegExp(`/${LOCALE}/chat`), { timeout: 10_000 });
     await expect(page).toHaveURL(new RegExp(`/${LOCALE}/chat`));
 
     // Navigate back to dashboard
     const sidebarRefresh = page.locator('[data-sidebar]').first();
     await sidebarRefresh.getByText('Dashboard').click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForURL(new RegExp(`/${LOCALE}/dashboard`), { timeout: 10_000 });
     await expect(page).toHaveURL(new RegExp(`/${LOCALE}/dashboard`));
   });
 
@@ -42,7 +42,7 @@ test.describe('Navigation — Protected Routes', () => {
     const sidebar = page.locator('[data-sidebar]').first();
     const brandLink = sidebar.getByRole('link', { name: 'Context.ai' });
     await brandLink.click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForURL(new RegExp(`/${LOCALE}/chat`), { timeout: 10_000 });
 
     await expect(page).toHaveURL(new RegExp(`/${LOCALE}/chat`));
   });
