@@ -115,7 +115,7 @@ describe('LandingNavbar', () => {
     expect(screen.getByRole('button', { name: 'Open menu' })).toBeInTheDocument();
   });
 
-  it('should render language selector in both desktop and mobile', () => {
+  it('should render language selector', () => {
     render(<LandingNavbar />);
 
     const selectors = screen.getAllByTestId('language-selector');

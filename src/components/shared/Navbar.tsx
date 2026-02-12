@@ -67,7 +67,12 @@ export function Navbar() {
               <LanguageSelector />
             </div>
 
-            {isLoading && <div className="h-10 w-10 animate-pulse rounded-full bg-gray-200" />}
+            {isLoading && (
+              <div
+                data-testid="loading-skeleton"
+                className="h-10 w-10 animate-pulse rounded-full bg-gray-200"
+              />
+            )}
 
             {!isLoading && !user && (
               <Button asChild>

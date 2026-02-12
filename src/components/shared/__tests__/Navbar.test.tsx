@@ -73,15 +73,48 @@ vi.mock('@/components/ui/button', () => ({
   ),
 }));
 
+/** Common mock user state for authenticated user */
+const MOCK_AUTHENTICATED_USER = {
+  user: {
+    id: 'user-1',
+    name: 'Test User',
+    email: 'test@example.com',
+    image: 'https://example.com/avatar.jpg',
+  },
+  isLoading: false,
+  userName: 'Test User',
+  userEmail: 'test@example.com',
+  userPicture: 'https://example.com/avatar.jpg',
+};
+
+/** Common mock user state for unauthenticated user */
+const MOCK_UNAUTHENTICATED_USER = {
+  user: null,
+  isLoading: false,
+  userName: 'Guest',
+  userEmail: '',
+  userPicture: '',
+};
+
+/** Common mock user state for loading */
+const MOCK_LOADING_USER = {
+  user: null,
+  isLoading: true,
+  userName: 'Guest',
+  userEmail: '',
+  userPicture: '',
+};
+
+/** Common mock user state for authenticated user without avatar */
+const MOCK_AUTHENTICATED_NO_AVATAR = {
+  ...MOCK_AUTHENTICATED_USER,
+  user: { ...MOCK_AUTHENTICATED_USER.user, image: null },
+  userPicture: '',
+};
+
 describe('Navbar', () => {
   it('should render logo and brand name', () => {
-    mockUseCurrentUser.mockReturnValue({
-      user: null,
-      isLoading: false,
-      userName: 'Guest',
-      userEmail: '',
-      userPicture: '',
-    });
+    mockUseCurrentUser.mockReturnValue(MOCK_UNAUTHENTICATED_USER);
 
     render(<Navbar />);
 
@@ -89,13 +122,7 @@ describe('Navbar', () => {
   });
 
   it('should render navigation links', () => {
-    mockUseCurrentUser.mockReturnValue({
-      user: null,
-      isLoading: false,
-      userName: 'Guest',
-      userEmail: '',
-      userPicture: '',
-    });
+    mockUseCurrentUser.mockReturnValue(MOCK_UNAUTHENTICATED_USER);
 
     render(<Navbar />);
 
@@ -105,29 +132,17 @@ describe('Navbar', () => {
   });
 
   it('should show loading skeleton when loading', () => {
-    mockUseCurrentUser.mockReturnValue({
-      user: null,
-      isLoading: true,
-      userName: 'Guest',
-      userEmail: '',
-      userPicture: '',
-    });
+    mockUseCurrentUser.mockReturnValue(MOCK_LOADING_USER);
 
     render(<Navbar />);
 
-    // Loading skeleton has animate-pulse class
-    const skeleton = document.querySelector('.animate-pulse');
-    expect(skeleton).toBeTruthy();
+    // Loading skeleton should be present
+    const skeleton = screen.getByTestId('loading-skeleton');
+    expect(skeleton).toBeInTheDocument();
   });
 
   it('should show Sign In button when not authenticated', () => {
-    mockUseCurrentUser.mockReturnValue({
-      user: null,
-      isLoading: false,
-      userName: 'Guest',
-      userEmail: '',
-      userPicture: '',
-    });
+    mockUseCurrentUser.mockReturnValue(MOCK_UNAUTHENTICATED_USER);
 
     render(<Navbar />);
 
@@ -135,18 +150,7 @@ describe('Navbar', () => {
   });
 
   it('should show user info when authenticated', () => {
-    mockUseCurrentUser.mockReturnValue({
-      user: {
-        id: 'user-1',
-        name: 'Test User',
-        email: 'test@example.com',
-        image: 'https://example.com/avatar.jpg',
-      },
-      isLoading: false,
-      userName: 'Test User',
-      userEmail: 'test@example.com',
-      userPicture: 'https://example.com/avatar.jpg',
-    });
+    mockUseCurrentUser.mockReturnValue(MOCK_AUTHENTICATED_USER);
 
     render(<Navbar />);
 
@@ -154,23 +158,12 @@ describe('Navbar', () => {
     const userNameElements = screen.getAllByText('Test User');
     expect(userNameElements.length).toBeGreaterThanOrEqual(1);
 
-    const emailElements = screen.getAllByText('test@example.com');
+    const emailElements = screen.getAllByText(MOCK_AUTHENTICATED_USER.userEmail);
     expect(emailElements.length).toBeGreaterThanOrEqual(1);
   });
 
   it('should show sector selector when user is authenticated', () => {
-    mockUseCurrentUser.mockReturnValue({
-      user: {
-        id: 'user-1',
-        name: 'Test User',
-        email: 'test@example.com',
-        image: null,
-      },
-      isLoading: false,
-      userName: 'Test User',
-      userEmail: 'test@example.com',
-      userPicture: '',
-    });
+    mockUseCurrentUser.mockReturnValue(MOCK_AUTHENTICATED_NO_AVATAR);
 
     render(<Navbar />);
 
@@ -178,13 +171,7 @@ describe('Navbar', () => {
   });
 
   it('should show language selector', () => {
-    mockUseCurrentUser.mockReturnValue({
-      user: null,
-      isLoading: false,
-      userName: 'Guest',
-      userEmail: '',
-      userPicture: '',
-    });
+    mockUseCurrentUser.mockReturnValue(MOCK_UNAUTHENTICATED_USER);
 
     render(<Navbar />);
 
@@ -192,18 +179,7 @@ describe('Navbar', () => {
   });
 
   it('should show logout button when authenticated', () => {
-    mockUseCurrentUser.mockReturnValue({
-      user: {
-        id: 'user-1',
-        name: 'Test User',
-        email: 'test@example.com',
-        image: null,
-      },
-      isLoading: false,
-      userName: 'Test User',
-      userEmail: 'test@example.com',
-      userPicture: '',
-    });
+    mockUseCurrentUser.mockReturnValue(MOCK_AUTHENTICATED_NO_AVATAR);
 
     render(<Navbar />);
 
@@ -211,18 +187,7 @@ describe('Navbar', () => {
   });
 
   it('should show Profile and Settings links when authenticated', () => {
-    mockUseCurrentUser.mockReturnValue({
-      user: {
-        id: 'user-1',
-        name: 'Test User',
-        email: 'test@example.com',
-        image: null,
-      },
-      isLoading: false,
-      userName: 'Test User',
-      userEmail: 'test@example.com',
-      userPicture: '',
-    });
+    mockUseCurrentUser.mockReturnValue(MOCK_AUTHENTICATED_NO_AVATAR);
 
     render(<Navbar />);
 

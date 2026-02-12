@@ -279,11 +279,9 @@ describe('ChatContainer', () => {
 
     render(<ChatContainer />);
 
-    // ErrorState renders dismiss buttons - find all and use the first one
-    const dismissButtons = screen.queryAllByRole('button', { name: /dismiss|close/i });
-    if (dismissButtons.length > 0) {
-      dismissButtons[0].click();
-      expect(mockStoreState.setError).toHaveBeenCalledWith(null);
-    }
+    // ErrorState should render a dismiss button
+    const dismissButton = screen.getByLabelText('Dismiss error');
+    dismissButton.click();
+    expect(mockStoreState.setError).toHaveBeenCalledWith(null);
   });
 });

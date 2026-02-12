@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { LanguageSelector } from '../LanguageSelector';
 import { useLocale, useTranslations } from 'next-intl';
@@ -96,26 +97,28 @@ describe('LanguageSelector', () => {
   });
 
   it('should navigate when a different locale is selected', async () => {
+    const user = userEvent.setup();
     render(<LanguageSelector />);
 
     const changeButton = screen.getByTestId('select-trigger-change');
-    changeButton.click();
+    await user.click(changeButton);
 
     // Should redirect to /es/chat
     expect(window.location.href).toBe('/es/chat');
   });
 
-  it('should not navigate when the same locale is selected', () => {
+  it('should not navigate when the same locale is selected', async () => {
+    const user = userEvent.setup();
     render(<LanguageSelector />);
 
     const sameLocaleButton = screen.getByTestId('select-same-locale');
-    sameLocaleButton.click();
+    await user.click(sameLocaleButton);
 
     // href should remain empty (not set)
     expect(window.location.href).toBe('');
   });
 
-  it('should display the globe icon', () => {
+  it('should render the select trigger', () => {
     render(<LanguageSelector />);
 
     const trigger = screen.getByTestId('select-trigger');

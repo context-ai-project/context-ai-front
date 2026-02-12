@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe('auth0Config', () => {
   const originalEnv = process.env;
@@ -14,6 +14,10 @@ describe('auth0Config', () => {
       AUTH0_CLIENT_SECRET: 'test-client-secret',
       AUTH0_AUDIENCE: 'https://api.test.com',
     };
+  });
+
+  afterEach(() => {
+    process.env = originalEnv;
   });
 
   it('should export auth0 config with correct values from environment', async () => {

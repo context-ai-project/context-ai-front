@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterAll, vi } from 'vitest';
 
 /**
  * Helper to set NODE_ENV in tests.
@@ -39,7 +39,7 @@ describe('test-auth', () => {
   });
 
   it('should return a valid mock session from getMockE2ESession', async () => {
-    process.env.E2E_BYPASS_AUTH = 'false';
+    // getMockE2ESession returns a static mock session regardless of env state
     const { getMockE2ESession } = await import('../test-auth');
     const session = getMockE2ESession();
 
