@@ -60,14 +60,20 @@ const MOCK_SOURCES: SourceFragment[] = [
 
 /** Shared test description for axe-core scans */
 const AXE_PASS = 'should pass axe-core a11y scan';
+/** Timeout for axe-core tests (rendering + analysis can be slow in JSDOM) */
+const AXE_TIMEOUT = 15_000;
 
 describe('Chat Components — Accessibility', () => {
   describe('EmptyState', () => {
-    it(AXE_PASS, async () => {
-      const { container } = render(<EmptyState />);
-      const results = await axe(container);
-      expect(results).toHaveNoViolations();
-    });
+    it(
+      AXE_PASS,
+      async () => {
+        const { container } = render(<EmptyState />);
+        const results = await axe(container);
+        expect(results).toHaveNoViolations();
+      },
+      AXE_TIMEOUT,
+    );
 
     it('should have a heading hierarchy', () => {
       const { container } = render(<EmptyState />);
@@ -78,24 +84,32 @@ describe('Chat Components — Accessibility', () => {
   });
 
   describe('ErrorState', () => {
-    it('should have no a11y violations (full variant)', async () => {
-      const { container } = render(<ErrorState error="Something went wrong" onRetry={vi.fn()} />);
-      const results = await axe(container);
-      expect(results).toHaveNoViolations();
-    });
+    it(
+      'should have no a11y violations (full variant)',
+      async () => {
+        const { container } = render(<ErrorState error="Something went wrong" onRetry={vi.fn()} />);
+        const results = await axe(container);
+        expect(results).toHaveNoViolations();
+      },
+      AXE_TIMEOUT,
+    );
 
-    it('should have no a11y violations (inline variant)', async () => {
-      const { container } = render(
-        <ErrorState
-          error="Connection failed"
-          onRetry={vi.fn()}
-          onDismiss={vi.fn()}
-          variant="inline"
-        />,
-      );
-      const results = await axe(container);
-      expect(results).toHaveNoViolations();
-    });
+    it(
+      'should have no a11y violations (inline variant)',
+      async () => {
+        const { container } = render(
+          <ErrorState
+            error="Connection failed"
+            onRetry={vi.fn()}
+            onDismiss={vi.fn()}
+            variant="inline"
+          />,
+        );
+        const results = await axe(container);
+        expect(results).toHaveNoViolations();
+      },
+      AXE_TIMEOUT,
+    );
 
     it('dismiss button should have aria-label', () => {
       const { getByLabelText } = render(
@@ -106,11 +120,15 @@ describe('Chat Components — Accessibility', () => {
   });
 
   describe('TypingIndicator', () => {
-    it(AXE_PASS, async () => {
-      const { container } = render(<TypingIndicator />);
-      const results = await axe(container);
-      expect(results).toHaveNoViolations();
-    });
+    it(
+      AXE_PASS,
+      async () => {
+        const { container } = render(<TypingIndicator />);
+        const results = await axe(container);
+        expect(results).toHaveNoViolations();
+      },
+      AXE_TIMEOUT,
+    );
 
     it('should have role="status" for assistive technologies', () => {
       const { getByRole } = render(<TypingIndicator />);
@@ -124,11 +142,15 @@ describe('Chat Components — Accessibility', () => {
   });
 
   describe('SourceCard', () => {
-    it('should have no a11y violations (collapsed)', async () => {
-      const { container } = render(<SourceCard source={MOCK_SOURCE} index={0} />);
-      const results = await axe(container);
-      expect(results).toHaveNoViolations();
-    });
+    it(
+      'should have no a11y violations (collapsed)',
+      async () => {
+        const { container } = render(<SourceCard source={MOCK_SOURCE} index={0} />);
+        const results = await axe(container);
+        expect(results).toHaveNoViolations();
+      },
+      AXE_TIMEOUT,
+    );
 
     it('should have aria-expanded attribute on toggle button', () => {
       const { container } = render(<SourceCard source={MOCK_SOURCE} index={0} />);
@@ -145,32 +167,48 @@ describe('Chat Components — Accessibility', () => {
   });
 
   describe('SourceList', () => {
-    it(AXE_PASS, async () => {
-      const { container } = render(<SourceList sources={MOCK_SOURCES} />);
-      const results = await axe(container);
-      expect(results).toHaveNoViolations();
-    });
+    it(
+      AXE_PASS,
+      async () => {
+        const { container } = render(<SourceList sources={MOCK_SOURCES} />);
+        const results = await axe(container);
+        expect(results).toHaveNoViolations();
+      },
+      AXE_TIMEOUT,
+    );
 
-    it('should render nothing and produce no violations when empty', async () => {
-      const { container } = render(<SourceList sources={[]} />);
-      const results = await axe(container);
-      expect(results).toHaveNoViolations();
-    });
+    it(
+      'should render nothing and produce no violations when empty',
+      async () => {
+        const { container } = render(<SourceList sources={[]} />);
+        const results = await axe(container);
+        expect(results).toHaveNoViolations();
+      },
+      AXE_TIMEOUT,
+    );
   });
 
   describe('MarkdownRenderer', () => {
-    it('should have no a11y violations with basic content', async () => {
-      const { container } = render(<MarkdownRenderer content="Hello **world**" />);
-      const results = await axe(container);
-      expect(results).toHaveNoViolations();
-    });
+    it(
+      'should have no a11y violations with basic content',
+      async () => {
+        const { container } = render(<MarkdownRenderer content="Hello **world**" />);
+        const results = await axe(container);
+        expect(results).toHaveNoViolations();
+      },
+      AXE_TIMEOUT,
+    );
 
-    it('should have no a11y violations with headings and links', async () => {
-      const content = '# Title\n\nVisit [Google](https://google.com)\n\n> A blockquote';
-      const { container } = render(<MarkdownRenderer content={content} />);
-      const results = await axe(container);
-      expect(results).toHaveNoViolations();
-    });
+    it(
+      'should have no a11y violations with headings and links',
+      async () => {
+        const content = '# Title\n\nVisit [Google](https://google.com)\n\n> A blockquote';
+        const { container } = render(<MarkdownRenderer content={content} />);
+        const results = await axe(container);
+        expect(results).toHaveNoViolations();
+      },
+      AXE_TIMEOUT,
+    );
 
     it('links should have rel="noopener noreferrer"', () => {
       const { getByRole } = render(<MarkdownRenderer content="[Link](https://example.com)" />);
@@ -181,11 +219,15 @@ describe('Chat Components — Accessibility', () => {
   });
 
   describe('SuggestedQuestions', () => {
-    it(AXE_PASS, async () => {
-      const { container } = render(<SuggestedQuestions onQuestionClick={vi.fn()} />);
-      const results = await axe(container);
-      expect(results).toHaveNoViolations();
-    });
+    it(
+      AXE_PASS,
+      async () => {
+        const { container } = render(<SuggestedQuestions onQuestionClick={vi.fn()} />);
+        const results = await axe(container);
+        expect(results).toHaveNoViolations();
+      },
+      AXE_TIMEOUT,
+    );
 
     it('each question should be a focusable button', () => {
       const { getAllByRole } = render(<SuggestedQuestions onQuestionClick={vi.fn()} />);
@@ -198,11 +240,15 @@ describe('Chat Components — Accessibility', () => {
   });
 
   describe('MessageInput', () => {
-    it(AXE_PASS, async () => {
-      const { container } = render(<MessageInput />);
-      const results = await axe(container);
-      expect(results).toHaveNoViolations();
-    });
+    it(
+      AXE_PASS,
+      async () => {
+        const { container } = render(<MessageInput />);
+        const results = await axe(container);
+        expect(results).toHaveNoViolations();
+      },
+      AXE_TIMEOUT,
+    );
 
     it('textarea should have aria-label', () => {
       const { getByLabelText } = render(<MessageInput />);

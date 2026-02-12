@@ -69,7 +69,7 @@ test.describe('Landing Page — Content & Layout', () => {
   test('should render the footer with links and copyright', async ({ page }) => {
     const footer = page.locator('footer');
     await expect(footer).toBeVisible();
-    await expect(footer.getByText('Context.ai')).toBeVisible();
+    await expect(footer.getByText('Context.ai', { exact: true })).toBeVisible();
     await expect(footer.getByText('2026 Context.ai. Built with purpose.')).toBeVisible();
   });
 });
