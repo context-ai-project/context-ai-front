@@ -1,0 +1,99 @@
+# ============================================================================
+# Frontend E2E — Playwright End-to-End Tests
+# ============================================================================
+# Runs Playwright E2E tests against a live Next.js dev server.
+# Triggered on push/PR to main and develop.
+#
+# The E2E tests use E2E_BYPASS_AUTH=true to skip real Auth0 authentication
+# and mock the session endpoint via Playwright route interception.
+#
+# Visual regression tests are excluded (run separately with
+# `pnpm test:e2e:visual` locally).
+# ============================================================================
+
+name: Frontend E2E
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'context-ai-front/**'
+      - '.github/workflows/frontend-e2e.yml'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'context-ai-front/**'
+      - '.github/workflows/frontend-e2e.yml'
+
+defaults:
+  run:
+    working-directory: ./context-ai-front
+
+# Cancel in-progress runs for the same branch/PR
+concurrency:
+  group: frontend-e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  e2e:
+    name: Playwright E2E (${{ matrix.browser }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium]
+        # Expand to [chromium, firefox, webkit] when stable
+        # firefox and webkit can be added once tests are verified in CI
+
+    env:
+      # Auth bypass for E2E
+      E2E_BYPASS_AUTH: 'true'
+      AUTH_SECRET: e2e-test-secret-for-playwright-only
+      NEXTAUTH_URL: http://localhost:3000
+      AUTH0_CLIENT_ID: e2e-test-client-id
+      AUTH0_CLIENT_SECRET: e2e-test-client-secret
+      AUTH0_ISSUER: https://e2e-test.auth0.com
+      AUTH0_AUDIENCE: http://localhost:3001
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+          cache-dependency-path: context-ai-front/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps ${{ matrix.browser }}
+
+      - name: Run E2E tests
+        run: pnpm exec playwright test --project=${{ matrix.browser }} --ignore-snapshots
+        env:
+          CI: true
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ matrix.browser }}
+          path: context-ai-front/playwright-report/
+          retention-days: 14
+
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-results-${{ matrix.browser }}
+          path: context-ai-front/test-results/
+          retention-days: 7
+
