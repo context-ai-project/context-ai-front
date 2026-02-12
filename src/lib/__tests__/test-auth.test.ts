@@ -1,5 +1,18 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
+/**
+ * Helper to set NODE_ENV in tests.
+ * process.env.NODE_ENV is typed as readonly in TypeScript,
+ * so we use Object.defineProperty to override it safely in tests.
+ */
+function setNodeEnv(value: string): void {
+  Object.defineProperty(process.env, 'NODE_ENV', {
+    value,
+    writable: true,
+    configurable: true,
+  });
+}
+
 describe('test-auth', () => {
   const originalEnv = process.env;
 
@@ -20,7 +33,7 @@ describe('test-auth', () => {
 
   it('should return true for isE2ETestMode when E2E_BYPASS_AUTH is "true"', async () => {
     process.env.E2E_BYPASS_AUTH = 'true';
-    process.env.NODE_ENV = 'test';
+    setNodeEnv('test');
     const { isE2ETestMode } = await import('../test-auth');
     expect(isE2ETestMode()).toBe(true);
   });
@@ -42,7 +55,7 @@ describe('test-auth', () => {
 
   it('should throw error when E2E bypass is enabled in production', async () => {
     process.env.E2E_BYPASS_AUTH = 'true';
-    process.env.NODE_ENV = 'production';
+    setNodeEnv('production');
 
     await expect(async () => {
       await import('../test-auth');
