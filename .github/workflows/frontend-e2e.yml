@@ -17,17 +17,21 @@ on:
   push:
     branches: [main, develop]
     paths:
-      - 'context-ai-front/**'
+      - 'src/**'
+      - 'e2e/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'playwright.config.*'
       - '.github/workflows/frontend-e2e.yml'
   pull_request:
     branches: [main, develop]
     paths:
-      - 'context-ai-front/**'
+      - 'src/**'
+      - 'e2e/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'playwright.config.*'
       - '.github/workflows/frontend-e2e.yml'
-
-defaults:
-  run:
-    working-directory: ./context-ai-front
 
 # Cancel in-progress runs for the same branch/PR
 concurrency:
@@ -68,7 +72,6 @@ jobs:
         with:
           node-version: '22'
           cache: 'pnpm'
-          cache-dependency-path: context-ai-front/pnpm-lock.yaml
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -86,7 +89,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report-${{ matrix.browser }}
-          path: context-ai-front/playwright-report/
+          path: playwright-report/
           retention-days: 14
 
       - name: Upload test results
@@ -94,6 +97,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: playwright-results-${{ matrix.browser }}
-          path: context-ai-front/test-results/
+          path: test-results/
           retention-days: 7
-
