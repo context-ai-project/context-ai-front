@@ -16,7 +16,7 @@ vi.mock('@/stores/chat.store', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@/stores/chat.store')>();
   return {
     ...actual,
-    useChatIsLoading: () => mockIsLoading(),
+    useIsLoading: () => mockIsLoading(),
   };
 });
 
@@ -67,13 +67,22 @@ describe('Keyboard Navigation — Chat Components', () => {
     });
 
     it('send button should be reachable via keyboard Tab', async () => {
-      userEvent.setup();
+      const user = userEvent.setup();
       render(<MessageInput />);
 
+      const textarea = screen.getByTestId('message-input');
       const sendButton = screen.getByTestId('send-button');
-      // The send button exists and is visible; focus it directly
-      sendButton.focus();
-      expect(sendButton).toBeInTheDocument();
+
+      // Focus the textarea first
+      await user.click(textarea);
+      expect(textarea).toHaveFocus();
+
+      // Type something to enable the send button
+      await user.type(textarea, 'Hello');
+
+      // Tab to the send button
+      await user.tab();
+      expect(sendButton).toHaveFocus();
     });
   });
 

@@ -59,8 +59,9 @@ test.describe('Visual — Landing Page (Mobile)', () => {
     const hamburger = page.getByRole('button', { name: 'Open menu' });
     await hamburger.click();
 
-    // Wait for menu animation
-    await page.waitForTimeout(300);
+    // Wait for mobile menu to be visible (replaces fragile waitForTimeout)
+    const closeButton = page.getByRole('button', { name: 'Close menu' });
+    await expect(closeButton).toBeVisible();
 
     const header = page.locator('header').first();
     await expect(header).toHaveScreenshot('landing-mobile-menu-open.png');

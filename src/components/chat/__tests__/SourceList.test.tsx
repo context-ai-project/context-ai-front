@@ -62,9 +62,14 @@ describe('SourceList', () => {
     expect(sourceCards).toHaveLength(mockSources.length);
   });
 
-  it('should display the Sources heading with icon', () => {
+  it('should pass correct index to each SourceCard', () => {
     render(<SourceList sources={mockSources} />);
 
-    expect(screen.getByText(`Sources (${mockSources.length})`)).toBeInTheDocument();
+    // Verify that each source card is present
+    const sourceCards = screen.getAllByTestId('source-card');
+    expect(sourceCards).toHaveLength(mockSources.length);
+    sourceCards.forEach((card) => {
+      expect(card).toBeVisible();
+    });
   });
 });

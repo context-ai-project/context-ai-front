@@ -1,10 +1,10 @@
 import { apiClient, APIError } from '../client';
 
 /**
- * Mock global fetch
+ * Mock global fetch using vi.stubGlobal for proper cleanup
  */
 const mockFetch = vi.fn();
-global.fetch = mockFetch;
+vi.stubGlobal('fetch', mockFetch);
 
 /** Reusable test token */
 const TEST_TOKEN = 'test-token';

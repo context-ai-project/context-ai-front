@@ -103,9 +103,10 @@ describe('MarkdownRenderer', () => {
   });
 
   it('should render blockquotes', () => {
-    render(<MarkdownRenderer content="> This is a quote" />);
+    const { container } = render(<MarkdownRenderer content="> This is a quote" />);
 
-    const blockquote = screen.getByRole('blockquote');
+    const blockquote = container.querySelector('blockquote');
+    expect(blockquote).toBeInTheDocument();
     expect(blockquote).toHaveTextContent('This is a quote');
   });
 
@@ -155,13 +156,13 @@ This is a paragraph with **bold** and *italic* text.
 
 Visit [link](https://example.com)`;
 
-    render(<MarkdownRenderer content={complexContent} />);
+    const { container } = render(<MarkdownRenderer content={complexContent} />);
 
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Title');
     expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('Section');
     expect(screen.getByText('bold')).toBeInTheDocument();
     expect(screen.getByText('italic')).toBeInTheDocument();
-    expect(screen.getByRole('blockquote')).toBeInTheDocument();
+    expect(container.querySelector('blockquote')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'link' })).toBeInTheDocument();
   });
 });

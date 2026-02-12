@@ -92,10 +92,16 @@ export const mockConversation: MessageDto[] = [
   },
 ];
 
+/** Individual mock error entry */
+interface MockErrorEntry {
+  type: ErrorType;
+  message: string;
+}
+
 /**
  * Mock error types for testing ErrorState
  */
-export const mockErrors = {
+export const mockErrors: Record<string, MockErrorEntry> = {
   network: {
     type: ErrorType.NETWORK,
     message: 'Unable to connect to the server.',

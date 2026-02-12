@@ -57,7 +57,6 @@ const eslintConfig = defineConfig([
     'playwright-report/**',
     'test-results/**',
     '*.config.{js,mjs,ts}',
-    'vitest.config.ts',
   ]),
 ]);
 

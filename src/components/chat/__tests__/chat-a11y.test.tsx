@@ -23,7 +23,7 @@ vi.mock('@/stores/chat.store', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@/stores/chat.store')>();
   return {
     ...actual,
-    useChatIsLoading: () => mockIsLoading(),
+    useIsLoading: () => mockIsLoading(),
   };
 });
 

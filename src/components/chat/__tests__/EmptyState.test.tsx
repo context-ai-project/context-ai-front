@@ -53,10 +53,9 @@ describe('EmptyState', () => {
 
     // Find and click a suggested question button
     const buttons = screen.getAllByRole('button');
-    if (buttons.length > 0) {
-      await user.click(buttons[0]);
-      expect(handleClick).toHaveBeenCalledTimes(1);
-    }
+    expect(buttons.length).toBeGreaterThan(0);
+    await user.click(buttons[0]);
+    expect(handleClick).toHaveBeenCalledTimes(1);
   });
 
   it('should render feature descriptions', () => {

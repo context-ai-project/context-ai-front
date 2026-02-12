@@ -2,7 +2,7 @@
 # Frontend CI — Lint, Type-check, Unit Tests & Coverage
 # ============================================================================
 # Triggers on push/PR to main, develop, and feature branches.
-# Blocks merge when lint, type-check, or tests fail, or coverage < 80%.
+# Blocks merge when lint, type-check, or tests fail.
 #
 # Jobs:
 #   1. lint        — ESLint

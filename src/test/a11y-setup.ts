@@ -16,8 +16,10 @@ export { axe, configureAxe } from 'vitest-axe';
 import type { AxeMatchers } from 'vitest-axe/matchers';
 
 declare module 'vitest' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-  interface Assertion extends AxeMatchers {}
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-  interface AsymmetricMatchersContaining extends AxeMatchers {}
+  interface Assertion extends AxeMatchers {
+    toHaveNoViolations(): void;
+  }
+  interface AsymmetricMatchersContaining extends AxeMatchers {
+    toHaveNoViolations(): void;
+  }
 }

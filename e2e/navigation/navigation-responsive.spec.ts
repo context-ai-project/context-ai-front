@@ -108,14 +108,13 @@ test.describe('Responsive — Protected Pages Mobile', () => {
     await page.goto(`/${LOCALE}/chat`);
     await page.waitForLoadState('networkidle');
 
-    // Chat should load — empty state or message input visible
+    // Chat should load — either the empty state or the message input should be visible
     const messageInput = page.getByTestId('message-input');
     const emptyState = page.getByTestId('empty-state');
 
-    const inputVisible = await messageInput.isVisible().catch(() => false);
-    const emptyVisible = await emptyState.isVisible().catch(() => false);
-
-    expect(inputVisible || emptyVisible).toBe(true);
+    await expect(
+      messageInput.or(emptyState).first(),
+    ).toBeVisible();
   });
 
   test('should render dashboard on mobile viewport', async ({ page }) => {
