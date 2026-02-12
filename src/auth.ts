@@ -1,5 +1,11 @@
 import NextAuth from 'next-auth';
 import Auth0Provider from 'next-auth/providers/auth0';
+import { z } from 'zod';
+
+/** Schema for validating the /users/sync API response */
+const userSyncResponseSchema = z.object({
+  id: z.string().uuid(),
+});
 
 /**
  * NextAuth.js v5 configuration with Auth0 provider
@@ -49,10 +55,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               email: profile.email,
             });
 
+            const internalApiKey = process.env.INTERNAL_API_KEY;
+            if (!internalApiKey) {
+              console.error('[NextAuth] INTERNAL_API_KEY is not configured — cannot sync user');
+              return token;
+            }
+
             const response = await fetch(syncUrl, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
+                'X-Internal-API-Key': internalApiKey,
               },
               body: JSON.stringify({
                 auth0UserId: profile.sub,
@@ -62,9 +75,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             });
 
             if (response.ok) {
-              const userData = await response.json();
-              token.userId = userData.id; // Store internal UUID
-              console.warn('[NextAuth] User synced successfully:', { userId: userData.id });
+              const rawData: unknown = await response.json();
+              const parsed = userSyncResponseSchema.safeParse(rawData);
+
+              if (parsed.success) {
+                token.userId = parsed.data.id;
+                console.warn('[NextAuth] User synced successfully:', { userId: parsed.data.id });
+              } else {
+                console.error('[NextAuth] Invalid /users/sync response:', parsed.error.format());
+              }
             } else {
               const errorText = await response.text();
               console.error('[NextAuth] Failed to sync user:', {

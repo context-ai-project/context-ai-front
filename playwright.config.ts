@@ -1,14 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
 /**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// import dotenv from 'dotenv';
-// import path from 'path';
-// dotenv.config({ path: path.resolve(__dirname, '.env') });
-
-/**
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
@@ -31,6 +23,21 @@ export default defineConfig({
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
   },
+
+  /* Visual regression snapshot configuration */
+  expect: {
+    toHaveScreenshot: {
+      /* Allowed pixel-level difference ratio (0.2 = 20% tolerance) */
+      maxDiffPixelRatio: 0.05,
+      /* Animation must settle before capturing */
+      animations: 'disabled',
+      /* Consistent rendering across runs */
+      caret: 'hide',
+    },
+  },
+
+  /* Snapshot path template: group by project name for cross-browser baselines */
+  snapshotPathTemplate: '{testDir}/__snapshots__/{projectName}/{testFilePath}/{arg}{ext}',
 
   /* Web Server to run before starting tests */
   webServer: {

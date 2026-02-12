@@ -95,18 +95,21 @@ Tienes **20 días** de vacaciones anuales.`;
  * Mock ChatResponseDto for the vacation policy query
  * This matches the exact format returned by the backend API
  */
+/** Fixed timestamp to prevent visual-regression snapshot churn */
+const FIXED_TIMESTAMP = '2026-01-15T12:00:00.000Z';
+
 export const mockChatResponses: Record<string, MockChatResponse> = {
   vacationPolicy: {
     response: mockAssistantContent,
     conversationId: 'conv-e2e-001',
     sources: mockSources,
-    timestamp: new Date().toISOString(),
+    timestamp: FIXED_TIMESTAMP,
   },
   vacationPolicyNoSources: {
     response: mockAssistantContent,
     conversationId: 'conv-e2e-001',
     sources: [],
-    timestamp: new Date().toISOString(),
+    timestamp: FIXED_TIMESTAMP,
   },
 };
 
@@ -161,8 +164,8 @@ export const testConversation: TestConversation = {
   id: '660e8400-e29b-41d4-a716-446655440101',
   userId: 'auth0|test123',
   sectorId: '440e8400-e29b-41d4-a716-446655440000',
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
+  createdAt: FIXED_TIMESTAMP,
+  updatedAt: FIXED_TIMESTAMP,
 };
 
 /**
