@@ -3,6 +3,7 @@
 import Image, { type ImageProps } from 'next/image';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { PLACEHOLDER_BLUR } from '@/lib/utils/image-config';
 
 interface OptimizedImageProps extends Omit<ImageProps, 'onLoadingComplete'> {
   fallback?: string;
@@ -68,11 +69,7 @@ export function OptimizedImage({
         }}
         priority={priority}
         placeholder={priority ? undefined : 'blur'}
-        blurDataURL={
-          priority
-            ? undefined
-            : 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI2YzZjRmNiIvPgo8L3N2Zz4='
-        }
+        blurDataURL={priority ? undefined : PLACEHOLDER_BLUR}
       />
     </div>
   );

@@ -17,7 +17,6 @@ export function useCurrentUser() {
     // NextAuth data
     user,
     isLoading: status === 'loading',
-    error: null,
     isAuthenticated: status === 'authenticated',
 
     // User store data

@@ -7,6 +7,32 @@ export enum MessageRole {
 }
 
 /**
+ * Typed metadata for source fragments
+ * Provides type-safe access to common metadata fields
+ */
+export interface SourceMetadata {
+  title?: string;
+  page?: number;
+  url?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Extract typed metadata from a raw metadata record
+ * Uses runtime type checks instead of unsafe type assertions
+ */
+export function extractSourceMetadata(metadata?: Record<string, unknown>): SourceMetadata {
+  if (!metadata) return {};
+
+  return {
+    ...metadata,
+    title: typeof metadata.title === 'string' ? metadata.title : undefined,
+    page: typeof metadata.page === 'number' ? metadata.page : undefined,
+    url: typeof metadata.url === 'string' ? metadata.url : undefined,
+  };
+}
+
+/**
  * Source fragment interface
  */
 export interface SourceFragment {
@@ -29,7 +55,9 @@ export interface MessageDto {
   role: MessageRole;
   content: string;
   sourcesUsed?: SourceFragment[];
+  /** @planned Phase 6 - Sentiment analysis integration */
   sentimentScore?: number;
+  /** @planned Phase 7 - Extended message metadata */
   metadata?: Record<string, unknown>;
   createdAt: string;
 }
@@ -53,4 +81,36 @@ export interface ChatResponseDto {
   conversationId: string;
   sources: SourceFragment[];
   timestamp: string | Date; // ISO 8601 string or Date object
+}
+
+/**
+ * Factory function to create a user message DTO
+ * Ensures consistent structure and unique IDs
+ */
+export function createUserMessage(content: string, conversationId: string | null): MessageDto {
+  return {
+    id: `user-${crypto.randomUUID()}`,
+    conversationId: conversationId || 'new',
+    role: MessageRole.USER,
+    content,
+    createdAt: new Date().toISOString(),
+  };
+}
+
+/**
+ * Factory function to create an assistant message DTO from API response
+ * Handles timestamp normalization
+ */
+export function createAssistantMessage(response: ChatResponseDto): MessageDto {
+  return {
+    id: `assistant-${crypto.randomUUID()}`,
+    conversationId: response.conversationId,
+    role: MessageRole.ASSISTANT,
+    content: response.response,
+    createdAt:
+      typeof response.timestamp === 'string'
+        ? response.timestamp
+        : new Date(response.timestamp).toISOString(),
+    sourcesUsed: response.sources,
+  };
 }

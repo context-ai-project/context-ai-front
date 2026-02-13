@@ -8,52 +8,103 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Frontend de la aplicación Context.ai - Sistema RAG (Retrieval Augmented Generation) con gestión de conocimiento y chat inteligente.
+## Descripción General
+
+Context.ai es una plataforma de gestión de conocimiento empresarial potenciada por Inteligencia Artificial. Utiliza un sistema RAG (Retrieval-Augmented Generation) que permite a las organizaciones centralizar su documentación interna y consultarla mediante un asistente de chat inteligente.
+
+Este repositorio contiene el **frontend** de la aplicación, desarrollado como Trabajo Final de Máster (TFM) del programa de Maestría en Inteligencia Artificial. La interfaz permite a los usuarios:
+
+- Conversar con un asistente IA que responde en base a la documentación de la empresa.
+- Subir y gestionar fuentes de conocimiento (PDF, Markdown).
+- Visualizar métricas de uso en un dashboard.
+- Acceder a la plataforma de forma segura con autenticación OAuth2.
+
+El frontend se comunica con el backend (`context-ai-api`) mediante API REST, utilizando tokens JWT de Auth0 para autenticación y autorización.
 
 ## 📋 Tabla de Contenidos
 
+- [Descripción General](#descripción-general)
+- [Funcionalidades Principales](#-funcionalidades-principales)
 - [Stack Tecnológico](#-stack-tecnológico)
 - [Requisitos Previos](#-requisitos-previos)
-- [Instalación](#-instalación)
+- [Instalación y Ejecución](#-instalación-y-ejecución)
 - [Configuración](#-configuración)
-- [Desarrollo](#-desarrollo)
 - [Testing](#-testing)
 - [Estructura del Proyecto](#-estructura-del-proyecto)
 - [Scripts Disponibles](#-scripts-disponibles)
 - [Integración con Backend](#-integración-con-backend)
 
+## ✨ Funcionalidades Principales
+
+| Funcionalidad | Descripción |
+|---|---|
+| **Chat IA con RAG** | Interfaz conversacional que consulta documentación interna mediante Retrieval-Augmented Generation. Muestra respuestas con citas a las fuentes originales. |
+| **Gestión de Conocimiento** | Carga de documentos (PDF, Markdown) que se procesan, fragmentan y almacenan como vectores para búsqueda semántica. |
+| **Dashboard de Métricas** | Panel con estadísticas de uso: consultas realizadas, documentos indexados, usuarios activos y precisión del sistema. |
+| **Autenticación OAuth2** | Login seguro mediante Auth0 con NextAuth.js v5. Soporte para JWT, sincronización de usuarios con el backend y control de sesiones. |
+| **Internacionalización (i18n)** | Soporte multiidioma (español e inglés) mediante next-intl con rutas localizadas (`/es/chat`, `/en/chat`). |
+| **Landing Page** | Página de presentación del producto con secciones de características, funcionamiento, casos de uso y llamadas a la acción. |
+| **Renderizado Markdown** | Las respuestas del asistente se renderizan con formato Markdown completo (tablas, código, listas) mediante react-markdown. |
+| **Diseño Responsive** | Interfaz adaptativa para escritorio y móvil con sidebar colapsable y navegación responsive. |
+| **Accesibilidad (a11y)** | Cumplimiento de estándares WCAG con validación mediante eslint-plugin-jsx-a11y y tests con vitest-axe. |
+| **Monitoreo de Errores** | Integración con Sentry para captura y seguimiento de errores en producción. |
+
 ## 🚀 Stack Tecnológico
 
 ### Framework y Lenguaje
-- **Next.js 16** - React framework con App Router
-- **TypeScript 5** - Tipado estático
-- **React 19** - Biblioteca UI
+
+- **Next.js 16** — React framework con App Router y Server Components
+- **TypeScript 5** — Tipado estático
+- **React 19** — Biblioteca UI
 
 ### Estilos y UI
-- **Tailwind CSS 4** - Framework de utilidades CSS
-- **shadcn/ui** - Componentes UI copiables
-- **Lucide React** - Iconos
+
+- **Tailwind CSS 4** — Framework de utilidades CSS (configuración vía PostCSS)
+- **shadcn/ui** — Componentes UI basados en Radix UI
+- **Lucide React** — Sistema de iconos
 
 ### Estado y Data Fetching
-- **Zustand** - State management ligero
-- **TanStack Query (React Query)** - Data fetching y caching
-- **Fetch API** - Cliente HTTP nativo
+
+- **Zustand** — State management ligero
+- **TanStack Query (React Query)** — Data fetching, caching y sincronización
+- **Fetch API** — Cliente HTTP nativo
 
 ### Autenticación
-- **Auth0 Next.js SDK** - Autenticación OAuth2/OIDC
 
-### Calidad de Código
-- **ESLint** - Linter con configuración estricta
-- **Prettier** - Formateador de código
-- **SonarJS** - Análisis de calidad
-- **jsx-a11y** - Reglas de accesibilidad
-- **Husky** - Git hooks
+- **NextAuth.js v5** (Auth.js) — Autenticación con proveedor Auth0 (OAuth2/OIDC)
+
+### Internacionalización
+
+- **next-intl** — Routing localizado y traducciones (ES/EN)
+
+### Contenido
+
+- **react-markdown** + **remark-gfm** — Renderizado de Markdown con GitHub Flavored Markdown
+- **react-syntax-highlighter** — Resaltado de sintaxis en bloques de código
 
 ### Testing
-- **Playwright** - Testing E2E
+
+- **Vitest** — Tests unitarios y de componentes (jsdom)
+- **Testing Library** (React) — Testing de componentes orientado al usuario
+- **vitest-axe** — Tests de accesibilidad automatizados
+- **Playwright** — Tests end-to-end y regresión visual
+
+### Calidad de Código
+
+- **ESLint** — Linter con configuración estricta
+- **Prettier** — Formateador de código
+- **eslint-plugin-sonarjs** — Análisis de calidad
+- **eslint-plugin-jsx-a11y** — Reglas de accesibilidad
+- **Husky** + **lint-staged** — Git hooks automatizados
 
 ### Observabilidad
-- **Sentry** - Monitoreo de errores
+
+- **Sentry** (`@sentry/nextjs`) — Monitoreo de errores en producción
+
+### Utilidades
+
+- **Zod** — Validación de datos y schemas
+- **date-fns** — Manipulación de fechas
 
 ## 📦 Requisitos Previos
 
@@ -61,18 +112,43 @@ Frontend de la aplicación Context.ai - Sistema RAG (Retrieval Augmented Generat
 - **pnpm** >= 10.x (recomendado)
 - **Git**
 
-## 🛠️ Instalación
+## 🛠️ Instalación y Ejecución
 
 ```bash
-# Clonar el repositorio
+# 1. Clonar el repositorio
 git clone https://github.com/gromeroalfonso/context-ai-front.git
 cd context-ai-front
 
-# Instalar dependencias
+# 2. Instalar dependencias
 pnpm install
 
-# Copiar variables de entorno
+# 3. Copiar variables de entorno
 cp env.local.example .env.local
+# Editar .env.local con tus credenciales (ver sección Configuración)
+
+# 4. Modo desarrollo (http://localhost:3000)
+pnpm dev
+
+# 5. Build de producción
+pnpm build
+
+# 6. Servidor de producción
+pnpm start
+```
+
+### Comandos de calidad de código
+
+```bash
+# Lint
+pnpm lint
+pnpm lint:fix
+
+# Formato
+pnpm format
+pnpm format:check
+
+# Type checking
+pnpm type-check
 ```
 
 ## ⚙️ Configuración
@@ -102,61 +178,51 @@ SENTRY_AUTH_TOKEN=''
 
 1. Crear aplicación en [Auth0 Dashboard](https://manage.auth0.com/)
 2. Configurar Allowed Callback URLs:
-   - `http://localhost:3000/api/auth/callback`
+   - `http://localhost:3000/api/auth/callback/auth0`
 3. Configurar Allowed Logout URLs:
    - `http://localhost:3000`
 4. Copiar credenciales a `.env.local`
 
-### 3. Integración con Paquete Compartido
-
-Durante el desarrollo del MVP, usaremos `pnpm link`:
-
-```bash
-# En el directorio context-ai-shared
-cd ../context-ai-shared
-pnpm link --global
-
-# En el directorio context-ai-front
-cd ../context-ai-front
-pnpm link --global @context-ai/shared
-```
-
-Post-MVP, se publicará en GitHub Packages.
-
-## 🏗️ Desarrollo
-
-```bash
-# Modo desarrollo (http://localhost:3000)
-pnpm dev
-
-# Build de producción
-pnpm build
-
-# Servidor de producción
-pnpm start
-
-# Lint y format
-pnpm lint
-pnpm lint:fix
-pnpm format
-
-# Type checking
-pnpm type-check
-```
-
 ## 🧪 Testing
 
-### Playwright (E2E)
+El proyecto utiliza dos frameworks de testing complementarios:
+
+### Tests Unitarios y de Componentes (Vitest)
 
 ```bash
-# Ejecutar tests
+# Ejecutar tests unitarios
 pnpm test
 
-# UI Mode (recomendado para desarrollo)
+# Modo watch (re-ejecuta al guardar)
+pnpm test:watch
+
+# Con cobertura de código
+pnpm test:coverage
+
+# UI interactiva de Vitest
 pnpm test:ui
+```
+
+### Tests End-to-End (Playwright)
+
+```bash
+# Ejecutar tests E2E
+pnpm test:e2e
+
+# UI Mode (recomendado para desarrollo)
+pnpm test:e2e:ui
 
 # Debug mode
-pnpm test:debug
+pnpm test:e2e:debug
+
+# Tests de regresión visual
+pnpm test:e2e:visual
+```
+
+### Ejecutar todos los tests
+
+```bash
+pnpm test:all
 ```
 
 ## 📁 Estructura del Proyecto
@@ -164,100 +230,148 @@ pnpm test:debug
 ```
 context-ai-front/
 ├── src/
-│   ├── app/                      # Next.js App Router
-│   │   ├── (auth)/              # Route group: Autenticación
-│   │   │   ├── login/
-│   │   │   └── callback/
-│   │   ├── (protected)/         # Route group: Rutas protegidas
-│   │   │   ├── chat/
-│   │   │   ├── knowledge/
-│   │   │   └── dashboard/
-│   │   ├── api/                 # API Routes
-│   │   │   └── auth/
-│   │   ├── layout.tsx
-│   │   └── page.tsx
+│   ├── app/                          # Next.js App Router
+│   │   ├── [locale]/                 # Rutas internacionalizadas (es/en)
+│   │   │   ├── (auth)/              # Route group: Autenticación
+│   │   │   │   ├── callback/
+│   │   │   │   └── login/
+│   │   │   ├── (protected)/         # Route group: Rutas protegidas
+│   │   │   │   ├── chat/            # Chat IA con RAG
+│   │   │   │   ├── dashboard/       # Dashboard de métricas
+│   │   │   │   ├── knowledge/       # Gestión de conocimiento
+│   │   │   │   └── layout.tsx       # Layout con sidebar
+│   │   │   ├── auth/                # Páginas NextAuth (signin, error)
+│   │   │   ├── layout.tsx           # Layout con providers i18n
+│   │   │   └── page.tsx             # Landing page
+│   │   ├── api/                     # API Routes
+│   │   │   └── auth/                # NextAuth endpoints
+│   │   ├── layout.tsx               # Root layout
+│   │   └── globals.css              # Estilos globales (Tailwind)
 │   ├── components/
-│   │   ├── chat/                # Componentes de chat
-│   │   ├── knowledge/           # Gestión de conocimiento
-│   │   ├── shared/              # Componentes compartidos
-│   │   └── ui/                  # shadcn/ui components
+│   │   ├── chat/                    # Chat: mensajes, input, fuentes, markdown
+│   │   ├── dashboard/               # Sidebar y navegación
+│   │   ├── knowledge/               # Gestión de documentos
+│   │   ├── landing/                 # Landing: hero, features, CTA
+│   │   ├── shared/                  # Navbar, ErrorBoundary, LanguageSelector
+│   │   ├── user/                    # UserProfile, SectorSelector, Logout
+│   │   ├── providers/               # React context providers
+│   │   └── ui/                      # shadcn/ui components (Radix-based)
+│   ├── hooks/                       # Custom hooks
+│   │   ├── use-mobile.ts            # Detección responsive
+│   │   ├── use-toast.ts             # Sistema de notificaciones
+│   │   └── useCurrentUser.ts        # Hook de usuario autenticado
 │   ├── lib/
-│   │   ├── api/                 # API clients
-│   │   ├── providers/           # React providers
-│   │   ├── utils/               # Utilidades
-│   │   └── auth0.config.ts      # Auth0 config
-│   └── stores/                  # Zustand stores
-│       ├── user.store.ts
-│       └── chat.store.ts
-├── tests/                        # Playwright tests
-├── public/                       # Archivos estáticos
-├── playwright.config.ts          # Configuración Playwright
-├── eslint.config.mjs             # Configuración ESLint
-├── .prettierrc                   # Configuración Prettier
-├── tailwind.config.ts            # Configuración Tailwind
-└── tsconfig.json                 # Configuración TypeScript
+│   │   ├── api/                     # API clients (chat, user, error handler)
+│   │   ├── providers/               # TanStack Query provider
+│   │   ├── utils/                   # Utilidades (image config, cn)
+│   │   ├── auth0.config.ts          # Configuración Auth0
+│   │   └── env-config.ts            # Validación de variables de entorno
+│   ├── stores/                      # Zustand stores
+│   │   ├── chat.store.tsx           # Estado del chat
+│   │   └── user.store.tsx           # Estado del usuario
+│   ├── constants/                   # Constantes de la aplicación
+│   ├── types/                       # Tipos TypeScript compartidos
+│   ├── test/                        # Setup y utilidades de testing
+│   ├── auth.ts                      # Configuración NextAuth.js v5
+│   ├── i18n.ts                      # Configuración next-intl
+│   └── instrumentation.ts           # Sentry instrumentation
+├── e2e/                             # Tests Playwright E2E
+│   ├── auth/                        # Tests de autenticación
+│   ├── chat/                        # Tests de flujo de chat
+│   ├── dashboard/                   # Tests de dashboard
+│   ├── landing/                     # Tests de landing page
+│   ├── navigation/                  # Tests de navegación responsive
+│   └── visual-regression/           # Tests de regresión visual
+├── messages/                        # Traducciones i18n
+│   ├── en.json                      # Inglés
+│   └── es.json                      # Español
+├── public/                          # Archivos estáticos
+├── middleware.ts                     # Middleware i18n + headers
+├── playwright.config.ts             # Configuración Playwright
+├── vitest.config.ts                 # Configuración Vitest
+├── eslint.config.mjs                # Configuración ESLint
+├── postcss.config.mjs               # PostCSS (Tailwind v4)
+├── .prettierrc                      # Configuración Prettier
+├── Dockerfile                       # Imagen Docker multi-stage
+└── tsconfig.json                    # Configuración TypeScript
 ```
 
 ## 📜 Scripts Disponibles
 
 | Script | Descripción |
 |--------|-------------|
-| `pnpm dev` | Inicia servidor de desarrollo |
-| `pnpm build` | Build de producción |
+| `pnpm dev` | Inicia servidor de desarrollo en `http://localhost:3000` |
+| `pnpm build` | Build de producción optimizado |
 | `pnpm start` | Inicia servidor de producción |
-| `pnpm lint` | Ejecuta ESLint |
-| `pnpm lint:fix` | Ejecuta ESLint y corrige errores |
+| `pnpm lint` | Ejecuta ESLint sobre `src/` |
+| `pnpm lint:fix` | Ejecuta ESLint y corrige errores automáticamente |
 | `pnpm format` | Formatea código con Prettier |
-| `pnpm format:check` | Verifica formato |
-| `pnpm type-check` | Verifica tipos TypeScript |
-| `pnpm test` | Ejecuta tests de Playwright |
-| `pnpm test:ui` | Playwright UI mode |
-| `pnpm test:debug` | Playwright debug mode |
+| `pnpm format:check` | Verifica formato sin modificar |
+| `pnpm type-check` | Verifica tipos TypeScript (`tsc --noEmit`) |
+| `pnpm test` | Ejecuta tests unitarios con Vitest |
+| `pnpm test:watch` | Vitest en modo watch |
+| `pnpm test:coverage` | Tests unitarios con cobertura de código |
+| `pnpm test:ui` | Vitest UI interactiva |
+| `pnpm test:e2e` | Ejecuta tests E2E con Playwright |
+| `pnpm test:e2e:ui` | Playwright UI mode |
+| `pnpm test:e2e:debug` | Playwright debug mode |
+| `pnpm test:e2e:visual` | Tests de regresión visual |
+| `pnpm test:all` | Ejecuta Vitest + Playwright |
 
 ## 🔄 Integración con Backend
 
 El frontend se comunica con el backend (`context-ai-api`) a través de:
 
-1. **API REST** - Endpoints HTTP en `http://localhost:3001`
-2. **Auth0 JWT** - Tokens de autenticación compartidos
-3. **DTOs Compartidos** - Paquete `@context-ai/shared`
+1. **API REST** — Endpoints HTTP en `http://localhost:3001/api/v1`
+2. **Auth0 JWT** — Tokens de autenticación gestionados por NextAuth.js
+3. **Sincronización de usuarios** — Al hacer login, se sincroniza el usuario de Auth0 con la base de datos interna del backend
 
-### Ejemplo de uso:
+### Flujo de autenticación
+
+```
+Usuario → Auth0 Login → NextAuth.js → JWT Token
+                                      ↓
+                              POST /users/sync (backend)
+                                      ↓
+                              userId interno ← respuesta
+                                      ↓
+                              API calls con Bearer token
+```
+
+### Ejemplo de uso
 
 ```typescript
 import { apiClient } from '@/lib/api/client';
-import { ChatQueryDto, ChatResponseDto } from '@context-ai/shared';
 
-const response = await apiClient.post<ChatResponseDto>(
-  '/api/chat',
-  queryDto,
-  { token: accessToken }
-);
+// El token se obtiene automáticamente de la sesión NextAuth
+const response = await apiClient.post('/interaction/query', {
+  sectorId: 'sector-uuid',
+  query: '¿Cómo solicito vacaciones?',
+});
 ```
 
 ## 🔒 Seguridad
 
-- ✅ Auth0 con tokens HttpOnly
-- ✅ CSRF protection
-- ✅ Content Security Policy (CSP)
-- ✅ Rate limiting (API)
+- ✅ Autenticación OAuth2 vía Auth0 + NextAuth.js v5
+- ✅ Tokens JWT gestionados en sesión del servidor
 - ✅ Input validation con Zod
+- ✅ Headers de cache-control en middleware
+- ✅ Rate limiting (API backend)
 - ✅ Sanitización de inputs
 
 ## 🐛 Git Hooks
 
-### Pre-commit
-- Ejecuta `lint-staged`
-- Formatea código
+### Pre-commit (automático)
+
+- Ejecuta `lint-staged` sobre archivos modificados
+- Formatea código con Prettier
 - Corrige errores de ESLint
 
-### Pre-push
-- Verifica tipos TypeScript
-- Ejecuta linter
+### Pre-push (automático)
 
-## 📝 Licencia
-
-MIT
+- Verifica tipos TypeScript (`tsc --noEmit`)
+- Ejecuta linter completo
+- Auditoría de seguridad de dependencias
 
 ---
 
@@ -265,4 +379,4 @@ MIT
 
 Este proyecto es parte del TFM de la Maestría en IA.
 
-Para más información, consulta la documentación en `/Context.ia/documentation/`.
+Para más información, consulta la documentación en `/Context.ai/documentation/`.

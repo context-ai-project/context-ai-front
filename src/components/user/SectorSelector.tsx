@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useSetCurrentSectorId, useSetSectors } from '@/stores/user.store';
+import { SECTORS } from '@/constants/sectors';
 import { Building2, Check, ChevronDown } from 'lucide-react';
 import {
   DropdownMenu,
@@ -20,32 +21,15 @@ import { Badge } from '@/components/ui/badge';
  * Allows user to select their current active sector
  * Issue 5.13: User Profile and Session Management
  */
-
-// Temporary hardcoded sectors (will come from API in future)
-const AVAILABLE_SECTORS = [
-  {
-    id: '440e8400-e29b-41d4-a716-446655440000',
-    name: 'Human Resources',
-  },
-  {
-    id: '440e8400-e29b-41d4-a716-446655440001',
-    name: 'Engineering',
-  },
-  {
-    id: '440e8400-e29b-41d4-a716-446655440002',
-    name: 'Sales',
-  },
-];
-
 export function SectorSelector() {
   const { currentSectorId, sectors } = useCurrentUser();
   const setCurrentSectorId = useSetCurrentSectorId();
   const setSectors = useSetSectors();
 
-  // Initialize sectors list on mount
+  // Initialize sectors list on mount (from centralized constant)
   useEffect(() => {
     if (sectors.length === 0) {
-      setSectors(AVAILABLE_SECTORS);
+      setSectors(SECTORS.map((s) => ({ id: s.id, name: s.name })));
     }
   }, [sectors.length, setSectors]);
 

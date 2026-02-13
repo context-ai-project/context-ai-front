@@ -8,12 +8,18 @@ import { getPublicEnv } from '@/lib/env-config';
 
 export { APIError };
 
+/** Default timeout for API requests (30 seconds) */
+const API_TIMEOUT_MS = 30_000;
+
+/** Timeout for fetching access token (5 seconds) */
+const TOKEN_TIMEOUT_MS = 5_000;
+
 /**
  * API client configuration
  */
 const API_CONFIG = {
   baseURL: getPublicEnv('NEXT_PUBLIC_API_URL'),
-  timeout: 30000, // 30 seconds
+  timeout: API_TIMEOUT_MS,
 };
 
 /**
@@ -30,7 +36,10 @@ interface RequestOptions extends RequestInit {
  * @param signal - Optional AbortSignal for cancellation
  * @returns Access token or null if failed
  */
-async function getAccessToken(timeout = 5000, signal?: AbortSignal): Promise<string | null> {
+async function getAccessToken(
+  timeout = TOKEN_TIMEOUT_MS,
+  signal?: AbortSignal,
+): Promise<string | null> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeout);
 
@@ -76,7 +85,7 @@ async function fetchWithInterceptors(
 
   try {
     // Add auth token with shared timeout and signal
-    const token = await getAccessToken(5000, controller.signal);
+    const token = await getAccessToken(TOKEN_TIMEOUT_MS, controller.signal);
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
     };

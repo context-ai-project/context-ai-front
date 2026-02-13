@@ -5,14 +5,13 @@ import { getMessages } from 'next-intl/server';
 import { QueryProvider } from '@/lib/providers/query-provider';
 import { Toaster } from '@/components/ui/toaster';
 import { notFound } from 'next/navigation';
+import { locales } from '@/i18n';
 
 export const metadata: Metadata = {
   title: 'Context.ai - RAG Knowledge Management',
   description: 'Sistema de gestión de conocimiento con búsqueda semántica y chat inteligente',
   keywords: ['RAG', 'AI', 'Knowledge Management', 'Chat', 'Semantic Search'],
 };
-
-const locales = ['en', 'es'];
 
 /**
  * Locale Layout
@@ -35,7 +34,7 @@ export default async function LocaleLayout({
   const { locale } = await params;
 
   // Validate locale
-  if (!locales.includes(locale)) {
+  if (!(locales as readonly string[]).includes(locale)) {
     notFound();
   }
 

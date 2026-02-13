@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Brain } from 'lucide-react';
+import { routes } from '@/lib/routes';
 
 /**
  * Sign in page using NextAuth.js v5
@@ -15,7 +16,7 @@ export default function SignInPage() {
   const locale = useLocale();
   const t = useTranslations('auth');
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || `/${locale}/dashboard`;
+  const callbackUrl = searchParams.get('callbackUrl') || routes.dashboard(locale);
 
   const handleSignIn = () => {
     signIn('auth0', { callbackUrl });

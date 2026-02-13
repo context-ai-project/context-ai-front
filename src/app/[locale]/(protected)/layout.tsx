@@ -6,6 +6,7 @@ import { ChatStoreProvider } from '@/stores/chat.store';
 import { UserStoreProvider } from '@/stores/user.store';
 import { LanguageSelector } from '@/components/shared/LanguageSelector';
 import { isE2ETestMode } from '@/lib/test-auth';
+import { routes } from '@/lib/routes';
 
 /**
  * Force dynamic rendering to ensure locale changes are reflected
@@ -33,7 +34,7 @@ export default async function ProtectedLayout({
     // Normal authentication flow
     const session = await auth();
     if (!session) {
-      redirect(`/${locale}/auth/signin`);
+      redirect(routes.signIn(locale));
     }
   }
   // E2E test mode: bypass authentication

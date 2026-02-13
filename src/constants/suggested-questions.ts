@@ -1,10 +1,14 @@
+import { SECTORS } from './sectors';
+
 /**
  * Suggested questions organized by sector.
  * These questions are displayed in the EmptyState to help users get started.
+ *
+ * Uses centralized sector IDs from constants/sectors.ts
  */
 export const SUGGESTED_QUESTIONS: Record<string, string[]> = {
   // Human Resources sector
-  '440e8400-e29b-41d4-a716-446655440000': [
+  [SECTORS[0].id]: [
     'What is the company vacation policy?',
     'How do I submit an expense report?',
     'What are the employee benefits?',
@@ -12,7 +16,7 @@ export const SUGGESTED_QUESTIONS: Record<string, string[]> = {
   ],
 
   // Engineering sector
-  '440e8400-e29b-41d4-a716-446655440001': [
+  [SECTORS[1].id]: [
     'What is our code review process?',
     'How do we handle CI/CD deployments?',
     'What are the coding standards?',
@@ -20,7 +24,7 @@ export const SUGGESTED_QUESTIONS: Record<string, string[]> = {
   ],
 
   // Sales sector
-  '440e8400-e29b-41d4-a716-446655440002': [
+  [SECTORS[2].id]: [
     'What is our pricing strategy?',
     'How do I qualify a lead?',
     'What are the sales targets for this quarter?',
