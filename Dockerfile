@@ -3,6 +3,11 @@
 # ============================================
 # Optimised for production using Next.js standalone output.
 # Final image ≈ 150-250 MB (Alpine + standalone server).
+#
+# NEXT_PUBLIC_* variables are baked at build time using a
+# placeholder string. The entrypoint script replaces them
+# with real runtime values so a single image can serve
+# multiple environments (dev / staging / production).
 # ============================================
 
 # --------------- Base ---------------
@@ -29,7 +34,8 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Build-time environment variables
-# These are baked into the client bundle; runtime secrets use NEXT_PUBLIC_* or server-only env
+# Server-side secrets use placeholders — they are NOT included in the
+# client bundle and will be overridden at runtime via Docker env vars.
 ARG AUTH_SECRET=build-placeholder
 ARG AUTH0_CLIENT_ID=build-placeholder
 ARG AUTH0_CLIENT_SECRET=build-placeholder
@@ -43,6 +49,10 @@ ENV AUTH0_CLIENT_SECRET=${AUTH0_CLIENT_SECRET}
 ENV AUTH0_ISSUER=${AUTH0_ISSUER}
 ENV AUTH0_AUDIENCE=${AUTH0_AUDIENCE}
 ENV NEXTAUTH_URL=${NEXTAUTH_URL}
+
+# NEXT_PUBLIC_* — Use a placeholder that the entrypoint replaces at runtime.
+# This allows the same image to point at different API URLs per environment.
+ENV NEXT_PUBLIC_API_URL=__NEXT_PUBLIC_API_URL_PLACEHOLDER__
 
 RUN pnpm build
 
@@ -70,6 +80,10 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
+# Copy entrypoint script (validates env vars + injects runtime config)
+COPY --chown=nextjs:nodejs scripts/docker-entrypoint.sh /app/docker-entrypoint.sh
+RUN chmod +x /app/docker-entrypoint.sh
+
 USER nextjs
 
 EXPOSE 3000
@@ -78,5 +92,5 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
   CMD node -e "require('http').get('http://127.0.0.1:3000/', r => process.exit(r.statusCode < 400 ? 0 : 1)).on('error', () => process.exit(1))"
 
-CMD ["node", "server.js"]
-
+# Use entrypoint for runtime env injection, then start the server
+ENTRYPOINT ["/app/docker-entrypoint.sh"]

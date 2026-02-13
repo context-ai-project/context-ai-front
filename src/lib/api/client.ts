@@ -4,13 +4,15 @@
  */
 
 import { APIError } from '@/lib/api/error-handler';
+import { getPublicEnv } from '@/lib/env-config';
+
 export { APIError };
 
 /**
  * API client configuration
  */
 const API_CONFIG = {
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1',
+  baseURL: getPublicEnv('NEXT_PUBLIC_API_URL'),
   timeout: 30000, // 30 seconds
 };
 
