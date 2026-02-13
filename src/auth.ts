@@ -38,17 +38,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         Object.assign(token, extractProfileData(profile));
 
         if (account) {
-          token.userId = (await syncUserWithBackend(profile)) ?? undefined;
+          const syncResult = await syncUserWithBackend(profile);
+          token.userId = syncResult?.id ?? undefined;
+          token.roles = syncResult?.roles ?? [];
         }
       }
 
       return token;
     },
     async session({ session, token }) {
-      // Send properties to the client, including user ID
+      // Send properties to the client, including user ID and roles
       session.accessToken = token.accessToken as string;
       session.user.image = token.picture as string;
       session.user.id = token.userId as string; // Internal UUID from backend
+      session.user.roles = (token.roles as string[]) ?? [];
 
       // If userId is not available, log warning
       if (!token.userId) {

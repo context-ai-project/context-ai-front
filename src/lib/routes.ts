@@ -8,6 +8,7 @@ export const routes = {
   dashboard: (locale: string) => `/${locale}/dashboard`,
   chat: (locale: string) => `/${locale}/chat`,
   knowledge: (locale: string) => `/${locale}/knowledge`,
+  documents: (locale: string) => `/${locale}/documents`,
   profile: (locale: string) => `/${locale}/profile`,
   settings: (locale: string) => `/${locale}/settings`,
 } as const;

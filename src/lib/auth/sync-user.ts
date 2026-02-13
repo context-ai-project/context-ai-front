@@ -3,7 +3,13 @@ import { z } from 'zod';
 /** Schema for validating the /users/sync API response */
 const userSyncResponseSchema = z.object({
   id: z.string().uuid(),
+  roles: z.array(z.string()).default([]),
 });
+
+export interface SyncResult {
+  id: string;
+  roles: string[];
+}
 
 interface UserSyncProfile {
   sub?: string | null;
@@ -17,7 +23,7 @@ interface UserSyncProfile {
  * @param profile - User profile from Auth0
  * @returns The internal user UUID from backend, or null if sync fails
  */
-export async function syncUserWithBackend(profile: UserSyncProfile): Promise<string | null> {
+export async function syncUserWithBackend(profile: UserSyncProfile): Promise<SyncResult | null> {
   if (!profile.sub || !profile.email || !profile.name) {
     return null;
   }
@@ -56,8 +62,11 @@ export async function syncUserWithBackend(profile: UserSyncProfile): Promise<str
       const parsed = userSyncResponseSchema.safeParse(rawData);
 
       if (parsed.success) {
-        console.warn('[NextAuth] User synced successfully:', { userId: parsed.data.id });
-        return parsed.data.id;
+        console.warn('[NextAuth] User synced successfully:', {
+          userId: parsed.data.id,
+          roles: parsed.data.roles,
+        });
+        return { id: parsed.data.id, roles: parsed.data.roles };
       }
 
       console.error('[NextAuth] Invalid /users/sync response:', parsed.error.format());

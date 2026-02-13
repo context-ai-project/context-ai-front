@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Brain, MessageSquare, LayoutDashboard, LogOut, ChevronUp } from 'lucide-react';
+import { Brain, MessageSquare, LayoutDashboard, FileText, LogOut, ChevronUp } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useLocale } from 'next-intl';
 import { useLogout } from '@/hooks/useLogout';
@@ -39,19 +39,6 @@ export function AppSidebar() {
   const locale = useLocale();
   const { logout } = useLogout();
 
-  const mainNav = [
-    {
-      title: 'Dashboard',
-      href: routes.dashboard(locale),
-      icon: LayoutDashboard,
-    },
-    {
-      title: 'AI Chat',
-      href: routes.chat(locale),
-      icon: MessageSquare,
-    },
-  ];
-
   /**
    * Get user role from session
    * Auth0 can send roles in custom claims, fallback to 'user' if not available
@@ -63,6 +50,26 @@ export function AppSidebar() {
     }
     return 'user';
   };
+
+  const userRole = getUserRole();
+
+  const mainNav = [
+    {
+      title: 'Dashboard',
+      href: routes.dashboard(locale),
+      icon: LayoutDashboard,
+    },
+    {
+      title: 'Documents',
+      href: routes.documents(locale),
+      icon: FileText,
+    },
+    {
+      title: 'AI Chat',
+      href: routes.chat(locale),
+      icon: MessageSquare,
+    },
+  ];
 
   return (
     <Sidebar>
@@ -123,7 +130,7 @@ export function AppSidebar() {
                 <div className="text-sidebar-foreground truncate text-sm font-medium">
                   {session?.user?.name ?? 'User'}
                 </div>
-                <div className="text-sidebar-foreground/60 truncate text-xs">{getUserRole()}</div>
+                <div className="text-sidebar-foreground/60 truncate text-xs">{userRole}</div>
               </div>
               <ChevronUp className="text-sidebar-foreground/60 h-4 w-4" />
             </button>
