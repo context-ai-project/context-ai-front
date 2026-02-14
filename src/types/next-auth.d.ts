@@ -12,6 +12,7 @@ declare module 'next-auth' {
       name?: string | null;
       email?: string | null;
       image?: string | null;
+      roles?: string[]; // Auth0 custom claims — roles assigned to the user
     };
   }
 
@@ -20,6 +21,7 @@ declare module 'next-auth' {
     name?: string | null;
     email?: string | null;
     image?: string | null;
+    roles?: string[];
   }
 }
 
@@ -33,5 +35,6 @@ declare module 'next-auth/jwt' {
     userId?: string; // Internal UUID from backend
     email?: string;
     name?: string;
+    roles?: string[];
   }
 }

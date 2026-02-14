@@ -14,6 +14,8 @@ import { cn } from '@/lib/utils';
 
 const MAX_MESSAGE_LENGTH = 2000;
 const MIN_MESSAGE_LENGTH = 1;
+/** Threshold (80%) at which the character counter changes to warning color */
+const NEAR_LIMIT_THRESHOLD = 0.8;
 
 interface MessageInputProps {
   onSendMessage?: (message: string) => void;
@@ -42,7 +44,7 @@ export function MessageInput({ onSendMessage, onClearConversation }: MessageInpu
 
   // Character count
   const charCount = message.length;
-  const isNearLimit = charCount > MAX_MESSAGE_LENGTH * 0.8;
+  const isNearLimit = charCount > MAX_MESSAGE_LENGTH * NEAR_LIMIT_THRESHOLD;
   const isOverLimit = charCount > MAX_MESSAGE_LENGTH;
 
   // Handle form submission

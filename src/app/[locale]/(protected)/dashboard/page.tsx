@@ -1,6 +1,7 @@
 import { FileText, MessageSquare, Users, TrendingUp } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { getTranslations } from 'next-intl/server';
+import { MOCK_STAT_VALUES } from '@/constants/mock-data';
 
 /**
  * Force dynamic rendering to ensure locale changes are reflected
@@ -12,6 +13,9 @@ export const revalidate = 0;
  * Dashboard overview page
  * Shows key metrics and statistics for the knowledge platform
  * Server Component for better performance
+ *
+ * Note: Stats use mock data (MOCK_STAT_VALUES) for MVP.
+ * Will be replaced with real API calls in Phase 7.
  */
 export default async function DashboardPage({ params }: { params: Promise<{ locale: string }> }) {
   // Await params to get the locale
@@ -20,29 +24,29 @@ export default async function DashboardPage({ params }: { params: Promise<{ loca
   // Get translations for the specific locale
   const t = await getTranslations({ locale, namespace: 'dashboard' });
 
-  // Mock stats for MVP - will be replaced with real API calls
+  // Stats with mock values — will be replaced with real API calls
   const stats = [
     {
       title: t('stats.queries.title'),
-      value: '1,247',
+      value: MOCK_STAT_VALUES.queries,
       change: t('stats.queries.change'),
       icon: MessageSquare,
     },
     {
       title: t('stats.documents.title'),
-      value: '156',
+      value: MOCK_STAT_VALUES.documents,
       change: t('stats.documents.change'),
       icon: FileText,
     },
     {
       title: t('stats.users.title'),
-      value: '24',
+      value: MOCK_STAT_VALUES.users,
       change: t('stats.users.change'),
       icon: Users,
     },
     {
       title: t('stats.accuracy.title'),
-      value: '92%',
+      value: MOCK_STAT_VALUES.accuracy,
       change: t('stats.accuracy.change'),
       icon: TrendingUp,
     },

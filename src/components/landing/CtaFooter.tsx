@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Brain } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
+import { routes } from '@/lib/routes';
 
 /**
  * CTA section for landing page
@@ -21,7 +22,7 @@ export function CTASection() {
         </h2>
         <p className="text-muted-foreground mx-auto mb-8 max-w-xl text-pretty">{t('subtitle')}</p>
         <Button size="lg" className="gap-2 px-8" asChild>
-          <Link href={`/${locale}/auth/signin`}>
+          <Link href={routes.signIn(locale)}>
             {t('button')}
             <ArrowRight className="h-4 w-4" />
           </Link>

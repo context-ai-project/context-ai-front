@@ -9,6 +9,7 @@ import { LanguageSelector } from './LanguageSelector';
 import { SectorSelector } from '@/components/user/SectorSelector';
 import { LogoutButton } from '@/components/user/LogoutButton';
 import { Button } from '@/components/ui/button';
+import { routes } from '@/lib/routes';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,7 +34,7 @@ export function Navbar() {
           {/* Logo and brand */}
           <div className="flex items-center gap-3">
             <Brain className="text-primary h-8 w-8" />
-            <Link href={`/${locale}`} className="text-xl font-semibold text-gray-900">
+            <Link href={routes.home(locale)} className="text-xl font-semibold text-gray-900">
               Context.ai
             </Link>
           </div>
@@ -41,19 +42,19 @@ export function Navbar() {
           {/* Navigation links - desktop */}
           <div className="hidden items-center gap-6 md:flex">
             <Link
-              href={`/${locale}/dashboard`}
+              href={routes.dashboard(locale)}
               className="text-sm font-medium text-gray-700 hover:text-gray-900"
             >
               Dashboard
             </Link>
             <Link
-              href={`/${locale}/chat`}
+              href={routes.chat(locale)}
               className="text-sm font-medium text-gray-700 hover:text-gray-900"
             >
               Chat
             </Link>
             <Link
-              href={`/${locale}/knowledge`}
+              href={routes.knowledge(locale)}
               className="text-sm font-medium text-gray-700 hover:text-gray-900"
             >
               Knowledge
@@ -76,7 +77,7 @@ export function Navbar() {
 
             {!isLoading && !user && (
               <Button asChild>
-                <Link href={`/${locale}/auth/signin`}>Sign In</Link>
+                <Link href={routes.signIn(locale)}>Sign In</Link>
               </Button>
             )}
 
@@ -121,12 +122,12 @@ export function Navbar() {
                     <DropdownMenuSeparator className="lg:hidden" />
 
                     <DropdownMenuItem asChild>
-                      <Link href={`/${locale}/profile`} className="w-full cursor-pointer">
+                      <Link href={routes.profile(locale)} className="w-full cursor-pointer">
                         Profile
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link href={`/${locale}/settings`} className="w-full cursor-pointer">
+                      <Link href={routes.settings(locale)} className="w-full cursor-pointer">
                         Settings
                       </Link>
                     </DropdownMenuItem>

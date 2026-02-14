@@ -6,12 +6,11 @@ import { MessageInput } from './MessageInput';
 import { EmptyState } from './EmptyState';
 import { ErrorState } from './ErrorState';
 import { useChatStore } from '@/stores/chat.store';
+import { useCurrentSectorId } from '@/stores/user.store';
 import { chatApi } from '@/lib/api/chat.api';
-import { MessageRole } from '@/types/message.types';
+import { createUserMessage, createAssistantMessage } from '@/types/message.types';
 import { logError, getErrorMessage } from '@/lib/api/error-handler';
-
-// Temporary hardcoded sector for MVP
-const TEST_SECTOR_ID = '440e8400-e29b-41d4-a716-446655440000';
+import { DEFAULT_SECTOR_ID } from '@/constants/sectors';
 
 /**
  * Main chat container component
@@ -19,6 +18,7 @@ const TEST_SECTOR_ID = '440e8400-e29b-41d4-a716-446655440000';
  */
 export function ChatContainer() {
   const { data: session } = useSession();
+  const currentSectorId = useCurrentSectorId();
   const {
     messages,
     conversationId,
@@ -42,20 +42,14 @@ export function ChatContainer() {
     setLoading(true);
 
     // Add user message optimistically
-    const userMessage = {
-      id: `temp-user-${Date.now()}`,
-      conversationId: conversationId || 'new',
-      role: MessageRole.USER,
-      content: messageContent,
-      createdAt: new Date().toISOString(),
-    };
+    const userMessage = createUserMessage(messageContent, conversationId);
     addMessage(userMessage);
 
     try {
       const response = await chatApi.sendMessage({
         userId: session.user.id,
         conversationId: conversationId || undefined,
-        sectorId: TEST_SECTOR_ID,
+        sectorId: currentSectorId || DEFAULT_SECTOR_ID,
         query: messageContent,
       });
 
@@ -68,17 +62,7 @@ export function ChatContainer() {
       setConversationId(response.conversationId);
 
       // Add assistant message
-      const assistantMessage = {
-        id: `assistant-${Date.now()}`,
-        conversationId: response.conversationId,
-        role: MessageRole.ASSISTANT,
-        content: response.response,
-        createdAt:
-          typeof response.timestamp === 'string'
-            ? response.timestamp
-            : new Date(response.timestamp).toISOString(),
-        sourcesUsed: response.sources,
-      };
+      const assistantMessage = createAssistantMessage(response);
       addMessage(assistantMessage);
     } catch (err) {
       logError(err, { context: 'ChatContainer.handleSendMessage' });

@@ -2,9 +2,12 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Brain, MessageSquare, LayoutDashboard, LogOut, ChevronUp } from 'lucide-react';
-import { useSession, signOut } from 'next-auth/react';
+import { Brain, MessageSquare, LayoutDashboard, FileText, LogOut, ChevronUp } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import { useLocale } from 'next-intl';
+import { useLogout } from '@/hooks/useLogout';
+import { getUserInitials } from '@/lib/utils/get-user-initials';
+import { routes } from '@/lib/routes';
 import {
   Sidebar,
   SidebarContent,
@@ -34,51 +37,44 @@ export function AppSidebar() {
   const pathname = usePathname();
   const { data: session } = useSession();
   const locale = useLocale();
-
-  const mainNav = [
-    {
-      title: 'Dashboard',
-      href: `/${locale}/dashboard`,
-      icon: LayoutDashboard,
-    },
-    {
-      title: 'AI Chat',
-      href: `/${locale}/chat`,
-      icon: MessageSquare,
-    },
-  ];
-
-  const handleSignOut = async () => {
-    await signOut({ callbackUrl: `/${locale}` });
-  };
-
-  const getUserInitials = (name?: string | null) => {
-    if (!name) return 'U';
-    return name
-      .split(' ')
-      .map((n) => n[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2);
-  };
+  const { logout } = useLogout();
 
   /**
    * Get user role from session
    * Auth0 can send roles in custom claims, fallback to 'user' if not available
    */
-  const getUserRole = () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const roles = (session as any)?.user?.roles;
+  const getUserRole = (): string => {
+    const roles = session?.user?.roles;
     if (roles && Array.isArray(roles) && roles.length > 0) {
       return roles[0];
     }
     return 'user';
   };
 
+  const userRole = getUserRole();
+
+  const mainNav = [
+    {
+      title: 'Dashboard',
+      href: routes.dashboard(locale),
+      icon: LayoutDashboard,
+    },
+    {
+      title: 'Documents',
+      href: routes.documents(locale),
+      icon: FileText,
+    },
+    {
+      title: 'AI Chat',
+      href: routes.chat(locale),
+      icon: MessageSquare,
+    },
+  ];
+
   return (
     <Sidebar>
       <SidebarHeader className="p-4">
-        <Link href={`/${locale}/chat`} className="flex items-center gap-2.5">
+        <Link href={routes.chat(locale)} className="flex items-center gap-2.5">
           <div className="bg-sidebar-primary flex h-8 w-8 items-center justify-center rounded-lg">
             <Brain className="text-sidebar-primary-foreground h-5 w-5" />
           </div>
@@ -134,13 +130,13 @@ export function AppSidebar() {
                 <div className="text-sidebar-foreground truncate text-sm font-medium">
                   {session?.user?.name ?? 'User'}
                 </div>
-                <div className="text-sidebar-foreground/60 truncate text-xs">{getUserRole()}</div>
+                <div className="text-sidebar-foreground/60 truncate text-xs">{userRole}</div>
               </div>
               <ChevronUp className="text-sidebar-foreground/60 h-4 w-4" />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent side="top" align="start" className="w-56">
-            <DropdownMenuItem onClick={handleSignOut}>
+            <DropdownMenuItem onClick={logout}>
               <LogOut className="mr-2 h-4 w-4" />
               Sign Out
             </DropdownMenuItem>

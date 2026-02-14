@@ -6,6 +6,7 @@ import { useLocale } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { AlertCircle } from 'lucide-react';
+import { routes } from '@/lib/routes';
 
 /**
  * Authentication error page for NextAuth.js v5
@@ -39,10 +40,10 @@ export default function AuthErrorPage() {
         </CardHeader>
         <CardContent className="space-y-2">
           <Button asChild className="w-full">
-            <Link href={`/${locale}/auth/signin`}>Try Again</Link>
+            <Link href={routes.signIn(locale)}>Try Again</Link>
           </Button>
           <Button asChild variant="outline" className="w-full">
-            <Link href={`/${locale}`}>Go Home</Link>
+            <Link href={routes.home(locale)}>Go Home</Link>
           </Button>
         </CardContent>
       </Card>

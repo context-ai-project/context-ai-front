@@ -8,17 +8,18 @@ import { UserAvatar } from '../UserAvatar';
  * and verify the component accepts the correct props.
  */
 describe('UserAvatar', () => {
-  it('should render fallback initial from user object', () => {
+  it('should render fallback initials from user object', () => {
     render(<UserAvatar user={{ name: 'John Doe', picture: 'https://example.com/avatar.jpg' }} />);
 
-    expect(screen.getByText('J')).toBeInTheDocument();
+    // getUserInitials returns up to 2 chars: "JD" for "John Doe"
+    expect(screen.getByText('JD')).toBeInTheDocument();
   });
 
-  it('should render fallback initial from alt prop', () => {
+  it('should render fallback initials from alt prop', () => {
     render(<UserAvatar src="https://example.com/avatar.jpg" alt="Jane Doe" />);
 
-    // In jsdom, image doesn't load, so fallback shows initial
-    expect(screen.getByText('J')).toBeInTheDocument();
+    // In jsdom, image doesn't load, so fallback shows initials
+    expect(screen.getByText('JD')).toBeInTheDocument();
   });
 
   it('should show initial letter as fallback when no image', () => {

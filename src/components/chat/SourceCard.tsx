@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ChevronDown, ChevronUp, FileText, ExternalLink } from 'lucide-react';
 import type { SourceFragment } from '@/types/message.types';
+import { extractSourceMetadata } from '@/types/message.types';
 
 /**
  * SourceCard component displays a source fragment used by the assistant
@@ -21,10 +22,9 @@ interface SourceCardProps {
 export function SourceCard({ source, index }: SourceCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // Extract metadata for display
-  const documentTitle = (source.metadata?.title as string | undefined) || `Document ${index + 1}`;
-  const page = source.metadata?.page as number | undefined;
-  const sourceUrl = source.metadata?.url as string | undefined;
+  // Extract typed metadata for display
+  const { title, page, url: sourceUrl } = extractSourceMetadata(source.metadata);
+  const documentTitle = title || `Document ${index + 1}`;
 
   return (
     <div

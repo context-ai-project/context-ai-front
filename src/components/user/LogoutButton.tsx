@@ -1,10 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { signOut } from 'next-auth/react';
-import { useLocale } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { LogOut } from 'lucide-react';
+import { useLogout } from '@/hooks/useLogout';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,7 +17,7 @@ import {
 
 /**
  * Logout button with confirmation dialog
- * Updated to use NextAuth.js v5
+ * Uses shared useLogout hook for consistent logout behavior
  */
 
 interface LogoutButtonProps {
@@ -33,19 +31,7 @@ export function LogoutButton({
   size = 'default',
   showLabel = true,
 }: LogoutButtonProps) {
-  const locale = useLocale();
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
-
-  const handleLogout = async () => {
-    try {
-      setIsLoggingOut(true);
-      await signOut({ callbackUrl: `/${locale}` });
-    } catch (error) {
-      console.error('Error during logout:', error);
-    } finally {
-      setIsLoggingOut(false);
-    }
-  };
+  const { logout, isLoggingOut } = useLogout();
 
   return (
     <AlertDialog>
@@ -70,7 +56,7 @@ export function LogoutButton({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleLogout}>Logout</AlertDialogAction>
+          <AlertDialogAction onClick={logout}>Logout</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

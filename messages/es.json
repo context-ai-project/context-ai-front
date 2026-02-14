@@ -260,6 +260,67 @@
       "copyright": "2026 Context.ai. Construido con propósito."
     }
   },
+  "documents": {
+    "title": "Documentos",
+    "subtitle": "Sube y gestiona los documentos de tu base de conocimiento",
+    "searchPlaceholder": "Buscar documentos...",
+    "allSectors": "Todos los Sectores",
+    "noResults": "No se encontraron documentos que coincidan con tu búsqueda.",
+    "uploadButton": "Subir Documento",
+    "uploadAndIndex": "Subir e Indexar",
+    "status": {
+      "PENDING": "Pendiente",
+      "PROCESSING": "Procesando",
+      "PROCESSED": "Indexado",
+      "COMPLETED": "Indexado",
+      "FAILED": "Error"
+    },
+    "sourceType": {
+      "PDF": "PDF",
+      "MARKDOWN": "Markdown",
+      "TEXT": "Texto",
+      "URL": "Enlace"
+    },
+    "uploadDialog": {
+      "title": "Subir Documento",
+      "documentTitle": "Título del Documento",
+      "documentTitlePlaceholder": "ej., Documentación de API",
+      "targetSector": "Sector Destino",
+      "selectSector": "Seleccionar sector",
+      "file": "Archivo",
+      "dropzoneText": "Haz clic para subir PDF, Markdown o pegar un enlace",
+      "dropzoneActive": "Suelta el archivo aquí...",
+      "allowedTypes": "Tipos permitidos: PDF, Markdown (.md), Texto (.txt)",
+      "maxSize": "Tamaño máximo: 10MB",
+      "fileSelected": "Archivo seleccionado:",
+      "uploading": "Subiendo...",
+      "success": "¡Documento subido exitosamente!",
+      "successDetails": "Procesados {fragments} fragmentos en {time}ms",
+      "error": "Error al subir",
+      "requiresPermission": "Necesitas permisos de admin o manager para subir documentos."
+    },
+    "loading": "Cargando documentos...",
+    "errorLoading": "Error al cargar documentos. Por favor intenta de nuevo.",
+    "viewDocument": "Ver Documento",
+    "deleteDocument": "Eliminar Documento",
+    "documentContent": "Contenido del Documento",
+    "fragments": "Fragmentos",
+    "createdAt": "Creado",
+    "sector": "Sector",
+    "type": "Tipo",
+    "noContent": "No hay contenido disponible para este documento.",
+    "loadingDetail": "Cargando detalles del documento...",
+    "errorLoadingDetail": "Error al cargar los detalles del documento.",
+    "deleteConfirm": {
+      "title": "Eliminar Documento",
+      "message": "¿Estás seguro de que quieres eliminar \"{title}\"? Esto eliminará todos los datos asociados y los embeddings vectoriales. Esta acción no se puede deshacer.",
+      "confirm": "Eliminar",
+      "cancel": "Cancelar",
+      "deleting": "Eliminando...",
+      "success": "Documento eliminado exitosamente.",
+      "error": "Error al eliminar el documento."
+    }
+  },
   "dashboard": {
     "title": "Panel de Control",
     "subtitle": "Resumen de tu plataforma de conocimiento",

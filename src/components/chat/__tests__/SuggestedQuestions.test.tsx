@@ -2,6 +2,7 @@ import { render, screen } from '@/test/test-utils';
 import userEvent from '@testing-library/user-event';
 import { SuggestedQuestions } from '../SuggestedQuestions';
 import { SUGGESTED_QUESTIONS } from '@/constants/suggested-questions';
+import { SECTORS } from '@/constants/sectors';
 import { vi } from 'vitest';
 
 // Mock the user store to return a specific sector
@@ -35,7 +36,7 @@ describe('SuggestedQuestions', () => {
   });
 
   it('should render sector-specific questions when sector is selected', () => {
-    const hrSectorId = '440e8400-e29b-41d4-a716-446655440000';
+    const hrSectorId = SECTORS[0].id;
     mockCurrentSectorId.mockReturnValue(hrSectorId);
 
     render(<SuggestedQuestions />);
@@ -46,7 +47,7 @@ describe('SuggestedQuestions', () => {
   });
 
   it('should render engineering sector questions', () => {
-    const engSectorId = '440e8400-e29b-41d4-a716-446655440001';
+    const engSectorId = SECTORS[1].id;
     mockCurrentSectorId.mockReturnValue(engSectorId);
 
     render(<SuggestedQuestions />);

@@ -260,6 +260,67 @@
       "copyright": "2026 Context.ai. Built with purpose."
     }
   },
+  "documents": {
+    "title": "Documents",
+    "subtitle": "Upload and manage your knowledge base documents",
+    "searchPlaceholder": "Search documents...",
+    "allSectors": "All Sectors",
+    "noResults": "No documents found matching your search.",
+    "uploadButton": "Upload Document",
+    "uploadAndIndex": "Upload & Index",
+    "status": {
+      "PENDING": "Pending",
+      "PROCESSING": "Processing",
+      "PROCESSED": "Indexed",
+      "COMPLETED": "Indexed",
+      "FAILED": "Error"
+    },
+    "sourceType": {
+      "PDF": "PDF",
+      "MARKDOWN": "Markdown",
+      "TEXT": "Text",
+      "URL": "Link"
+    },
+    "uploadDialog": {
+      "title": "Upload Document",
+      "documentTitle": "Document Title",
+      "documentTitlePlaceholder": "e.g., API Documentation",
+      "targetSector": "Target Sector",
+      "selectSector": "Select sector",
+      "file": "File",
+      "dropzoneText": "Click to upload PDF, Markdown, or paste a link",
+      "dropzoneActive": "Drop the file here...",
+      "allowedTypes": "Allowed types: PDF, Markdown (.md), Text (.txt)",
+      "maxSize": "Maximum file size: 10MB",
+      "fileSelected": "File selected:",
+      "uploading": "Uploading...",
+      "success": "Document uploaded successfully!",
+      "successDetails": "Processed {fragments} fragments in {time}ms",
+      "error": "Upload failed",
+      "requiresPermission": "You need admin or manager permissions to upload documents."
+    },
+    "loading": "Loading documents...",
+    "errorLoading": "Failed to load documents. Please try again.",
+    "viewDocument": "View Document",
+    "deleteDocument": "Delete Document",
+    "documentContent": "Document Content",
+    "fragments": "Fragments",
+    "createdAt": "Created",
+    "sector": "Sector",
+    "type": "Type",
+    "noContent": "No content available for this document.",
+    "loadingDetail": "Loading document details...",
+    "errorLoadingDetail": "Failed to load document details.",
+    "deleteConfirm": {
+      "title": "Delete Document",
+      "message": "Are you sure you want to delete \"{title}\"? This will remove all associated data and vector embeddings. This action cannot be undone.",
+      "confirm": "Delete",
+      "cancel": "Cancel",
+      "deleting": "Deleting...",
+      "success": "Document deleted successfully.",
+      "error": "Failed to delete document."
+    }
+  },
   "dashboard": {
     "title": "Dashboard",
     "subtitle": "Overview of your knowledge platform",

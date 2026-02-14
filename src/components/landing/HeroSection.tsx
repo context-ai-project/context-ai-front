@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
+import { routes } from '@/lib/routes';
 
 /**
  * Hero section for landing page
@@ -12,6 +13,8 @@ import { useTranslations, useLocale } from 'next-intl';
 export function HeroSection() {
   const t = useTranslations('landing.hero');
   const locale = useLocale();
+
+  const signInHref = routes.signIn(locale);
 
   return (
     <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 pt-20">
@@ -36,13 +39,13 @@ export function HeroSection() {
 
         <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
           <Button size="lg" className="gap-2 px-8" asChild>
-            <Link href={`/${locale}/auth/signin`}>
+            <Link href={signInHref}>
               {t('cta.primary')}
               <ArrowRight className="h-4 w-4" />
             </Link>
           </Button>
           <Button size="lg" variant="outline" className="bg-transparent px-8" asChild>
-            <Link href={`/${locale}/auth/signin`}>{t('cta.secondary')}</Link>
+            <Link href={signInHref}>{t('cta.secondary')}</Link>
           </Button>
         </div>
 

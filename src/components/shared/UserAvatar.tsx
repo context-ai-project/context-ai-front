@@ -1,6 +1,7 @@
 'use client';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { getUserInitials } from '@/lib/utils/get-user-initials';
 
 interface UserAvatarProps {
   user?: {
@@ -20,14 +21,14 @@ const sizeMap = {
 
 /**
  * User avatar component with optimized image loading
- * Falls back to user's initial if no picture is available
+ * Falls back to user's initials if no picture is available
  * Can accept either a user object or src/alt props
  * Issue 5.13: Enhanced for user profile management
  */
 export function UserAvatar({ user, src, alt, size = 'md' }: UserAvatarProps) {
   const avatarSrc = src || user?.picture || undefined;
   const avatarName = alt || user?.name || 'User';
-  const initial = avatarName?.charAt(0).toUpperCase() || 'U';
+  const initials = getUserInitials(avatarName);
 
   return (
     <Avatar className={sizeMap[size]}>
@@ -37,7 +38,7 @@ export function UserAvatar({ user, src, alt, size = 'md' }: UserAvatarProps) {
         className="rounded-full object-cover"
       />
       <AvatarFallback className="rounded-full bg-blue-600 text-sm font-medium text-white">
-        {initial}
+        {initials}
       </AvatarFallback>
     </Avatar>
   );

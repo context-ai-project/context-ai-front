@@ -8,6 +8,7 @@ import { render, screen } from '@/test/test-utils';
 import { axe } from '@/test/a11y-setup';
 import { LogoutButton } from '../LogoutButton';
 import { SectorSelector } from '../SectorSelector';
+import { SECTORS } from '@/constants/sectors';
 
 // Mock useCurrentUser for SectorSelector
 vi.mock('@/hooks/useCurrentUser', () => ({
@@ -16,10 +17,10 @@ vi.mock('@/hooks/useCurrentUser', () => ({
     userName: 'Test',
     userEmail: 'test@example.com',
     userPicture: '',
-    currentSectorId: '440e8400-e29b-41d4-a716-446655440000',
+    currentSectorId: SECTORS[0].id,
     sectors: [
-      { id: '440e8400-e29b-41d4-a716-446655440000', name: 'Human Resources' },
-      { id: '440e8400-e29b-41d4-a716-446655440001', name: 'Engineering' },
+      { id: SECTORS[0].id, name: SECTORS[0].name },
+      { id: SECTORS[1].id, name: SECTORS[1].name },
     ],
     isLoading: false,
   }),
