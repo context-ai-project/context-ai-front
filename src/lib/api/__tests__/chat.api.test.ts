@@ -43,7 +43,6 @@ describe('Chat API', () => {
   describe('sendMessage', () => {
     it('should send a message to the backend', async () => {
       const dto: ChatQueryDto = {
-        userId: 'user-1',
         conversationId: 'conv-1',
         sectorId: 'sector-1',
         query: 'What is vacation policy?',
@@ -66,7 +65,6 @@ describe('Chat API', () => {
 
     it('should send message without conversationId for new conversations', async () => {
       const dto: ChatQueryDto = {
-        userId: 'user-1',
         sectorId: 'sector-1',
         query: 'Hello!',
       };
