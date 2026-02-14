@@ -15,8 +15,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { SECTORS } from '@/constants/sectors';
-import { knowledgeApi } from '@/lib/api/knowledge.api';
 import type { SourceType } from '@/lib/api/knowledge.api';
+import { useUploadDocument } from '@/hooks/useUploadDocument';
 import { cn } from '@/lib/utils';
 
 /** Roles allowed to upload documents */
@@ -35,12 +35,6 @@ const FILE_TYPE_MAP: Record<string, SourceType> = {
 /** Allowed MIME types for the file input */
 const ACCEPTED_MIME_TYPES = '.pdf,.md,.txt';
 
-interface UploadResult {
-  sourceId: string;
-  totalFragments: number;
-  processingTimeMs: number;
-}
-
 /**
  * Knowledge Upload component
  * Allows admin/manager users to upload documents to the knowledge base
@@ -53,12 +47,21 @@ export function KnowledgeUpload() {
   const [title, setTitle] = useState('');
   const [sectorId, setSectorId] = useState('');
   const [sourceType, setSourceType] = useState<SourceType>('PDF');
-  const [isUploading, setIsUploading] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<UploadResult | null>(null);
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // TanStack Query mutation for upload
+  const {
+    mutate: uploadDocument,
+    isPending,
+    isSuccess,
+    isError,
+    error,
+    data: result,
+    reset,
+  } = useUploadDocument();
 
   // Check user role
   const userRoles = session?.user?.roles ?? [];
@@ -66,8 +69,8 @@ export function KnowledgeUpload() {
 
   const handleFileChange = useCallback(
     (selectedFile: File | null) => {
-      setError(null);
-      setResult(null);
+      setValidationError(null);
+      reset();
 
       if (!selectedFile) {
         setFile(null);
@@ -76,7 +79,7 @@ export function KnowledgeUpload() {
 
       // Validate file size
       if (selectedFile.size > MAX_FILE_SIZE) {
-        setError(t('maxSize'));
+        setValidationError(t('maxSize'));
         return;
       }
 
@@ -97,7 +100,7 @@ export function KnowledgeUpload() {
           if (!title) setTitle(selectedFile.name.replace(/\.[^.]+$/, ''));
           return;
         }
-        setError(t('allowedTypes'));
+        setValidationError(t('allowedTypes'));
         return;
       }
 
@@ -109,7 +112,7 @@ export function KnowledgeUpload() {
         setTitle(selectedFile.name.replace(/\.[^.]+$/, ''));
       }
     },
-    [t, title],
+    [t, title, reset],
   );
 
   const handleDrop = useCallback(
@@ -134,51 +137,36 @@ export function KnowledgeUpload() {
     setIsDragOver(false);
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!file || !title || !sectorId) return;
 
-    setIsUploading(true);
-    setError(null);
-    setResult(null);
-
-    try {
-      const response = await knowledgeApi.uploadDocument({
-        file,
-        title,
-        sectorId,
-        sourceType,
-      });
-
-      setResult({
-        sourceId: response.sourceId,
-        totalFragments: response.totalFragments,
-        processingTimeMs: response.processingTimeMs,
-      });
-
-      // Reset form
-      setFile(null);
-      setTitle('');
-      setSectorId('');
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : t('error'));
-    } finally {
-      setIsUploading(false);
-    }
+    uploadDocument(
+      { file, title, sectorId, sourceType },
+      {
+        onSuccess: () => {
+          // Reset form after successful upload
+          setFile(null);
+          setTitle('');
+          setSectorId('');
+          if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+          }
+        },
+      },
+    );
   };
 
   const handleRemoveFile = () => {
     setFile(null);
-    setError(null);
+    setValidationError(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
   };
 
   const isFormValid = file && title.trim() && sectorId;
+  const displayError = validationError || (isError ? (error?.message ?? t('error')) : null);
 
   if (!hasUploadPermission) {
     return (
@@ -279,7 +267,7 @@ export function KnowledgeUpload() {
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder={t('documentTitlePlaceholder')}
                 maxLength={255}
-                disabled={isUploading}
+                disabled={isPending}
               />
             </div>
 
@@ -288,7 +276,7 @@ export function KnowledgeUpload() {
               <label htmlFor="sector-select" className="text-sm font-medium">
                 {t('sector')}
               </label>
-              <Select value={sectorId} onValueChange={setSectorId} disabled={isUploading}>
+              <Select value={sectorId} onValueChange={setSectorId} disabled={isPending}>
                 <SelectTrigger id="sector-select">
                   <SelectValue placeholder={t('selectSector')} />
                 </SelectTrigger>
@@ -309,15 +297,15 @@ export function KnowledgeUpload() {
             </div>
 
             {/* Error Message */}
-            {error && (
+            {displayError && (
               <div className="flex items-center gap-2 rounded-md bg-red-50 p-3 text-sm text-red-700">
                 <AlertCircle className="h-4 w-4 shrink-0" />
-                <span>{error}</span>
+                <span>{displayError}</span>
               </div>
             )}
 
             {/* Success Message */}
-            {result && (
+            {isSuccess && result && (
               <div className="flex items-center gap-2 rounded-md bg-green-50 p-3 text-sm text-green-700">
                 <CheckCircle className="h-4 w-4 shrink-0" />
                 <span>
@@ -331,13 +319,8 @@ export function KnowledgeUpload() {
             )}
 
             {/* Submit Button */}
-            <Button
-              type="submit"
-              className="w-full"
-              size="lg"
-              disabled={!isFormValid || isUploading}
-            >
-              {isUploading ? (
+            <Button type="submit" className="w-full" size="lg" disabled={!isFormValid || isPending}>
+              {isPending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   {t('uploading')}

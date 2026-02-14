@@ -73,7 +73,14 @@ const RUNTIME_PLACEHOLDER = '__NEXT_PUBLIC_API_URL_PLACEHOLDER__';
  * replaced at container startup via the entrypoint script).
  */
 export function getPublicEnv(key: PublicEnvKey): string {
-  const value = process.env[key] ?? '';
+  // Static map ensures Next.js bundler can inline the values at build time.
+  // Dynamic access like process.env[key] would NOT be inlined and would
+  // resolve to undefined in client-side code.
+  const PUBLIC_ENV_MAP: Record<PublicEnvKey, string | undefined> = {
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+  };
+
+  const value = PUBLIC_ENV_MAP[key] ?? '';
 
   // If the value still contains the placeholder, the entrypoint script
   // did not run or the variable was not set — fall back to defaults.

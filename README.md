@@ -1,8 +1,8 @@
 # Context.ai Frontend
 
-[![CI](https://github.com/gromeroalfonso/context-ai-front/actions/workflows/ci.yml/badge.svg)](https://github.com/gromeroalfonso/context-ai-front/actions/workflows/ci.yml)
-[![CodeQL](https://github.com/gromeroalfonso/context-ai-front/actions/workflows/codeql.yml/badge.svg)](https://github.com/gromeroalfonso/context-ai-front/actions/workflows/codeql.yml)
-[![Snyk Security](https://github.com/gromeroalfonso/context-ai-front/actions/workflows/snyk.yml/badge.svg)](https://github.com/gromeroalfonso/context-ai-front/actions/workflows/snyk.yml)
+[![CI](https://github.com/context-ai-project/context-ai-front/actions/workflows/ci.yml/badge.svg)](https://github.com/context-ai-project/context-ai-front/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/context-ai-project/context-ai-front/actions/workflows/codeql.yml/badge.svg)](https://github.com/context-ai-project/context-ai-front/actions/workflows/codeql.yml)
+[![Snyk Security](https://github.com/context-ai-project/context-ai-front/actions/workflows/snyk.yml/badge.svg)](https://github.com/context-ai-project/context-ai-front/actions/workflows/snyk.yml)
 [![Node.js](https://img.shields.io/badge/Node.js-22.x-green.svg)](https://nodejs.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-16.x-black.svg)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
@@ -114,25 +114,55 @@ El frontend se comunica con el backend (`context-ai-api`) mediante API REST, uti
 
 ## 🛠️ Instalación y Ejecución
 
+### 1. Clonar el repositorio
+
 ```bash
-# 1. Clonar el repositorio
-git clone https://github.com/gromeroalfonso/context-ai-front.git
+git clone https://github.com/context-ai-project/context-ai-front.git
 cd context-ai-front
+```
 
-# 2. Instalar dependencias
+### 2. Configurar acceso a GitHub Packages
+
+Este proyecto puede usar el paquete `@context-ai-project/shared` publicado en [GitHub Packages](https://github.com/orgs/context-ai-project/packages). GitHub Packages requiere autenticación incluso para paquetes públicos.
+
+1. Crea un **Personal Access Token (Classic)** en GitHub con el scope `read:packages`:
+   - Ve a https://github.com/settings/tokens/new
+   - Marca ✅ `read:packages`
+   - Genera y copia el token
+
+2. Añade la configuración a tu `~/.npmrc` global:
+
+```bash
+echo "//npm.pkg.github.com/:_authToken=ghp_TU_TOKEN_AQUI" >> ~/.npmrc
+echo "@context-ai-project:registry=https://npm.pkg.github.com/" >> ~/.npmrc
+```
+
+> **Nota**: Esto se configura una sola vez por máquina. Si ya lo hiciste para `context-ai-api`, no necesitas repetirlo.
+
+### 3. Instalar dependencias
+
+```bash
 pnpm install
+```
 
-# 3. Copiar variables de entorno
+### 4. Copiar variables de entorno
+
+```bash
 cp env.local.example .env.local
 # Editar .env.local con tus credenciales (ver sección Configuración)
+```
 
-# 4. Modo desarrollo (http://localhost:3000)
+### 5. Modo desarrollo
+
+```bash
 pnpm dev
+# Disponible en http://localhost:3000
+```
 
-# 5. Build de producción
+### 6. Build y servidor de producción
+
+```bash
 pnpm build
-
-# 6. Servidor de producción
 pnpm start
 ```
 

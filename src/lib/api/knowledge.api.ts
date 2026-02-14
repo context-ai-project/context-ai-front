@@ -3,6 +3,8 @@
  * Handles document listing, upload, and management operations
  */
 
+import { z } from 'zod';
+
 /** Supported source types for document upload */
 export type SourceType = 'PDF' | 'MARKDOWN' | 'URL';
 
@@ -30,16 +32,19 @@ export interface UploadDocumentDto {
   metadata?: Record<string, string>;
 }
 
+/** Zod schema for validating upload document response */
+export const uploadDocumentResponseSchema = z.object({
+  sourceId: z.string(),
+  title: z.string(),
+  sectorId: z.string(),
+  sourceType: z.string(),
+  status: z.string(),
+  totalFragments: z.number(),
+  processingTimeMs: z.number(),
+});
+
 /** Response from document upload */
-export interface UploadDocumentResponse {
-  sourceId: string;
-  title: string;
-  sectorId: string;
-  sourceType: SourceType;
-  status: string;
-  totalFragments: number;
-  processingTimeMs: number;
-}
+export type UploadDocumentResponse = z.infer<typeof uploadDocumentResponseSchema>;
 
 /** DTO for a knowledge source detail (with content and fragment count) */
 export interface KnowledgeSourceDetailDto extends KnowledgeSourceDto {
@@ -160,7 +165,12 @@ export const knowledgeApi = {
       );
     }
 
-    return response.json();
+    const rawData: unknown = await response.json();
+    const parsed = uploadDocumentResponseSchema.safeParse(rawData);
+    if (!parsed.success) {
+      throw new Error(`Invalid upload response: ${parsed.error.message}`);
+    }
+    return parsed.data;
   },
 
   /**

@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 /**
  * Message role enum
  */
@@ -17,19 +19,24 @@ export interface SourceMetadata {
   [key: string]: unknown;
 }
 
+/** Zod schema for validating source fragment metadata */
+const sourceMetadataSchema = z
+  .object({
+    title: z.string().optional(),
+    page: z.number().optional(),
+    url: z.string().url().optional(),
+  })
+  .catchall(z.unknown());
+
 /**
  * Extract typed metadata from a raw metadata record
- * Uses runtime type checks instead of unsafe type assertions
+ * Validates with Zod schema before returning typed result
  */
 export function extractSourceMetadata(metadata?: Record<string, unknown>): SourceMetadata {
   if (!metadata) return {};
 
-  return {
-    ...metadata,
-    title: typeof metadata.title === 'string' ? metadata.title : undefined,
-    page: typeof metadata.page === 'number' ? metadata.page : undefined,
-    url: typeof metadata.url === 'string' ? metadata.url : undefined,
-  };
+  const parsed = sourceMetadataSchema.safeParse(metadata);
+  return parsed.success ? parsed.data : {};
 }
 
 /**
