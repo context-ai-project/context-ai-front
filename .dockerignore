@@ -1,0 +1,66 @@
+# Dependencies
+node_modules
+.pnpm-store
+
+# Build output
+.next
+out
+
+# Tests
+e2e
+coverage
+*.spec.ts
+*.test.ts
+*.test.tsx
+vitest.config.*
+playwright.config.*
+playwright-report
+test-results
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Environment files (secrets injected at runtime)
+.env
+.env.*
+!.env.example
+
+# Documentation
+docs
+*.md
+!README.md
+
+# Docker files (prevent recursive copy)
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Husky hooks
+.husky
+
+# CI/CD
+.github
+
+# Storybook (if present)
+.storybook
+storybook-static
+
+# Temporary / debug
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Nginx (separate copy)
+nginx.conf
+

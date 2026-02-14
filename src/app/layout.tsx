@@ -1,7 +1,4 @@
-import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import { UserProvider } from '@auth0/nextjs-auth0/client';
-import { QueryProvider } from '@/lib/providers/query-provider';
 import './globals.css';
 
 const inter = Inter({
@@ -9,24 +6,22 @@ const inter = Inter({
   variable: '--font-inter',
 });
 
-export const metadata: Metadata = {
-  title: 'Context.ai - RAG Knowledge Management',
-  description: 'Sistema de gestión de conocimiento con búsqueda semántica y chat inteligente',
-  keywords: ['RAG', 'AI', 'Knowledge Management', 'Chat', 'Semantic Search'],
-};
-
+/**
+ * Root Layout
+ *
+ * This is the outermost layout that wraps all pages.
+ * It sets up the HTML structure and global fonts.
+ *
+ * Locale-specific layouts are in app/[locale]/layout.tsx
+ */
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans antialiased`}>
-        <UserProvider>
-          <QueryProvider>{children}</QueryProvider>
-        </UserProvider>
-      </body>
+    <html suppressHydrationWarning>
+      <body className={`${inter.variable} font-sans antialiased`}>{children}</body>
     </html>
   );
 }

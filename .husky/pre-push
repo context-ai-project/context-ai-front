@@ -1,3 +1,3 @@
 pnpm type-check
 pnpm lint
-
+pnpm audit --audit-level=high

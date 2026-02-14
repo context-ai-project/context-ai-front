@@ -1,0 +1,351 @@
+{
+  "common": {
+    "appName": "Context.ai",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "send": "Send",
+    "clear": "Clear"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "chat": "Chat",
+    "knowledge": "Knowledge Base",
+    "profile": "Profile",
+    "settings": "Settings",
+    "signIn": "Sign In",
+    "signOut": "Sign Out"
+  },
+  "chat": {
+    "title": "Assistant Chat",
+    "placeholder": "Type your message... (press Enter to send)",
+    "placeholderLoading": "Waiting for response...",
+    "send": "Send message",
+    "clear": "Clear conversation",
+    "newConversation": "New conversation",
+    "typing": "Assistant is typing...",
+    "emptyState": {
+      "title": "Welcome to Context.AI Chat!",
+      "description": "I'm your intelligent assistant, ready to help you with your knowledge management needs. Ask me anything about your documents and data.",
+      "suggestionsTitle": "Start a conversation:"
+    },
+    "errors": {
+      "networkError": "Network error. Please check your internet connection.",
+      "authError": "Authentication failed. Please sign in again.",
+      "validationError": "Invalid input. Please check your data.",
+      "timeoutError": "Request timed out. Please try again.",
+      "serverError": "Server error. Please try again later.",
+      "unknownError": "An unexpected error occurred.",
+      "noSectorSelected": "No sector selected. Please select a sector from your profile."
+    },
+    "messages": {
+      "user": "You",
+      "assistant": "Assistant"
+    },
+    "sources": {
+      "title": "Sources:",
+      "viewSource": "View source",
+      "similarity": "match",
+      "page": "Page",
+      "metadata": "Metadata:",
+      "andMore": "And {count} more sources."
+    },
+    "input": {
+      "enterToSend": "Press Enter to send",
+      "shiftEnterForNewLine": "Shift+Enter for new line",
+      "characterLimit": "Message exceeds maximum length of {max} characters. Please shorten your message."
+    }
+  },
+  "user": {
+    "profile": "User Profile",
+    "currentSector": "Current Sector:",
+    "role": "Role:",
+    "email": "Email:",
+    "selectSector": "Select Sector",
+    "pleaseLogin": "Please log in to view your profile."
+  },
+  "sector": {
+    "humanResources": "Human Resources",
+    "engineering": "Engineering",
+    "sales": "Sales",
+    "selectSector": "Select a Sector"
+  },
+  "auth": {
+    "signInTitle": "Sign In with",
+    "signInDescription": "Sign in to your account to access your knowledge management dashboard",
+    "signOutConfirm": "Are you sure you want to sign out?",
+    "signOutDescription": "Signing out will end your session and you will need to sign in again to access protected content.",
+    "welcomeTitle": "Welcome to Context.ai"
+  },
+  "errors": {
+    "title": "Oops! Something went wrong.",
+    "description": "We're sorry, but an unexpected error occurred. Please try again.",
+    "tryAgain": "Try again",
+    "details": "Error Details"
+  },
+  "suggestedQuestions": {
+    "contextAI": {
+      "benefits": "What are the key benefits of Context.AI?",
+      "privacy": "How does Context.AI handle data privacy?",
+      "integration": "Can Context.AI integrate with my existing systems?",
+      "architecture": "Tell me about the architecture of Context.AI.",
+      "rag": "What is RAG (Retrieval Augmented Generation)?",
+      "getStarted": "How can I get started with Context.AI?"
+    },
+    "hr": {
+      "vacation": "How do I request vacation time?",
+      "benefits": "What benefits does the company offer?",
+      "remote": "What is the remote work policy?",
+      "performance": "When are performance reviews?",
+      "training": "What training programs are available?",
+      "policies": "Where can I find HR policies?"
+    },
+    "engineering": {
+      "deploy": "How do I deploy to production?",
+      "architecture": "What is the system architecture?",
+      "testing": "What are the testing standards?",
+      "codeReview": "What is the code review process?",
+      "cicd": "How does the CI/CD pipeline work?",
+      "docs": "Where is the technical documentation?"
+    },
+    "sales": {
+      "pricing": "What is our pricing structure?",
+      "competitors": "Who are our main competitors?",
+      "demo": "How do I schedule a demo?",
+      "objections": "How do I handle common objections?",
+      "crm": "How do I use the CRM system?",
+      "targets": "What are the sales targets?"
+    }
+  },
+  "language": {
+    "select": "Select language",
+    "en": "English",
+    "es": "Spanish"
+  },
+  "accessibility": {
+    "skipToContent": "Skip to content",
+    "menu": "Menu",
+    "closeMenu": "Close menu",
+    "openMenu": "Open menu",
+    "loading": "Loading",
+    "errorBoundary": "Error boundary"
+  },
+  "landing": {
+    "nav": {
+      "features": "Features",
+      "howItWorks": "How It Works",
+      "useCases": "Use Cases",
+      "signIn": "Sign In",
+      "getStarted": "Get Started",
+      "closeMenu": "Close menu",
+      "openMenu": "Open menu"
+    },
+    "hero": {
+      "badge": "AI-Powered Knowledge Orchestration",
+      "title": {
+        "part1": "From Chaos",
+        "part2": "to Context"
+      },
+      "subtitle": "Stop losing knowledge to turnover and fragmentation. Context.ai turns your scattered docs, processes, and expertise into a living, intelligent knowledge base that onboards and empowers your team 24/7.",
+      "cta": {
+        "primary": "Start Free Trial",
+        "secondary": "View Demo"
+      },
+      "stats": {
+        "resolution": {
+          "value": "92%",
+          "label": "Query Resolution Rate"
+        },
+        "onboarding": {
+          "value": "30%",
+          "label": "Faster Onboarding"
+        },
+        "questions": {
+          "value": "1.2K+",
+          "label": "Questions Answered"
+        }
+      }
+    },
+    "features": {
+      "title": "Everything You Need to Scale Knowledge",
+      "subtitle": "Purpose-built for startups where everyone wears multiple hats and knowledge is the most valuable — and vulnerable — asset.",
+      "items": {
+        "sectors": {
+          "title": "Knowledge Sectors",
+          "description": "Create isolated knowledge bases for each department. Engineering, HR, Sales -- each with their own context and access controls."
+        },
+        "ingestion": {
+          "title": "Multimodal Ingestion",
+          "description": "Upload PDFs, Markdown files, or external links. Our RAG pipeline indexes everything into searchable, intelligent knowledge."
+        },
+        "qa": {
+          "title": "AI-Powered Q&A",
+          "description": "Employees ask questions in natural language and get answers grounded exclusively in your company documentation."
+        },
+        "capsules": {
+          "title": "Auto-Generated Capsules",
+          "description": "Automatically create onboarding scripts, audio guides, and learning materials from your uploaded documents."
+        },
+        "analytics": {
+          "title": "Sentiment Analytics",
+          "description": "Track how helpful your documentation is. Sentiment analysis on queries reveals gaps and improvement opportunities."
+        },
+        "access": {
+          "title": "Role-Based Access",
+          "description": "RBAC ensures sensitive information stays compartmentalized. HR docs stay in HR, engineering in engineering."
+        }
+      }
+    },
+    "howItWorks": {
+      "title": "How It Works",
+      "subtitle": "Three simple steps to transform your fragmented knowledge into an intelligent, always-available teammate.",
+      "steps": {
+        "upload": {
+          "title": "Upload Your Knowledge",
+          "description": "Create sectors for each department and upload your documentation — PDFs, Markdown, or links. Context.ai handles the rest."
+        },
+        "index": {
+          "title": "AI Indexes & Learns",
+          "description": "Our RAG pipeline breaks documents into embeddings, building a vectorized knowledge graph that understands relationships and context."
+        },
+        "answer": {
+          "title": "Your Team Asks, AI Answers",
+          "description": "Employees get instant, accurate answers grounded in your documentation. Every response includes source citations for transparency."
+        }
+      }
+    },
+    "useCases": {
+      "title": "Built for Real Startup Challenges",
+      "subtitle": "Every feature addresses a pain point we experienced firsthand in our own fast-moving team.",
+      "items": {
+        "onboarding": {
+          "persona": "For New Hires",
+          "title": "Autonomous Onboarding",
+          "description": "Self-guided onboarding journeys with AI-generated capsules, video scripts, and interactive Q&A tutor available 24/7."
+        },
+        "retention": {
+          "persona": "For Leadership",
+          "title": "Knowledge Retention",
+          "description": "When team members leave, their expertise stays. Critical processes, decisions, and know-how persist in the platform."
+        },
+        "crossFunctional": {
+          "persona": "For Multitaskers",
+          "title": "Cross-Functional Roles",
+          "description": "Wearing multiple hats? Quickly access processes from departments outside your specialty without interrupting colleagues."
+        },
+        "quality": {
+          "persona": "For HR & Managers",
+          "title": "Documentation Quality",
+          "description": "Sentiment analytics reveal which docs help and which confuse. Continuously improve your knowledge base with data."
+        }
+      }
+    },
+    "cta": {
+      "title": "Ready to Stop Losing Knowledge?",
+      "subtitle": "Join the teams transforming how they preserve, share, and scale their collective intelligence.",
+      "button": "Get Started Free"
+    },
+    "footer": {
+      "links": {
+        "features": "Features",
+        "howItWorks": "How It Works",
+        "useCases": "Use Cases"
+      },
+      "copyright": "2026 Context.ai. Built with purpose."
+    }
+  },
+  "documents": {
+    "title": "Documents",
+    "subtitle": "Upload and manage your knowledge base documents",
+    "searchPlaceholder": "Search documents...",
+    "allSectors": "All Sectors",
+    "noResults": "No documents found matching your search.",
+    "uploadButton": "Upload Document",
+    "uploadAndIndex": "Upload & Index",
+    "status": {
+      "PENDING": "Pending",
+      "PROCESSING": "Processing",
+      "PROCESSED": "Indexed",
+      "COMPLETED": "Indexed",
+      "FAILED": "Error"
+    },
+    "sourceType": {
+      "PDF": "PDF",
+      "MARKDOWN": "Markdown",
+      "TEXT": "Text",
+      "URL": "Link"
+    },
+    "uploadDialog": {
+      "title": "Upload Document",
+      "documentTitle": "Document Title",
+      "documentTitlePlaceholder": "e.g., API Documentation",
+      "targetSector": "Target Sector",
+      "selectSector": "Select sector",
+      "file": "File",
+      "dropzoneText": "Click to upload PDF, Markdown, or paste a link",
+      "dropzoneActive": "Drop the file here...",
+      "allowedTypes": "Allowed types: PDF, Markdown (.md), Text (.txt)",
+      "maxSize": "Maximum file size: 10MB",
+      "fileSelected": "File selected:",
+      "uploading": "Uploading...",
+      "success": "Document uploaded successfully!",
+      "successDetails": "Processed {fragments} fragments in {time}ms",
+      "error": "Upload failed",
+      "requiresPermission": "You need admin or manager permissions to upload documents."
+    },
+    "loading": "Loading documents...",
+    "errorLoading": "Failed to load documents. Please try again.",
+    "viewDocument": "View Document",
+    "deleteDocument": "Delete Document",
+    "documentContent": "Document Content",
+    "fragments": "Fragments",
+    "createdAt": "Created",
+    "sector": "Sector",
+    "type": "Type",
+    "noContent": "No content available for this document.",
+    "loadingDetail": "Loading document details...",
+    "errorLoadingDetail": "Failed to load document details.",
+    "deleteConfirm": {
+      "title": "Delete Document",
+      "message": "Are you sure you want to delete \"{title}\"? This will remove all associated data and vector embeddings. This action cannot be undone.",
+      "confirm": "Delete",
+      "cancel": "Cancel",
+      "deleting": "Deleting...",
+      "success": "Document deleted successfully.",
+      "error": "Failed to delete document."
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Overview of your knowledge platform",
+    "stats": {
+      "queries": {
+        "title": "Total Queries",
+        "change": "92% resolved"
+      },
+      "documents": {
+        "title": "Total Documents",
+        "change": "+12 this month"
+      },
+      "users": {
+        "title": "Active Users",
+        "change": "+3 this week"
+      },
+      "accuracy": {
+        "title": "Accuracy Rate",
+        "change": "+5% improvement"
+      }
+    },
+    "comingSoon": {
+      "title": "More Insights Coming Soon",
+      "description": "We're working on detailed analytics and reporting features for your knowledge base."
+    }
+  }
+}
+
