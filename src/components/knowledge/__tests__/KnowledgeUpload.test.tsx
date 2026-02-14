@@ -1,12 +1,19 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { KnowledgeUpload } from '../KnowledgeUpload';
 
-const mockUploadDocument = vi.fn();
+const mockMutate = vi.fn();
+const mockReset = vi.fn();
 
-vi.mock('@/lib/api/knowledge.api', () => ({
-  knowledgeApi: {
-    uploadDocument: (...args: unknown[]) => mockUploadDocument(...args),
-  },
+vi.mock('@/hooks/useUploadDocument', () => ({
+  useUploadDocument: () => ({
+    mutate: mockMutate,
+    isPending: false,
+    isSuccess: false,
+    isError: false,
+    error: null,
+    data: undefined,
+    reset: mockReset,
+  }),
 }));
 
 // Controllable mock for useSession
