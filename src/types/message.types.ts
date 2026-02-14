@@ -71,9 +71,11 @@ export interface MessageDto {
 
 /**
  * Chat query DTO
+ *
+ * Note: userId is NOT included — the backend extracts it from the JWT token
+ * for security (prevents user impersonation).
  */
 export interface ChatQueryDto {
-  userId: string;
   conversationId?: string;
   sectorId: string;
   query: string; // Backend expects 'query', not 'message'

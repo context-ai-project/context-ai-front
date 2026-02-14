@@ -47,7 +47,6 @@ export function ChatContainer() {
 
     try {
       const response = await chatApi.sendMessage({
-        userId: session.user.id,
         conversationId: conversationId || undefined,
         sectorId: currentSectorId || DEFAULT_SECTOR_ID,
         query: messageContent,
