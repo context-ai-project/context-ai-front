@@ -38,11 +38,14 @@ vi.mock('next-auth/react', () => ({
   SessionProvider: ({ children }: { children: React.ReactNode }) => children,
 }));
 
-// Mock next-intl
-vi.mock('next-intl', () => ({
-  useTranslations: () => (key: string) => key,
-  useLocale: () => 'en',
-}));
+// Mock next-intl – return a STABLE function reference so useEffect deps on `t` don't loop
+vi.mock('next-intl', () => {
+  const t = (key: string, _params?: Record<string, unknown>) => key;
+  return {
+    useTranslations: () => t,
+    useLocale: () => 'en',
+  };
+});
 
 // Mock window.matchMedia
 Object.defineProperty(window, 'matchMedia', {
@@ -70,6 +73,17 @@ window.IntersectionObserver = MockIntersectionObserver as unknown as typeof Inte
 
 // Mock scrollIntoView
 Element.prototype.scrollIntoView = vi.fn();
+
+// Polyfill pointer capture methods (needed by Radix UI components in jsdom)
+if (!Element.prototype.hasPointerCapture) {
+  Element.prototype.hasPointerCapture = vi.fn().mockReturnValue(false);
+}
+if (!Element.prototype.setPointerCapture) {
+  Element.prototype.setPointerCapture = vi.fn();
+}
+if (!Element.prototype.releasePointerCapture) {
+  Element.prototype.releasePointerCapture = vi.fn();
+}
 
 // Mock ResizeObserver (must be a class for `new ResizeObserver()` in Radix/Floating UI)
 class MockResizeObserver {

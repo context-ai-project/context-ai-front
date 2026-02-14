@@ -41,7 +41,6 @@ export async function syncUserWithBackend(profile: UserSyncProfile): Promise<Syn
     console.warn('[NextAuth] Syncing user with backend:', {
       url: syncUrl,
       auth0UserId: profile.sub,
-      email: profile.email,
     });
 
     const response = await fetch(syncUrl, {
