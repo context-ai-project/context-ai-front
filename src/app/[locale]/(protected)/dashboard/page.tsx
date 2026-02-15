@@ -1,7 +1,7 @@
-import { FileText, MessageSquare, Users, TrendingUp } from 'lucide-react';
+import { TrendingUp } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { getTranslations } from 'next-intl/server';
-import { MOCK_STAT_VALUES } from '@/constants/mock-data';
+import { DashboardStats } from '@/components/dashboard/DashboardStats';
 
 /**
  * Force dynamic rendering to ensure locale changes are reflected
@@ -12,10 +12,7 @@ export const revalidate = 0;
 /**
  * Dashboard overview page
  * Shows key metrics and statistics for the knowledge platform
- * Server Component for better performance
- *
- * Note: Stats use mock data (MOCK_STAT_VALUES) for MVP.
- * Will be replaced with real API calls in Phase 7.
+ * Server Component for layout, delegates stats to DashboardStats (Client Component)
  */
 export default async function DashboardPage({ params }: { params: Promise<{ locale: string }> }) {
   // Await params to get the locale
@@ -23,34 +20,6 @@ export default async function DashboardPage({ params }: { params: Promise<{ loca
 
   // Get translations for the specific locale
   const t = await getTranslations({ locale, namespace: 'dashboard' });
-
-  // Stats with mock values — will be replaced with real API calls
-  const stats = [
-    {
-      title: t('stats.queries.title'),
-      value: MOCK_STAT_VALUES.queries,
-      change: t('stats.queries.change'),
-      icon: MessageSquare,
-    },
-    {
-      title: t('stats.documents.title'),
-      value: MOCK_STAT_VALUES.documents,
-      change: t('stats.documents.change'),
-      icon: FileText,
-    },
-    {
-      title: t('stats.users.title'),
-      value: MOCK_STAT_VALUES.users,
-      change: t('stats.users.change'),
-      icon: Users,
-    },
-    {
-      title: t('stats.accuracy.title'),
-      value: MOCK_STAT_VALUES.accuracy,
-      change: t('stats.accuracy.change'),
-      icon: TrendingUp,
-    },
-  ];
 
   return (
     <div className="flex flex-1 flex-col gap-6 p-6">
@@ -60,28 +29,8 @@ export default async function DashboardPage({ params }: { params: Promise<{ loca
         <p className="text-muted-foreground mt-1 text-sm">{t('subtitle')}</p>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat) => {
-          const Icon = stat.icon;
-          return (
-            <Card key={stat.title}>
-              <CardContent className="p-5">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <p className="text-muted-foreground text-sm">{stat.title}</p>
-                    <p className="text-foreground mt-1 text-3xl font-bold">{stat.value}</p>
-                    <p className="text-muted-foreground mt-1 text-xs">{stat.change}</p>
-                  </div>
-                  <div className="bg-primary/10 flex h-10 w-10 items-center justify-center rounded-lg">
-                    <Icon className="text-primary h-5 w-5" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+      {/* Stats Grid — real data from APIs */}
+      <DashboardStats />
 
       {/* Placeholder for future sections */}
       <Card>
