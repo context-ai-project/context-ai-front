@@ -2,6 +2,19 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { DocumentDetailDialog } from '../DocumentDetailDialog';
 import type { KnowledgeSourceDto } from '@/lib/api/knowledge.api';
 
+// Mock react-syntax-highlighter to avoid ESM import issues in test environment
+vi.mock('react-syntax-highlighter', () => ({
+  Prism: ({ children, language }: { children: string; language: string }) => (
+    <pre data-testid="syntax-highlighter" data-language={language}>
+      <code>{children}</code>
+    </pre>
+  ),
+}));
+
+vi.mock('react-syntax-highlighter/dist/esm/styles/prism', () => ({
+  vscDarkPlus: {},
+}));
+
 // Create mock function first
 const mockGetDocumentDetail = vi.fn();
 
@@ -9,6 +22,23 @@ vi.mock('@/lib/api/knowledge.api', () => ({
   knowledgeApi: {
     getDocumentDetail: (...args: unknown[]) => mockGetDocumentDetail(...args),
   },
+}));
+
+// Mock sector store to provide sectors for display
+vi.mock('@/stores/sector.store', () => ({
+  useAllSectors: () => [
+    {
+      id: '440e8400-e29b-41d4-a716-446655440000',
+      name: 'Human Resources',
+      description: '',
+      icon: 'users',
+      status: 'active',
+      documentCount: 0,
+      createdAt: '',
+      updatedAt: '',
+    },
+  ],
+  SectorStoreProvider: ({ children }: { children: React.ReactNode }) => children,
 }));
 
 const mockDocument: KnowledgeSourceDto = {

@@ -154,6 +154,8 @@ const MARKDOWN_COMPONENTS: Components = {
  * MarkdownRenderer component renders markdown content with syntax highlighting
  * for code blocks, safe link handling, and custom styling.
  *
+ * Used by chat messages and document detail views.
+ *
  * @example
  * ```tsx
  * <MarkdownRenderer content={message.content} />

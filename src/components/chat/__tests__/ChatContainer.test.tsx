@@ -54,10 +54,29 @@ const mockStoreState = {
   reset: vi.fn(),
 };
 
-// Mock user store (needed by SuggestedQuestions → EmptyState)
+// Mock sector store (needed by ChatHeader for active sectors)
+vi.mock('@/stores/sector.store', () => ({
+  useActiveSectors: () => [
+    {
+      id: 'test-sector-id',
+      name: 'Engineering',
+      description: '',
+      icon: 'code',
+      status: 'active',
+      documentCount: 0,
+      createdAt: '',
+      updatedAt: '',
+    },
+  ],
+  SectorStoreProvider: ({ children }: { children: React.ReactNode }) => children,
+}));
+
+// Mock user store (needed by ChatHeader and SuggestedQuestions → EmptyState)
 vi.mock('@/stores/user.store', () => ({
   useCurrentSectorId: () => 'test-sector-id',
-  useSectors: () => [],
+  useSectors: () => [{ id: 'test-sector-id', name: 'Engineering' }],
+  useSetCurrentSectorId: () => vi.fn(),
+  useSetSectors: () => vi.fn(),
   UserStoreProvider: ({ children }: { children: React.ReactNode }) => children,
 }));
 
@@ -87,6 +106,7 @@ const defaultSession = {
       name: 'Test User',
       email: 'test@example.com',
       image: null,
+      roles: ['user'],
     },
     accessToken: 'test-access-token',
     expires: new Date(Date.now() + 86400000).toISOString(),
@@ -114,9 +134,9 @@ describe('ChatContainer', () => {
     mockStoreState.error = 'Something went wrong';
 
     render(<ChatContainer />);
-    // ErrorState categorizes strings as UNKNOWN type and shows its own description
+    // ErrorState categorizes strings as UNKNOWN type and shows its translated title
     expect(screen.getByTestId('error-state')).toBeInTheDocument();
-    expect(screen.getByText('Unexpected Error')).toBeInTheDocument();
+    expect(screen.getByText('types.unknown.title')).toBeInTheDocument();
   });
 
   it('should render message list when messages exist', () => {
@@ -280,7 +300,7 @@ describe('ChatContainer', () => {
     render(<ChatContainer />);
 
     // ErrorState should render a dismiss button
-    const dismissButton = screen.getByLabelText('Dismiss error');
+    const dismissButton = screen.getByLabelText('dismissError');
     dismissButton.click();
     expect(mockStoreState.setError).toHaveBeenCalledWith(null);
   });

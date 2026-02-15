@@ -1,9 +1,21 @@
 'use client';
 
 import { useState, useRef, useEffect, FormEvent, KeyboardEvent } from 'react';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Send, Trash2 } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import { Send, Trash2, MessageSquareOff } from 'lucide-react';
 import { useIsLoading, useClearMessages } from '@/stores/chat.store';
 import { cn } from '@/lib/utils';
 
@@ -28,6 +40,7 @@ export function MessageInput({ onSendMessage, onClearConversation }: MessageInpu
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const isLoading = useIsLoading();
   const clearMessages = useClearMessages();
+  const t = useTranslations('chat');
 
   // Auto-grow textarea based on content
   useEffect(() => {
@@ -75,13 +88,11 @@ export function MessageInput({ onSendMessage, onClearConversation }: MessageInpu
     }
   };
 
-  // Handle clear conversation
+  // Handle clear conversation (called from AlertDialog confirm)
   const handleClearConversation = () => {
-    if (window.confirm('Are you sure you want to clear this conversation?')) {
-      clearMessages();
-      setMessage('');
-      onClearConversation?.();
-    }
+    clearMessages();
+    setMessage('');
+    onClearConversation?.();
   };
 
   return (
@@ -90,8 +101,7 @@ export function MessageInput({ onSendMessage, onClearConversation }: MessageInpu
       {isFocused && charCount > 0 && (
         <div className="flex items-center justify-between text-xs">
           <span className="text-gray-400">
-            Press <kbd className="rounded bg-gray-100 px-1 py-0.5">Enter</kbd> to send,{' '}
-            <kbd className="rounded bg-gray-100 px-1 py-0.5">Shift+Enter</kbd> for new line
+            {t('input.enterToSend')} · {t('input.shiftEnterForNewLine')}
           </span>
           <span
             className={cn(
@@ -115,9 +125,7 @@ export function MessageInput({ onSendMessage, onClearConversation }: MessageInpu
           onKeyDown={handleKeyDown}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
-          placeholder={
-            isLoading ? 'Waiting for response...' : 'Type your message... (press Enter to send)'
-          }
+          placeholder={isLoading ? t('placeholderLoading') : t('placeholder')}
           className={cn(
             'max-h-[200px] min-h-[60px] flex-1 resize-none transition-colors',
             isOverLimit && 'border-red-300 focus-visible:ring-red-500',
@@ -142,20 +150,46 @@ export function MessageInput({ onSendMessage, onClearConversation }: MessageInpu
             <Send className="h-5 w-5" />
           </Button>
 
-          {/* Clear conversation button - only show if handler is provided */}
+          {/* Clear conversation button with confirmation dialog */}
           {onClearConversation && (
-            <Button
-              type="button"
-              size="icon"
-              variant="outline"
-              className="h-[60px] w-[60px]"
-              onClick={handleClearConversation}
-              disabled={isLoading}
-              aria-label="Clear conversation"
-              data-testid="clear-button"
-            >
-              <Trash2 className="h-5 w-5" />
-            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  type="button"
+                  size="icon"
+                  variant="outline"
+                  className="h-[60px] w-[60px]"
+                  disabled={isLoading}
+                  aria-label={t('clear')}
+                  data-testid="clear-button"
+                >
+                  <Trash2 className="h-5 w-5" />
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <div className="bg-destructive/10 mx-auto flex h-12 w-12 items-center justify-center rounded-full">
+                    <MessageSquareOff className="text-destructive h-6 w-6" />
+                  </div>
+                  <AlertDialogTitle className="text-center">
+                    {t('clearDialog.title')}
+                  </AlertDialogTitle>
+                  <AlertDialogDescription className="text-center">
+                    {t('clearDialog.description')}
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter className="sm:justify-center">
+                  <AlertDialogCancel>{t('clearDialog.cancel')}</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleClearConversation}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    {t('clearDialog.confirm')}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           )}
         </div>
       </form>
@@ -163,8 +197,7 @@ export function MessageInput({ onSendMessage, onClearConversation }: MessageInpu
       {/* Error message for character limit */}
       {isOverLimit && (
         <p id="char-limit-error" className="text-xs text-red-500">
-          Message exceeds maximum length of {MAX_MESSAGE_LENGTH} characters. Please shorten your
-          message.
+          {t('input.characterLimit', { max: MAX_MESSAGE_LENGTH })}
         </p>
       )}
     </div>
