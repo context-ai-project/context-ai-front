@@ -36,12 +36,13 @@ export function ChangeRoleDialog({ open, onOpenChange, user, onSuccess }: Change
   const currentRole = user?.roles?.[0] ?? 'user';
 
   const handleSave = async () => {
-    if (!user || !selectedRole) return;
+    const effectiveRole = selectedRole || currentRole;
+    if (!user || !effectiveRole) return;
 
     setIsSaving(true);
     setError(null);
     try {
-      const updated = await adminApi.updateUserRole(user.id, selectedRole);
+      const updated = await adminApi.updateUserRole(user.id, effectiveRole);
       onSuccess(updated);
       onOpenChange(false);
     } catch (err: unknown) {
