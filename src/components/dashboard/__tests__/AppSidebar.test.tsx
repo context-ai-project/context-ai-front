@@ -125,9 +125,9 @@ describe('AppSidebar', () => {
     render(<AppSidebar />);
 
     expect(screen.getByText('Context.ai')).toBeInTheDocument();
-    expect(screen.getByText('Dashboard')).toBeInTheDocument();
-    expect(screen.getByText('AI Chat')).toBeInTheDocument();
-    expect(screen.getByText('Platform')).toBeInTheDocument();
+    expect(screen.getByText('dashboard')).toBeInTheDocument();
+    expect(screen.getByText('chat')).toBeInTheDocument();
+    expect(screen.getByText('platform')).toBeInTheDocument();
   });
 
   it('should render user initials from session name', () => {
@@ -208,7 +208,9 @@ describe('AppSidebar', () => {
 
     render(<AppSidebar />);
 
-    expect(screen.getByText('admin')).toBeInTheDocument();
+    // The role text is in the footer area (xs text below the user name)
+    const roleElements = screen.getAllByText('admin');
+    expect(roleElements.length).toBeGreaterThanOrEqual(1);
   });
 
   it('should render avatar image when session has user image', () => {
@@ -235,14 +237,14 @@ describe('AppSidebar', () => {
   it('should render Sign Out option', () => {
     render(<AppSidebar />);
 
-    expect(screen.getByText('Sign Out')).toBeInTheDocument();
+    expect(screen.getByText('signOut')).toBeInTheDocument();
   });
 
   it('should have correct navigation links with locale', () => {
     render(<AppSidebar />);
 
-    const dashboardLink = screen.getByText('Dashboard').closest('a');
-    const chatLink = screen.getByText('AI Chat').closest('a');
+    const dashboardLink = screen.getByText('dashboard').closest('a');
+    const chatLink = screen.getByText('chat').closest('a');
 
     expect(dashboardLink).toHaveAttribute('href', '/en/dashboard');
     expect(chatLink).toHaveAttribute('href', '/en/chat');
