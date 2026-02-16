@@ -17,7 +17,7 @@ describe('ErrorState', () => {
     it('should display error title for unknown error', () => {
       render(<ErrorState error="Something went wrong" />);
 
-      expect(screen.getByText('Unexpected Error')).toBeInTheDocument();
+      expect(screen.getByText('types.unknown.title')).toBeInTheDocument();
     });
 
     it('should display the error message from Error instance', () => {
@@ -30,54 +30,54 @@ describe('ErrorState', () => {
       const networkError = new APIError('Network failed', 0);
       render(<ErrorState error={networkError} />);
 
-      expect(screen.getByText('Network Error')).toBeInTheDocument();
+      expect(screen.getByText('types.network.title')).toBeInTheDocument();
     });
 
     it('should display auth error for 401 API errors', () => {
       const authError = new APIError('Unauthorized', 401);
       render(<ErrorState error={authError} />);
 
-      expect(screen.getByText('Authentication Error')).toBeInTheDocument();
+      expect(screen.getByText('types.auth.title')).toBeInTheDocument();
     });
 
     it('should display server error for 500 API errors', () => {
       const serverError = new APIError('Internal Server Error', 500);
       render(<ErrorState error={serverError} />);
 
-      expect(screen.getByText('Server Error')).toBeInTheDocument();
+      expect(screen.getByText('types.server.title')).toBeInTheDocument();
     });
 
     it('should display validation error for 400 API errors', () => {
       const validationError = new APIError('Bad Request', 400);
       render(<ErrorState error={validationError} />);
 
-      expect(screen.getByText('Validation Error')).toBeInTheDocument();
+      expect(screen.getByText('types.validation.title')).toBeInTheDocument();
     });
 
     it('should display timeout error for 408 API errors', () => {
       const timeoutError = new APIError('Request Timeout', 408);
       render(<ErrorState error={timeoutError} />);
 
-      expect(screen.getByRole('heading', { name: 'Request Timeout' })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: 'types.timeout.title' })).toBeInTheDocument();
     });
 
     it('should render retry button when onRetry is provided', () => {
       render(<ErrorState error="Error" onRetry={vi.fn()} />);
 
-      expect(screen.getByText('Try Again')).toBeInTheDocument();
+      expect(screen.getByText('tryAgain')).toBeInTheDocument();
     });
 
     it('should not render retry button when onRetry is not provided', () => {
       render(<ErrorState error="Error" />);
 
-      expect(screen.queryByText('Try Again')).not.toBeInTheDocument();
+      expect(screen.queryByText('tryAgain')).not.toBeInTheDocument();
     });
 
     it('should call onRetry when retry button is clicked', async () => {
       const onRetry = vi.fn();
       render(<ErrorState error="Error" onRetry={onRetry} />);
 
-      await user.click(screen.getByText('Try Again'));
+      await user.click(screen.getByText('tryAgain'));
       expect(onRetry).toHaveBeenCalledTimes(1);
     });
   });
@@ -92,28 +92,28 @@ describe('ErrorState', () => {
     it('should display dismiss button when onDismiss is provided', () => {
       render(<ErrorState error="Error" variant="inline" onDismiss={vi.fn()} />);
 
-      expect(screen.getByText('Dismiss')).toBeInTheDocument();
+      expect(screen.getByText('dismiss')).toBeInTheDocument();
     });
 
     it('should call onDismiss when dismiss button is clicked', async () => {
       const onDismiss = vi.fn();
       render(<ErrorState error="Error" variant="inline" onDismiss={onDismiss} />);
 
-      await user.click(screen.getByText('Dismiss'));
+      await user.click(screen.getByText('dismiss'));
       expect(onDismiss).toHaveBeenCalledTimes(1);
     });
 
     it('should render both retry and dismiss buttons', () => {
       render(<ErrorState error="Error" variant="inline" onRetry={vi.fn()} onDismiss={vi.fn()} />);
 
-      expect(screen.getByText('Try Again')).toBeInTheDocument();
-      expect(screen.getByText('Dismiss')).toBeInTheDocument();
+      expect(screen.getByText('tryAgain')).toBeInTheDocument();
+      expect(screen.getByText('dismiss')).toBeInTheDocument();
     });
 
     it('should have accessible dismiss button with aria-label', () => {
       render(<ErrorState error="Error" variant="inline" onDismiss={vi.fn()} />);
 
-      expect(screen.getByLabelText('Dismiss error')).toBeInTheDocument();
+      expect(screen.getByLabelText('dismissError')).toBeInTheDocument();
     });
   });
 });

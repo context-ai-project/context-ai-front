@@ -448,6 +448,44 @@ const content = useMemo(() => {
 ❌ Not cleaning up effects
 ❌ Not memoizing expensive operations
 
+## Code Smells to Avoid
+
+### 🏗 Structural
+
+| Smell | Description | How to Avoid |
+|-------|-------------|--------------|
+| **Long Method** | Functions/components exceeding ~200 lines | Extract into smaller functions, custom hooks, or sub-components |
+| **Large Class** | Components or stores with too many responsibilities | Split by single responsibility; one component = one purpose |
+| **Long Parameter List** | Functions with 4+ parameters | Group into an interface/object (e.g. `props`, `options`) |
+| **Data Clumps** | Groups of values that always appear together | Create a dedicated type or interface |
+
+### 🔄 Behavioral
+
+| Smell | Description | How to Avoid |
+|-------|-------------|--------------|
+| **Duplicate Code** | Repeated logic across components or files | Extract into shared utils, hooks, or components in `shared/` |
+| **Switch Statements** | Long `switch`/`if-else` chains for type-based logic | Use lookup objects, maps, or polymorphic components |
+| **Lazy Class** | A component or hook that does almost nothing | Inline it or merge it with a related module |
+| **Dead Code** | Unused imports, variables, functions, or components | Remove immediately; rely on ESLint `no-unused-vars` |
+
+### 🎯 Object-Oriented
+
+| Smell | Description | How to Avoid |
+|-------|-------------|--------------|
+| **Feature Envy** | A component accessing another component's state excessively | Move the logic to where the data lives, or lift state up |
+| **Inappropriate Intimacy** | Components tightly coupled to internal details of others | Use well-defined props/interfaces; communicate via callbacks |
+| **Refused Bequest** | Extending a component but ignoring most of its behavior | Prefer composition over inheritance |
+| **Middle Man** | A component that only delegates to another without adding value | Remove the wrapper; connect consumers directly |
+
+### 💾 Data
+
+| Smell | Description | How to Avoid |
+|-------|-------------|--------------|
+| **Primitive Obsession** | Using raw `string`/`number` instead of domain types | Create enums, branded types, or value objects (e.g. `SectorId`) |
+| **Data Class** | Types with only data and no behavior | Add helper methods or use alongside utility functions |
+| **Temporary Field** | State/props only used in specific conditions | Extract into a sub-component or conditional hook |
+| **Magic Numbers** | Hard-coded numeric/string literals | Extract into named constants (e.g. `MAX_PREVIEW_CHARS`) |
+
 ---
 
 Remember: Write code that is **readable, maintainable, and testable**. When in doubt, favor simplicity and clarity over cleverness.

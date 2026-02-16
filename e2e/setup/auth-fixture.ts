@@ -14,7 +14,9 @@ import { testUser } from '../fixtures/chat-data';
  */
 
 /**
- * Mock session data matching the structure expected by NextAuth v5 SessionProvider
+ * Mock session data matching the structure expected by NextAuth v5 SessionProvider.
+ * Includes `roles: ['admin']` so that admin-only features (dashboard stats,
+ * admin section, etc.) are visible during E2E testing.
  */
 const mockSession = {
   user: {
@@ -22,6 +24,7 @@ const mockSession = {
     name: testUser.name,
     email: testUser.email,
     image: testUser.picture,
+    roles: ['admin'],
   },
   accessToken: 'e2e-test-access-token',
   expires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),

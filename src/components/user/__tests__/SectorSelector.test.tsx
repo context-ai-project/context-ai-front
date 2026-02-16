@@ -17,6 +17,33 @@ vi.mock('@/hooks/useCurrentUser', () => ({
   }),
 }));
 
+// Mock sector store (SectorSelector now uses useActiveSectors)
+vi.mock('@/stores/sector.store', () => ({
+  useActiveSectors: () => [
+    {
+      id: 'sector-1',
+      name: 'Human Resources',
+      description: '',
+      icon: 'users',
+      status: 'active',
+      documentCount: 0,
+      createdAt: '',
+      updatedAt: '',
+    },
+    {
+      id: 'sector-2',
+      name: 'Engineering',
+      description: '',
+      icon: 'code',
+      status: 'active',
+      documentCount: 0,
+      createdAt: '',
+      updatedAt: '',
+    },
+  ],
+  SectorStoreProvider: ({ children }: { children: React.ReactNode }) => children,
+}));
+
 vi.mock('@/stores/user.store', async () => {
   const actual = await vi.importActual('@/stores/user.store');
   return {

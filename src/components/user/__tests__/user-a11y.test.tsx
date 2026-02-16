@@ -10,6 +10,33 @@ import { LogoutButton } from '../LogoutButton';
 import { SectorSelector } from '../SectorSelector';
 import { SECTORS } from '@/constants/sectors';
 
+// Mock sector store (SectorSelector now uses useActiveSectors)
+vi.mock('@/stores/sector.store', () => ({
+  useActiveSectors: () => [
+    {
+      id: SECTORS[0].id,
+      name: SECTORS[0].name,
+      description: '',
+      icon: 'users',
+      status: 'active',
+      documentCount: 0,
+      createdAt: '',
+      updatedAt: '',
+    },
+    {
+      id: SECTORS[1].id,
+      name: SECTORS[1].name,
+      description: '',
+      icon: 'code',
+      status: 'active',
+      documentCount: 0,
+      createdAt: '',
+      updatedAt: '',
+    },
+  ],
+  SectorStoreProvider: ({ children }: { children: React.ReactNode }) => children,
+}));
+
 // Mock useCurrentUser for SectorSelector
 vi.mock('@/hooks/useCurrentUser', () => ({
   useCurrentUser: () => ({

@@ -135,99 +135,60 @@ function useChatStoreContext() {
   return store;
 }
 
-/**
- * Hook to get current conversation ID
- */
-export const useConversationId = () => {
-  const store = useChatStoreContext();
-  return useStore(store, (state) => state.conversationId);
-};
+// ── Selector factory (eliminates repetitive 3-line hook boilerplate) ─────────
 
 /**
- * Hook to get loading state
+ * Creates a typed selector hook bound to the ChatStore context.
+ * Each call returns a hook that subscribes to a specific slice of state,
+ * preventing unnecessary re-renders on unrelated state changes.
  */
-export const useIsLoading = () => {
-  const store = useChatStoreContext();
-  return useStore(store, (state) => state.isLoading);
-};
+function createChatSelector<T>(selector: (state: ChatState) => T) {
+  return () => {
+    const store = useChatStoreContext();
+    return useStore(store, selector);
+  };
+}
 
-/**
- * Hook to get error state
- */
-export const useError = () => {
-  const store = useChatStoreContext();
-  return useStore(store, (state) => state.error);
-};
+// ── Exported hooks ───────────────────────────────────────────────────────────
 
-/**
- * Hook to get messages
- */
-export const useMessages = () => {
-  const store = useChatStoreContext();
-  return useStore(store, (state) => state.messages);
-};
+/** Hook to get current conversation ID */
+export const useConversationId = createChatSelector((s) => s.conversationId);
 
-/**
- * Hook to get the full store state (for internal use)
- */
-export const useChatStore = () => {
-  const store = useChatStoreContext();
-  return useStore(store, (state) => state);
-};
+/** Hook to get loading state */
+export const useIsLoading = createChatSelector((s) => s.isLoading);
 
-/**
- * Individual action hooks (prevents re-render issues)
- */
-export const useAddMessage = () => {
-  const store = useChatStoreContext();
-  return useStore(store, (state) => state.addMessage);
-};
+/** Hook to get error state */
+export const useError = createChatSelector((s) => s.error);
 
-export const useSetConversationId = () => {
-  const store = useChatStoreContext();
-  return useStore(store, (state) => state.setConversationId);
-};
+/** Hook to get messages */
+export const useMessages = createChatSelector((s) => s.messages);
 
-export const useSetLoading = () => {
-  const store = useChatStoreContext();
-  return useStore(store, (state) => state.setLoading);
-};
+/** Hook to get the full store state (for internal use) */
+export const useChatStore = createChatSelector((s) => s);
 
-export const useSetError = () => {
-  const store = useChatStoreContext();
-  return useStore(store, (state) => state.setError);
-};
+/** Hook to add a single message */
+export const useAddMessage = createChatSelector((s) => s.addMessage);
 
-export const useClearMessages = () => {
-  const store = useChatStoreContext();
-  return useStore(store, (state) => state.clearMessages);
-};
+/** Hook to set conversation ID */
+export const useSetConversationId = createChatSelector((s) => s.setConversationId);
 
-export const useResetChat = () => {
-  const store = useChatStoreContext();
-  return useStore(store, (state) => state.reset);
-};
+/** Hook to set loading state */
+export const useSetLoading = createChatSelector((s) => s.setLoading);
 
-/**
- * Hook to set messages (replaces entire messages array)
- */
-export const useSetMessages = () => {
-  const store = useChatStoreContext();
-  return useStore(store, (state) => state.setMessages);
-};
+/** Hook to set error state */
+export const useSetError = createChatSelector((s) => s.setError);
 
-/**
- * Hook to add both user and assistant messages at once
- */
-export const useAddMessages = () => {
-  const store = useChatStoreContext();
-  return useStore(store, (state) => state.addMessages);
-};
+/** Hook to clear all messages */
+export const useClearMessages = createChatSelector((s) => s.clearMessages);
 
-/**
- * Hook to clear error state
- */
-export const useClearError = () => {
-  const store = useChatStoreContext();
-  return useStore(store, (state) => state.clearError);
-};
+/** Hook to reset chat to initial state */
+export const useResetChat = createChatSelector((s) => s.reset);
+
+/** Hook to set messages (replaces entire messages array) */
+export const useSetMessages = createChatSelector((s) => s.setMessages);
+
+/** Hook to add both user and assistant messages at once */
+export const useAddMessages = createChatSelector((s) => s.addMessages);
+
+/** Hook to clear error state */
+export const useClearError = createChatSelector((s) => s.clearError);

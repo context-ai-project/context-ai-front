@@ -2,14 +2,36 @@ import { test, expect } from '../setup/auth-fixture';
 
 /**
  * E2E Tests for the Dashboard Page
- * Uses auth fixture to bypass authentication
+ * Uses auth fixture to bypass authentication.
+ *
+ * The mock session includes `roles: ['admin']` so the admin stats view is shown.
+ * The admin stats API (`/admin/stats`) is mocked to return predictable data.
  */
 
 const LOCALE = 'en';
 const DASHBOARD_URL = `/${LOCALE}/dashboard`;
 
+/** Mock data returned by the admin stats API */
+const MOCK_ADMIN_STATS = {
+  totalConversations: 1247,
+  totalUsers: 24,
+  recentUsers: 5,
+  totalDocuments: 156,
+  totalSectors: 4,
+  activeSectors: 3,
+};
+
 test.describe('Dashboard Page — Content', () => {
   test.beforeEach(async ({ page }) => {
+    // Mock the admin stats API so the component renders predictable values
+    await page.route('**/admin/stats', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(MOCK_ADMIN_STATS),
+      });
+    });
+
     await page.goto(DASHBOARD_URL);
     await page.waitForLoadState('networkidle');
   });
@@ -20,20 +42,24 @@ test.describe('Dashboard Page — Content', () => {
   });
 
   test('should render the stats cards', async ({ page }) => {
-    // Total Queries
-    await expect(page.getByText('Total Queries')).toBeVisible();
-    await expect(page.getByText('1,247')).toBeVisible();
+    // Scope assertions to main content to avoid ambiguity with sidebar links.
+    // Use { exact: true } to prevent substring matches (e.g. "Across all users").
+    const main = page.locator('main');
 
-    // Total Documents
-    await expect(page.getByText('Total Documents')).toBeVisible();
-    await expect(page.getByText('156')).toBeVisible();
+    // Conversations (i18n key: dashboard.stats.conversations.title)
+    await expect(main.getByText('Conversations', { exact: true })).toBeVisible();
+    await expect(main.getByText('1,247')).toBeVisible();
 
-    // Active Users
-    await expect(page.getByText('Active Users')).toBeVisible();
-    await expect(page.getByText('24', { exact: true })).toBeVisible();
+    // Documents (i18n key: dashboard.stats.documents.title)
+    await expect(main.getByText('Documents', { exact: true })).toBeVisible();
+    await expect(main.getByText('156')).toBeVisible();
 
-    // Accuracy Rate
-    await expect(page.getByText('Accuracy Rate')).toBeVisible();
+    // Users (i18n key: dashboard.stats.users.title)
+    await expect(main.getByText('Users', { exact: true })).toBeVisible();
+    await expect(main.getByText('24', { exact: true })).toBeVisible();
+
+    // Sectors (i18n key: dashboard.stats.sectors.title)
+    await expect(main.getByText('Sectors', { exact: true })).toBeVisible();
   });
 
   test('should render the "Coming Soon" placeholder', async ({ page }) => {

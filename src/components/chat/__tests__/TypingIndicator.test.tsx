@@ -43,10 +43,11 @@ describe('TypingIndicator', () => {
     expect(indicator).toHaveClass('custom-class');
   });
 
-  it('should render an avatar for the assistant', () => {
-    render(<TypingIndicator />);
+  it('should render a brain icon for the assistant', () => {
+    const { container } = render(<TypingIndicator />);
 
-    // UserAvatar renders an image with alt text
-    expect(screen.getByText('A')).toBeInTheDocument(); // Avatar fallback initial for "Assistant"
+    // Brain icon is rendered as an SVG with the lucide-brain class
+    const brainIcon = container.querySelector('.lucide-brain');
+    expect(brainIcon).toBeInTheDocument();
   });
 });

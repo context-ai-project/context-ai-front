@@ -1,22 +1,29 @@
 import { knowledgeApi } from '../knowledge.api';
 import type {
   KnowledgeSourceDto,
+  KnowledgeSourceDetailDto,
   UploadDocumentResponse,
   DeleteSourceResponse,
 } from '../knowledge.api';
+import { apiClient } from '../client';
+import type { Mock } from 'vitest';
 
-// Mock global fetch
-const mockFetch = vi.fn();
-global.fetch = mockFetch;
+// Mock apiClient — knowledge.api now delegates all HTTP calls to it
+vi.mock('../client', () => ({
+  apiClient: {
+    get: vi.fn(),
+    delete: vi.fn(),
+    postFormData: vi.fn(),
+  },
+}));
+
+const mockGet = apiClient.get as Mock;
+const mockDelete = apiClient.delete as Mock;
+const mockPostFormData = apiClient.postFormData as Mock;
 
 describe('knowledgeApi', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    // Mock token fetch (first call to /api/auth/token)
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: () => Promise.resolve({ accessToken: 'test-token' }),
-    });
   });
 
   describe('listDocuments', () => {
@@ -34,73 +41,41 @@ describe('knowledgeApi', () => {
         },
       ];
 
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve(mockDocs),
-      });
+      mockGet.mockResolvedValueOnce(mockDocs);
 
       const result = await knowledgeApi.listDocuments();
 
       expect(result).toEqual(mockDocs);
-      expect(mockFetch).toHaveBeenCalledTimes(2);
-      // Second call should be to knowledge/documents
-      const secondCall = mockFetch.mock.calls[1];
-      expect(secondCall[0]).toContain('/knowledge/documents');
-      expect(secondCall[0]).not.toContain('sectorId');
+      expect(mockGet).toHaveBeenCalledTimes(1);
+      expect(mockGet).toHaveBeenCalledWith('/knowledge/documents');
     });
 
     it('should pass sectorId as query parameter', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve([]),
-      });
+      mockGet.mockResolvedValueOnce([]);
 
       await knowledgeApi.listDocuments('sector-123');
 
-      const secondCall = mockFetch.mock.calls[1];
-      expect(secondCall[0]).toContain('?sectorId=sector-123');
+      expect(mockGet).toHaveBeenCalledWith('/knowledge/documents?sectorId=sector-123');
     });
 
-    it('should throw on non-ok response', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        status: 500,
-        statusText: 'Internal Server Error',
-        json: () => Promise.resolve({ message: 'DB error' }),
-      });
+    it('should propagate errors from apiClient', async () => {
+      mockGet.mockRejectedValueOnce(new Error('DB error'));
 
       await expect(knowledgeApi.listDocuments()).rejects.toThrow('DB error');
     });
 
-    it('should throw generic error when response has no message', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        status: 500,
-        statusText: 'Internal Server Error',
-        json: () => Promise.reject(new Error('parse error')),
-      });
+    it('should encode sectorId in query parameter', async () => {
+      mockGet.mockResolvedValueOnce([]);
 
-      await expect(knowledgeApi.listDocuments()).rejects.toThrow(
-        'Failed to load documents: 500 Internal Server Error',
-      );
-    });
+      await knowledgeApi.listDocuments('sector with spaces');
 
-    it('should include Authorization header with token', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve([]),
-      });
-
-      await knowledgeApi.listDocuments();
-
-      const secondCall = mockFetch.mock.calls[1];
-      expect(secondCall[1].headers.Authorization).toBe('Bearer test-token');
+      expect(mockGet).toHaveBeenCalledWith('/knowledge/documents?sectorId=sector%20with%20spaces');
     });
   });
 
   describe('getDocumentDetail', () => {
     it('should fetch document detail by sourceId', async () => {
-      const mockDetail = {
+      const mockDetail: KnowledgeSourceDetailDto = {
         id: 'doc-1',
         title: 'Doc 1',
         sectorId: 'sector-1',
@@ -113,25 +88,16 @@ describe('knowledgeApi', () => {
         updatedAt: '2025-01-01T00:00:00Z',
       };
 
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve(mockDetail),
-      });
+      mockGet.mockResolvedValueOnce(mockDetail);
 
       const result = await knowledgeApi.getDocumentDetail('doc-1');
 
       expect(result).toEqual(mockDetail);
-      const secondCall = mockFetch.mock.calls[1];
-      expect(secondCall[0]).toContain('/knowledge/documents/doc-1');
+      expect(mockGet).toHaveBeenCalledWith('/knowledge/documents/doc-1');
     });
 
-    it('should throw on non-ok response', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        status: 404,
-        statusText: 'Not Found',
-        json: () => Promise.resolve({ message: 'Source not found' }),
-      });
+    it('should propagate errors from apiClient', async () => {
+      mockGet.mockRejectedValueOnce(new Error('Source not found'));
 
       await expect(knowledgeApi.getDocumentDetail('missing-id')).rejects.toThrow(
         'Source not found',
@@ -151,10 +117,7 @@ describe('knowledgeApi', () => {
         processingTimeMs: 500,
       };
 
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve(mockResponse),
-      });
+      mockPostFormData.mockResolvedValueOnce(mockResponse);
 
       const file = new File(['content'], 'test.pdf', { type: 'application/pdf' });
       const result = await knowledgeApi.uploadDocument({
@@ -165,25 +128,25 @@ describe('knowledgeApi', () => {
       });
 
       expect(result).toEqual(mockResponse);
-      const secondCall = mockFetch.mock.calls[1];
-      expect(secondCall[0]).toContain('/knowledge/documents/upload');
-      expect(secondCall[1].method).toBe('POST');
-      expect(secondCall[1].body).toBeInstanceOf(FormData);
+      expect(mockPostFormData).toHaveBeenCalledTimes(1);
+
+      const [endpoint, formData] = mockPostFormData.mock.calls[0] as [string, FormData];
+      expect(endpoint).toBe('/knowledge/documents/upload');
+      expect(formData).toBeInstanceOf(FormData);
+      expect(formData.get('title')).toBe('Test Doc');
+      expect(formData.get('sectorId')).toBe('sector-1');
+      expect(formData.get('sourceType')).toBe('PDF');
     });
 
     it('should include metadata when provided', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: () =>
-          Promise.resolve({
-            sourceId: 's1',
-            title: 'T',
-            sectorId: 's',
-            sourceType: 'PDF',
-            status: 'COMPLETED',
-            totalFragments: 1,
-            processingTimeMs: 100,
-          }),
+      mockPostFormData.mockResolvedValueOnce({
+        sourceId: 's1',
+        title: 'T',
+        sectorId: 's',
+        sourceType: 'PDF',
+        status: 'COMPLETED',
+        totalFragments: 1,
+        processingTimeMs: 100,
       });
 
       const file = new File(['content'], 'test.pdf', { type: 'application/pdf' });
@@ -195,18 +158,22 @@ describe('knowledgeApi', () => {
         metadata: { author: 'Test' },
       });
 
-      const secondCall = mockFetch.mock.calls[1];
-      const formData = secondCall[1].body as FormData;
+      const [, formData] = mockPostFormData.mock.calls[0] as [string, FormData];
       expect(formData.get('metadata')).toBe(JSON.stringify({ author: 'Test' }));
     });
 
-    it('should throw on non-ok response', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        status: 400,
-        statusText: 'Bad Request',
-        json: () => Promise.resolve({ message: 'Invalid file type' }),
-      });
+    it('should throw on invalid upload response (Zod validation)', async () => {
+      // Return data missing required fields
+      mockPostFormData.mockResolvedValueOnce({ sourceId: 's1' });
+
+      const file = new File(['content'], 'test.pdf', { type: 'application/pdf' });
+      await expect(
+        knowledgeApi.uploadDocument({ file, title: 'T', sectorId: 's', sourceType: 'PDF' }),
+      ).rejects.toThrow('Invalid upload response');
+    });
+
+    it('should propagate errors from apiClient', async () => {
+      mockPostFormData.mockRejectedValueOnce(new Error('Invalid file type'));
 
       const file = new File(['content'], 'test.exe', { type: 'application/x-msdownload' });
       await expect(
@@ -223,57 +190,20 @@ describe('knowledgeApi', () => {
         vectorsDeleted: true,
       };
 
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve(mockResponse),
-      });
+      mockDelete.mockResolvedValueOnce(mockResponse);
 
       const result = await knowledgeApi.deleteSource('doc-1', 'sector-1');
 
       expect(result).toEqual(mockResponse);
-      const secondCall = mockFetch.mock.calls[1];
-      expect(secondCall[0]).toContain('/knowledge/documents/doc-1');
-      expect(secondCall[0]).toContain('sectorId=sector-1');
-      expect(secondCall[1].method).toBe('DELETE');
+      expect(mockDelete).toHaveBeenCalledWith('/knowledge/documents/doc-1?sectorId=sector-1');
     });
 
-    it('should throw on non-ok response', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        status: 404,
-        statusText: 'Not Found',
-        json: () => Promise.resolve({ message: 'Source not found' }),
-      });
+    it('should propagate errors from apiClient', async () => {
+      mockDelete.mockRejectedValueOnce(new Error('Source not found'));
 
       await expect(knowledgeApi.deleteSource('missing-id', 'sector-1')).rejects.toThrow(
         'Source not found',
       );
-    });
-  });
-
-  describe('getAccessToken', () => {
-    it('should handle token fetch failure gracefully', async () => {
-      // Reset mocks to set up a failing token request
-      mockFetch.mockReset();
-
-      // Token fetch fails
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        json: () => Promise.resolve({}),
-      });
-
-      // Documents fetch succeeds
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve([]),
-      });
-
-      const result = await knowledgeApi.listDocuments();
-
-      expect(result).toEqual([]);
-      // No Authorization header should be sent
-      const secondCall = mockFetch.mock.calls[1];
-      expect(secondCall[1].headers.Authorization).toBeUndefined();
     });
   });
 });

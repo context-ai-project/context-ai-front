@@ -14,26 +14,57 @@
     "clear": "Limpiar"
   },
   "nav": {
-    "dashboard": "Dashboard",
-    "chat": "Chat",
+    "dashboard": "Panel",
+    "chat": "Chat IA",
     "knowledge": "Base de Conocimiento",
+    "documents": "Documentos",
+    "sectors": "Sectores",
+    "admin": "Administración",
+    "platform": "Plataforma",
+    "management": "Gestión",
     "profile": "Perfil",
     "settings": "Configuración",
     "signIn": "Iniciar Sesión",
-    "signOut": "Cerrar Sesión"
+    "signOut": "Cerrar Sesión",
+    "userMenu": "Menú de usuario"
   },
   "chat": {
     "title": "Chat Asistente",
+    "header": {
+      "title": "Asistente Context.ai",
+      "subtitle": "Pregunta sobre el conocimiento de tu empresa"
+    },
     "placeholder": "Escribe tu mensaje... (presiona Enter para enviar)",
     "placeholderLoading": "Esperando respuesta...",
     "send": "Enviar mensaje",
     "clear": "Limpiar conversación",
+    "clearDialog": {
+      "title": "¿Limpiar conversación?",
+      "description": "Todos los mensajes de esta conversación se eliminarán permanentemente. Esta acción no se puede deshacer.",
+      "cancel": "Cancelar",
+      "confirm": "Limpiar conversación"
+    },
     "newConversation": "Nueva conversación",
     "typing": "El asistente está escribiendo...",
     "emptyState": {
-      "title": "¡Bienvenido a Context.AI Chat!",
-      "description": "Soy tu asistente inteligente, listo para ayudarte con tus necesidades de gestión de conocimiento. Pregúntame lo que quieras sobre tus documentos y datos.",
-      "suggestionsTitle": "Inicia una conversación:"
+      "welcomeTitle": "Bienvenido a Context.ai",
+      "subtitle": "Tu asistente inteligente de conocimiento impulsado por tecnología RAG",
+      "badge": "Pregúntame lo que quieras sobre tus documentos",
+      "tryAsking": "Intenta preguntar:",
+      "features": {
+        "naturalConversations": {
+          "title": "Conversaciones Naturales",
+          "description": "Haz preguntas en lenguaje natural y obtén respuestas precisas"
+        },
+        "contextAware": {
+          "title": "Consciente del Contexto",
+          "description": "Respuestas basadas en la base de conocimiento de tu organización"
+        },
+        "sourceCitations": {
+          "title": "Citas de Fuentes",
+          "description": "Cada respuesta incluye referencias a documentos fuente"
+        }
+      }
     },
     "errors": {
       "networkError": "Error de conexión. Por favor verifica tu conexión a internet.",
@@ -76,6 +107,74 @@
     "sales": "Ventas",
     "selectSector": "Selecciona un Sector"
   },
+  "sectors": {
+    "title": "Sectores de Conocimiento",
+    "subtitle": "Bases de conocimiento aisladas para cada departamento",
+    "newSector": "Nuevo Sector",
+    "searchPlaceholder": "Buscar sectores...",
+    "noResults": "No se encontraron sectores que coincidan con tu búsqueda.",
+    "empty": "Aún no hay sectores. Crea tu primer sector para comenzar a organizar el conocimiento.",
+    "loading": "Cargando sectores...",
+    "documentCount": "{count} docs",
+    "updatedAt": "Actualizado {date}",
+    "active": "Activo",
+    "inactive": "Inactivo",
+    "form": {
+      "createTitle": "Crear Nuevo Sector",
+      "editTitle": "Editar Sector",
+      "name": "Nombre del Sector",
+      "namePlaceholder": "ej., Marketing",
+      "description": "Descripción",
+      "descriptionPlaceholder": "Describe qué conocimiento contendrá este sector...",
+      "icon": "Ícono del Sector",
+      "selectIcon": "Selecciona un ícono",
+      "createButton": "Crear Sector",
+      "saveButton": "Guardar Cambios",
+      "creating": "Creando...",
+      "saving": "Guardando..."
+    },
+    "validation": {
+      "nameRequired": "El nombre del sector es requerido.",
+      "descriptionRequired": "La descripción es requerida.",
+      "nameExists": "Ya existe un sector con este nombre.",
+      "nameSimilar": "Ya existe un sector con un nombre similar: \"{names}\". ¿Deseas continuar?",
+      "nameMinLength": "El nombre debe tener al menos 2 caracteres.",
+      "nameMaxLength": "El nombre no puede exceder 50 caracteres.",
+      "descriptionMinLength": "La descripción debe tener al menos 10 caracteres.",
+      "descriptionMaxLength": "La descripción no puede exceder 300 caracteres."
+    },
+    "status": {
+      "activateTitle": "Activar Sector",
+      "activateMessage": "¿Activar \"{name}\"? Será visible y accesible para los usuarios.",
+      "deactivateTitle": "Desactivar Sector",
+      "deactivateMessage": "¿Desactivar \"{name}\"? Se ocultará y será inaccesible para todos los usuarios.",
+      "confirm": "Confirmar",
+      "cancel": "Cancelar"
+    },
+    "delete": {
+      "title": "Eliminar Sector",
+      "message": "¿Estás seguro de que quieres eliminar \"{name}\"? Esta acción no se puede deshacer.",
+      "hasDocuments": "Este sector tiene {count} documento(s) asociado(s) y no se puede eliminar. Por favor elimina todos los documentos primero.",
+      "confirm": "Eliminar Sector",
+      "cancel": "Cancelar",
+      "success": "Sector eliminado exitosamente.",
+      "error": "Error al eliminar el sector."
+    },
+    "icons": {
+      "code": "Código",
+      "users": "Usuarios",
+      "trending-up": "Tendencia",
+      "layout": "Diseño",
+      "heart": "Corazón",
+      "briefcase": "Maletín",
+      "building": "Edificio",
+      "globe": "Globo",
+      "shield": "Escudo",
+      "lightbulb": "Bombilla",
+      "book": "Libro",
+      "megaphone": "Megáfono"
+    }
+  },
   "auth": {
     "signInTitle": "Iniciar Sesión con",
     "signInDescription": "Inicia sesión en tu cuenta para acceder a tu panel de gestión de conocimiento",
@@ -87,40 +186,64 @@
     "title": "¡Ups! Algo salió mal.",
     "description": "Lo sentimos, pero ocurrió un error inesperado. Por favor intenta de nuevo.",
     "tryAgain": "Intentar de nuevo",
-    "details": "Detalles del Error"
+    "dismiss": "Descartar",
+    "dismissError": "Descartar error",
+    "reloadPage": "Recargar Página",
+    "details": "Detalles del Error",
+    "devOnlyDetails": "Detalles del Error (Solo Desarrollo)",
+    "somethingWentWrong": "Algo salió mal",
+    "defaultBoundaryMessage": "Ocurrió un error inesperado al renderizar este componente. Por favor intenta recargar la página.",
+    "types": {
+      "network": {
+        "title": "Error de Red",
+        "description": "No se pudo conectar con el servidor. Por favor verifica tu conexión a internet e intenta de nuevo."
+      },
+      "auth": {
+        "title": "Error de Autenticación",
+        "description": "Tu sesión ha expirado o no tienes permiso para realizar esta acción. Por favor inicia sesión de nuevo."
+      },
+      "validation": {
+        "title": "Error de Validación",
+        "description": "La información proporcionada no es válida. Por favor revisa los datos e intenta de nuevo."
+      },
+      "server": {
+        "title": "Error del Servidor",
+        "description": "El servidor encontró un error al procesar tu solicitud. Por favor intenta más tarde."
+      },
+      "timeout": {
+        "title": "Tiempo de Espera Agotado",
+        "description": "La solicitud tardó demasiado en completarse. Por favor verifica tu conexión e intenta de nuevo."
+      },
+      "unknown": {
+        "title": "Error Inesperado",
+        "description": "Ocurrió un error inesperado. Por favor intenta de nuevo o contacta a soporte si el problema persiste."
+      }
+    }
   },
   "suggestedQuestions": {
-    "contextAI": {
-      "benefits": "¿Cuáles son los beneficios clave de Context.AI?",
-      "privacy": "¿Cómo maneja Context.AI la privacidad de datos?",
-      "integration": "¿Puede Context.AI integrarse con mis sistemas existentes?",
-      "architecture": "Háblame sobre la arquitectura de Context.AI.",
-      "rag": "¿Qué es RAG (Generación Aumentada por Recuperación)?",
-      "getStarted": "¿Cómo puedo empezar con Context.AI?"
-    },
     "hr": {
-      "vacation": "¿Cómo solicito vacaciones?",
-      "benefits": "¿Qué beneficios ofrece la empresa?",
-      "remote": "¿Cuál es la política de trabajo remoto?",
-      "performance": "¿Cuándo son las evaluaciones de desempeño?",
-      "training": "¿Qué programas de capacitación están disponibles?",
-      "policies": "¿Dónde puedo encontrar las políticas de RRHH?"
+      "vacationPolicy": "¿Cuál es la política de vacaciones de la empresa?",
+      "expenseReport": "¿Cómo presento un informe de gastos?",
+      "benefits": "¿Cuáles son los beneficios para empleados?",
+      "timeOff": "¿Cómo puedo solicitar días libres?"
     },
     "engineering": {
-      "deploy": "¿Cómo despliego a producción?",
-      "architecture": "¿Cuál es la arquitectura del sistema?",
-      "testing": "¿Cuáles son los estándares de testing?",
-      "codeReview": "¿Cuál es el proceso de revisión de código?",
-      "cicd": "¿Cómo funciona el pipeline CI/CD?",
-      "docs": "¿Dónde está la documentación técnica?"
+      "codeReview": "¿Cuál es nuestro proceso de revisión de código?",
+      "cicd": "¿Cómo manejamos los despliegues CI/CD?",
+      "standards": "¿Cuáles son los estándares de codificación?",
+      "devSetup": "¿Cómo configuro mi entorno de desarrollo?"
     },
     "sales": {
-      "pricing": "¿Cuál es nuestra estructura de precios?",
-      "competitors": "¿Quiénes son nuestros principales competidores?",
-      "demo": "¿Cómo programo una demo?",
-      "objections": "¿Cómo manejo objeciones comunes?",
-      "crm": "¿Cómo uso el sistema CRM?",
-      "targets": "¿Cuáles son las metas de ventas?"
+      "pricing": "¿Cuál es nuestra estrategia de precios?",
+      "qualifyLead": "¿Cómo califico un prospecto?",
+      "targets": "¿Cuáles son las metas de ventas de este trimestre?",
+      "proposal": "¿Cómo creo una propuesta de ventas?"
+    },
+    "default": {
+      "helpFind": "¿Qué información puedes ayudarme a encontrar?",
+      "howItWorks": "¿Cómo funciona este sistema?",
+      "documents": "¿A qué documentos tienes acceso?",
+      "summarize": "¿Puedes resumir las actualizaciones recientes?"
     }
   },
   "language": {
@@ -156,20 +279,6 @@
       "cta": {
         "primary": "Comenzar Prueba Gratuita",
         "secondary": "Ver Demo"
-      },
-      "stats": {
-        "resolution": {
-          "value": "92%",
-          "label": "Tasa de Resolución de Consultas"
-        },
-        "onboarding": {
-          "value": "30%",
-          "label": "Incorporación Más Rápida"
-        },
-        "questions": {
-          "value": "1.2K+",
-          "label": "Preguntas Respondidas"
-        }
       }
     },
     "features": {
@@ -303,6 +412,7 @@
     "errorLoading": "Error al cargar documentos. Por favor intenta de nuevo.",
     "viewDocument": "Ver Documento",
     "deleteDocument": "Eliminar Documento",
+    "actions": "Acciones del documento",
     "documentContent": "Contenido del Documento",
     "fragments": "Fragmentos",
     "createdAt": "Creado",
@@ -321,30 +431,99 @@
       "error": "Error al eliminar el documento."
     }
   },
+  "admin": {
+    "title": "Administración",
+    "subtitle": "Gestiona usuarios, roles y permisos de acceso a sectores",
+    "tabs": {
+      "users": "Usuarios",
+      "permissions": "Permisos"
+    },
+    "search": {
+      "placeholder": "Buscar usuarios..."
+    },
+    "inviteUser": "Invitar Usuario",
+    "table": {
+      "user": "Usuario",
+      "role": "Rol",
+      "status": "Estado",
+      "joined": "Registro",
+      "actions": "Acciones"
+    },
+    "roles": {
+      "admin": "Admin",
+      "manager": "Manager",
+      "user": "Usuario"
+    },
+    "status": {
+      "active": "Activo",
+      "inactive": "Inactivo"
+    },
+    "actions": {
+      "changeRole": "Cambiar Rol",
+      "activate": "Activar",
+      "deactivate": "Desactivar",
+      "userActions": "Acciones de usuario"
+    },
+    "permissions": {
+      "title": "Matriz de Acceso a Sectores",
+      "subtitle": "Controla qué usuarios tienen acceso a cada sector de conocimiento. Los administradores siempre tienen acceso a todos los sectores.",
+      "searchPlaceholder": "Buscar por nombre de usuario...",
+      "toggleAccess": "Alternar acceso de {user} a {sector}"
+    },
+    "roleChange": {
+      "title": "Cambiar Rol",
+      "message": "Selecciona un nuevo rol para {name}:",
+      "confirm": "Guardar",
+      "cancel": "Cancelar",
+      "success": "Rol actualizado exitosamente.",
+      "error": "Error al actualizar el rol."
+    },
+    "statusChange": {
+      "activateTitle": "Activar Usuario",
+      "activateMessage": "¿Activar a {name}? Podrá acceder a la aplicación.",
+      "deactivateTitle": "Desactivar Usuario",
+      "deactivateMessage": "¿Desactivar a {name}? No podrá acceder a la aplicación.",
+      "confirm": "Confirmar",
+      "cancel": "Cancelar",
+      "success": "Estado del usuario actualizado.",
+      "error": "Error al actualizar el estado del usuario."
+    },
+    "loading": "Cargando usuarios...",
+    "noResults": "No se encontraron usuarios que coincidan con tu búsqueda.",
+    "error": "Error al cargar usuarios. Por favor intenta de nuevo."
+  },
   "dashboard": {
     "title": "Panel de Control",
     "subtitle": "Resumen de tu plataforma de conocimiento",
     "stats": {
-      "queries": {
-        "title": "Consultas Totales",
-        "change": "92% resueltas"
+      "conversations": {
+        "title": "Conversaciones",
+        "subtitle": "De todos los usuarios"
       },
       "documents": {
-        "title": "Documentos Totales",
-        "change": "+12 este mes"
+        "title": "Documentos",
+        "subtitle": "Fuentes de conocimiento"
       },
       "users": {
-        "title": "Usuarios Activos",
-        "change": "+3 esta semana"
+        "title": "Usuarios",
+        "subtitle": "{recent} nuevos este mes"
       },
-      "accuracy": {
-        "title": "Tasa de Precisión",
-        "change": "+5% de mejora"
+      "sectors": {
+        "title": "Sectores",
+        "subtitle": "{active} activos"
       }
     },
     "comingSoon": {
       "title": "Más Análisis Próximamente",
       "description": "Estamos trabajando en funciones detalladas de análisis y reportes para tu base de conocimiento."
+    },
+    "welcome": {
+      "title": "Bienvenido a Context.ai",
+      "subtitle": "Tu asistente inteligente de conocimiento",
+      "chatCta": "Iniciar una conversación",
+      "chatDescription": "Haz preguntas sobre la base de conocimiento de tu empresa y obtén respuestas con IA.",
+      "documentsCta": "Explorar documentos",
+      "documentsDescription": "Explora las fuentes de conocimiento disponibles en la plataforma."
     }
   }
 }

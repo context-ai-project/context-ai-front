@@ -35,10 +35,9 @@ test.describe('Landing Page — Content & Layout', () => {
     await expect(page.getByRole('link', { name: 'View Demo' })).toBeVisible();
   });
 
-  test('should render hero stats bar', async ({ page }) => {
-    await expect(page.getByText('92%')).toBeVisible();
-    await expect(page.getByText('Query Resolution Rate')).toBeVisible();
-    await expect(page.getByText('1.2K+')).toBeVisible();
+  test('should render the hero badge', async ({ page }) => {
+    // The hero section now shows the AI orchestration badge instead of a stats bar
+    await expect(page.getByText('AI-Powered Knowledge Orchestration')).toBeVisible();
   });
 
   test('should render the features section', async ({ page }) => {

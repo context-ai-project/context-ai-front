@@ -41,7 +41,8 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>,
     );
 
-    expect(screen.getByText('Something went wrong')).toBeInTheDocument();
+    // With useTranslations mock, keys are returned as-is
+    expect(screen.getByText('somethingWentWrong')).toBeInTheDocument();
     expect(screen.getByText('Test error message')).toBeInTheDocument();
   });
 
@@ -53,7 +54,7 @@ describe('ErrorBoundary', () => {
     );
 
     expect(screen.getByText('Custom error fallback')).toBeInTheDocument();
-    expect(screen.queryByText('Something went wrong')).not.toBeInTheDocument();
+    expect(screen.queryByText('somethingWentWrong')).not.toBeInTheDocument();
   });
 
   it('should display "Try Again" and "Reload Page" buttons', () => {
@@ -63,8 +64,8 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>,
     );
 
-    expect(screen.getByRole('button', { name: /try again/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /reload page/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /tryAgain/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /reloadPage/i })).toBeInTheDocument();
   });
 
   it('should recover when "Try Again" is clicked and error is resolved', async () => {
@@ -85,12 +86,12 @@ describe('ErrorBoundary', () => {
     );
 
     // Error state
-    expect(screen.getByText('Something went wrong')).toBeInTheDocument();
+    expect(screen.getByText('somethingWentWrong')).toBeInTheDocument();
 
     // Resolve the error
     shouldThrow = false;
 
-    await user.click(screen.getByRole('button', { name: /try again/i }));
+    await user.click(screen.getByRole('button', { name: /tryAgain/i }));
 
     // Force rerender after state reset
     rerender(
@@ -112,7 +113,7 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>,
     );
 
-    await user.click(screen.getByRole('button', { name: /try again/i }));
+    await user.click(screen.getByRole('button', { name: /tryAgain/i }));
 
     expect(onResetMock).toHaveBeenCalledTimes(1);
   });
@@ -125,11 +126,11 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>,
     );
 
-    // The <details> element with "Error Details (Development Only)" should not render
-    expect(screen.queryByText(/error details/i)).not.toBeInTheDocument();
+    // The <details> element with development-only details should not render
+    expect(screen.queryByText(/devOnlyDetails/i)).not.toBeInTheDocument();
 
     // But the error message should still be shown in the default fallback
-    expect(screen.getByText('Something went wrong')).toBeInTheDocument();
+    expect(screen.getByText('somethingWentWrong')).toBeInTheDocument();
     expect(screen.getByText('Test error message')).toBeInTheDocument();
   });
 });

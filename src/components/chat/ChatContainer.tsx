@@ -1,6 +1,7 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
+import { ChatHeader } from './ChatHeader';
 import { MessageList } from './MessageList';
 import { MessageInput } from './MessageInput';
 import { EmptyState } from './EmptyState';
@@ -79,10 +80,13 @@ export function ChatContainer() {
   const showEmptyState = messages.length === 0 && !isLoading && !error;
 
   return (
-    <div className="flex h-[calc(100svh-3.5rem)] flex-col">
+    <div className="absolute inset-0 flex flex-col">
+      {/* Chat header with sector selector */}
+      <ChatHeader />
+
       {/* Messages area with scroll */}
       <div className="flex-1 overflow-y-auto">
-        <div className="mx-auto max-w-4xl px-4 py-6">
+        <div className="mx-auto max-w-6xl px-6 py-6">
           {error && (
             <div className="mb-4">
               <ErrorState error={error} onDismiss={() => setError(null)} variant="inline" />
@@ -99,7 +103,7 @@ export function ChatContainer() {
 
       {/* Input area - fixed at bottom */}
       <div className="border-border bg-background shrink-0 border-t">
-        <div className="mx-auto max-w-4xl px-4 py-4">
+        <div className="mx-auto max-w-6xl px-6 py-4">
           <MessageInput
             onSendMessage={handleSendMessage}
             onClearConversation={handleClearConversation}

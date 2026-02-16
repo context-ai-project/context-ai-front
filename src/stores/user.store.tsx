@@ -122,42 +122,31 @@ function useUserStoreContext() {
   return store;
 }
 
-/**
- * Hook to get current sector ID
- */
-export const useCurrentSectorId = () => {
-  const store = useUserStoreContext();
-  return useStore(store, (state) => state.currentSectorId);
-};
+// ── Selector factory (eliminates repetitive 3-line hook boilerplate) ─────────
 
 /**
- * Hook to get sectors list
+ * Creates a typed selector hook bound to the UserStore context.
  */
-export const useSectors = () => {
-  const store = useUserStoreContext();
-  return useStore(store, (state) => state.sectors);
-};
+function createUserSelector<T>(selector: (state: UserState) => T) {
+  return () => {
+    const store = useUserStoreContext();
+    return useStore(store, selector);
+  };
+}
 
-/**
- * Hook to set current sector ID
- */
-export const useSetCurrentSectorId = () => {
-  const store = useUserStoreContext();
-  return useStore(store, (state) => state.setCurrentSectorId);
-};
+// ── Exported hooks ───────────────────────────────────────────────────────────
 
-/**
- * Hook to set sectors list
- */
-export const useSetSectors = () => {
-  const store = useUserStoreContext();
-  return useStore(store, (state) => state.setSectors);
-};
+/** Hook to get current sector ID */
+export const useCurrentSectorId = createUserSelector((s) => s.currentSectorId);
 
-/**
- * Hook to clear user data
- */
-export const useClearUserData = () => {
-  const store = useUserStoreContext();
-  return useStore(store, (state) => state.clearUserData);
-};
+/** Hook to get sectors list */
+export const useSectors = createUserSelector((s) => s.sectors);
+
+/** Hook to set current sector ID */
+export const useSetCurrentSectorId = createUserSelector((s) => s.setCurrentSectorId);
+
+/** Hook to set sectors list */
+export const useSetSectors = createUserSelector((s) => s.setSectors);
+
+/** Hook to clear user data */
+export const useClearUserData = createUserSelector((s) => s.clearUserData);

@@ -14,26 +14,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { SECTORS } from '@/constants/sectors';
+import { useActiveSectors } from '@/stores/sector.store';
 import type { SourceType } from '@/lib/api/knowledge.api';
 import { useUploadDocument } from '@/hooks/useUploadDocument';
+import { getUserRole } from '@/lib/utils/get-user-role';
+import { hasPermission, CAN_UPLOAD } from '@/constants/permissions';
+import {
+  MAX_FILE_SIZE_BYTES,
+  ACCEPTED_MIME_TYPES,
+  detectSourceType,
+} from '@/lib/utils/file-detection';
 import { cn } from '@/lib/utils';
-
-/** Roles allowed to upload documents */
-const UPLOAD_ROLES = ['admin', 'manager'];
-
-/** Maximum file size in bytes (10MB) */
-const MAX_FILE_SIZE = 10 * 1024 * 1024;
-
-/** Allowed file extensions and their source types */
-const FILE_TYPE_MAP: Record<string, SourceType> = {
-  'application/pdf': 'PDF',
-  'text/markdown': 'MARKDOWN',
-  'text/plain': 'MARKDOWN',
-};
-
-/** Allowed MIME types for the file input */
-const ACCEPTED_MIME_TYPES = '.pdf,.md,.txt';
 
 /**
  * Knowledge Upload component
@@ -42,6 +33,7 @@ const ACCEPTED_MIME_TYPES = '.pdf,.md,.txt';
 export function KnowledgeUpload() {
   const { data: session } = useSession();
   const t = useTranslations('knowledge.upload');
+  const activeSectors = useActiveSectors();
 
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState('');
@@ -64,8 +56,8 @@ export function KnowledgeUpload() {
   } = useUploadDocument();
 
   // Check user role
-  const userRoles = session?.user?.roles ?? [];
-  const hasUploadPermission = userRoles.some((role) => UPLOAD_ROLES.includes(role));
+  const userRole = getUserRole(session?.user?.roles);
+  const hasUploadPermission = hasPermission(userRole, CAN_UPLOAD);
 
   const handleFileChange = useCallback(
     (selectedFile: File | null) => {
@@ -78,32 +70,17 @@ export function KnowledgeUpload() {
       }
 
       // Validate file size
-      if (selectedFile.size > MAX_FILE_SIZE) {
+      if (selectedFile.size > MAX_FILE_SIZE_BYTES) {
         setValidationError(t('maxSize'));
         return;
       }
 
-      // Validate MIME type
-      const detectedType = FILE_TYPE_MAP[selectedFile.type];
+      // Detect source type via shared utility
+      const detectedType = detectSourceType(selectedFile);
       if (!detectedType) {
-        // Check by extension as fallback
-        const ext = selectedFile.name.split('.').pop()?.toLowerCase();
-        if (ext === 'md' || ext === 'txt') {
-          setFile(selectedFile);
-          setSourceType('MARKDOWN');
-          if (!title) setTitle(selectedFile.name.replace(/\.[^.]+$/, ''));
-          return;
-        }
-        if (ext === 'pdf') {
-          setFile(selectedFile);
-          setSourceType('PDF');
-          if (!title) setTitle(selectedFile.name.replace(/\.[^.]+$/, ''));
-          return;
-        }
         setValidationError(t('allowedTypes'));
         return;
       }
-
       setFile(selectedFile);
       setSourceType(detectedType);
 
@@ -281,7 +258,7 @@ export function KnowledgeUpload() {
                   <SelectValue placeholder={t('selectSector')} />
                 </SelectTrigger>
                 <SelectContent>
-                  {SECTORS.map((sector) => (
+                  {activeSectors.map((sector) => (
                     <SelectItem key={sector.id} value={sector.id}>
                       {sector.name}
                     </SelectItem>
