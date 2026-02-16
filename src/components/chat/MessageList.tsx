@@ -2,9 +2,9 @@
 
 import { useEffect, useRef } from 'react';
 import { MessageDto, MessageRole } from '@/types/message.types';
+import { Brain, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { UserAvatar } from '@/components/shared/UserAvatar';
-import { MarkdownRenderer } from './MarkdownRenderer';
+import { MarkdownRenderer } from '@/components/shared/MarkdownRenderer';
 import { SourceList } from './SourceList';
 import { TypingIndicator } from './TypingIndicator';
 import { format } from 'date-fns';
@@ -28,7 +28,6 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
         .map((message) => {
           const isUser = message.role === MessageRole.USER;
           const isAssistant = message.role === MessageRole.ASSISTANT;
-          const user = { name: isUser ? 'You' : 'Assistant', picture: null };
 
           return (
             <div
@@ -36,21 +35,29 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
               className={cn('flex gap-4', isUser && 'flex-row-reverse')}
               data-testid={isUser ? 'user-message' : 'assistant-message'}
             >
-              <UserAvatar user={user} />
+              {isAssistant ? (
+                <div className="bg-primary/10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
+                  <Brain className="text-primary h-5 w-5" />
+                </div>
+              ) : (
+                <div className="bg-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
+                  <User className="text-primary-foreground h-5 w-5" />
+                </div>
+              )}
 
               <div
                 className={cn(
                   'flex max-w-[75%] flex-col rounded-lg p-4',
                   isUser
-                    ? 'bg-blue-500 text-white'
-                    : 'border border-gray-200 bg-white text-gray-800',
+                    ? 'bg-chat-bubble-user text-chat-bubble-user-foreground'
+                    : 'border-chat-bubble-assistant-border bg-chat-bubble-assistant text-chat-bubble-assistant-foreground border',
                 )}
               >
                 {/* Message content */}
                 {isAssistant ? (
                   <MarkdownRenderer
                     content={message.content}
-                    className="text-gray-800"
+                    className="text-chat-bubble-assistant-foreground"
                     data-testid="markdown-content"
                   />
                 ) : (
@@ -61,16 +68,16 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
 
                 {/* Sources for assistant messages */}
                 {isAssistant && message.sourcesUsed && message.sourcesUsed.length > 0 && (
-                  <div className="mt-4 border-t border-gray-200 pt-4">
+                  <div className="border-chat-bubble-assistant-border mt-4 border-t pt-4">
                     <SourceList sources={message.sourcesUsed} maxSources={5} />
                   </div>
                 )}
 
-                {/* Timestamp */}
+                {/* Timestamp - WCAG AA: ≥4.5:1 contrast ratio */}
                 <span
                   className={cn(
                     'mt-2 text-right text-xs',
-                    isUser ? 'text-blue-200' : 'text-gray-500',
+                    isUser ? 'text-chat-bubble-user-muted' : 'text-chat-bubble-assistant-muted',
                   )}
                 >
                   {format(new Date(message.createdAt), 'MMM dd, HH:mm')}

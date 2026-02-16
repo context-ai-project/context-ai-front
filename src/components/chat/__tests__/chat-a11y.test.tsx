@@ -12,7 +12,7 @@ import { ErrorState } from '../ErrorState';
 import { TypingIndicator } from '../TypingIndicator';
 import { SourceCard } from '../SourceCard';
 import { SourceList } from '../SourceList';
-import { MarkdownRenderer } from '../MarkdownRenderer';
+import { MarkdownRenderer } from '@/components/shared/MarkdownRenderer';
 import { SuggestedQuestions } from '../SuggestedQuestions';
 import { MessageInput } from '../MessageInput';
 import type { SourceFragment } from '@/types/message.types';
@@ -79,7 +79,7 @@ describe('Chat Components — Accessibility', () => {
       const { container } = render(<EmptyState />);
       const h1 = container.querySelector('h1');
       expect(h1).toBeInTheDocument();
-      expect(h1).toHaveTextContent('Welcome to Context.ai');
+      expect(h1).toHaveTextContent('welcomeTitle');
     });
   });
 
@@ -115,7 +115,7 @@ describe('Chat Components — Accessibility', () => {
       const { getByLabelText } = render(
         <ErrorState error="Error" onDismiss={vi.fn()} variant="inline" />,
       );
-      expect(getByLabelText('Dismiss error')).toBeInTheDocument();
+      expect(getByLabelText('dismissError')).toBeInTheDocument();
     });
   });
 

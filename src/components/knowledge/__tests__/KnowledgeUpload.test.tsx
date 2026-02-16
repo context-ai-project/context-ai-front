@@ -16,6 +16,33 @@ vi.mock('@/hooks/useUploadDocument', () => ({
   }),
 }));
 
+// Mock sector store to provide active sectors
+vi.mock('@/stores/sector.store', () => ({
+  useActiveSectors: () => [
+    {
+      id: '440e8400-e29b-41d4-a716-446655440000',
+      name: 'Human Resources',
+      description: '',
+      icon: 'users',
+      status: 'active',
+      documentCount: 0,
+      createdAt: '',
+      updatedAt: '',
+    },
+    {
+      id: '440e8400-e29b-41d4-a716-446655440001',
+      name: 'Engineering',
+      description: '',
+      icon: 'code',
+      status: 'active',
+      documentCount: 0,
+      createdAt: '',
+      updatedAt: '',
+    },
+  ],
+  SectorStoreProvider: ({ children }: { children: React.ReactNode }) => children,
+}));
+
 // Controllable mock for useSession
 const mockSessionData = vi.fn();
 vi.mock('next-auth/react', () => ({

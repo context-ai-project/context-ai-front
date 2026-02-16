@@ -32,12 +32,9 @@ describe('HeroSection', () => {
     expect(links.length).toBeGreaterThanOrEqual(1);
   });
 
-  it('should render stats section', () => {
+  it('should render subtitle text', () => {
     render(<HeroSection />);
-    // Stats render translated keys like 'stats.resolution.value'
-    expect(screen.getByText('stats.resolution.value')).toBeInTheDocument();
-    expect(screen.getByText('stats.onboarding.value')).toBeInTheDocument();
-    expect(screen.getByText('stats.questions.value')).toBeInTheDocument();
+    expect(screen.getByText('subtitle')).toBeInTheDocument();
   });
 });
 

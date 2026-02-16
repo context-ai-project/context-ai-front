@@ -1,9 +1,13 @@
 /**
  * Knowledge API client
- * Handles document listing, upload, and management operations
+ * Handles document listing, upload, and management operations.
+ *
+ * Uses the centralised `apiClient` for auth, timeout, and error handling
+ * (eliminates the duplicate `getAccessToken` that was defined here — CS-01).
  */
 
 import { z } from 'zod';
+import { apiClient } from './client';
 
 /** Supported source types for document upload */
 export type SourceType = 'PDF' | 'MARKDOWN' | 'URL';
@@ -60,86 +64,36 @@ export interface DeleteSourceResponse {
 }
 
 /**
- * Get access token for authenticated requests
- */
-async function getAccessToken(): Promise<string | null> {
-  try {
-    const response = await fetch('/api/auth/token');
-    if (!response.ok) return null;
-    const data: { accessToken: string } = await response.json();
-    return data.accessToken;
-  } catch {
-    return null;
-  }
-}
-
-/** Base API URL */
-const getBaseUrl = (): string => process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
-
-/**
  * Knowledge API functions
+ *
+ * All methods delegate to `apiClient`, which handles authentication,
+ * timeouts, and error mapping centrally.
  */
 export const knowledgeApi = {
   /**
-   * List all knowledge sources (documents)
-   * Optionally filter by sectorId
+   * List all knowledge sources (documents).
+   * Optionally filter by sectorId.
    */
   listDocuments: async (sectorId?: string): Promise<KnowledgeSourceDto[]> => {
-    const token = await getAccessToken();
     const params = sectorId ? `?sectorId=${encodeURIComponent(sectorId)}` : '';
-
-    const response = await fetch(`${getBaseUrl()}/knowledge/documents${params}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      },
-    });
-
-    if (!response.ok) {
-      const errorData: { message?: string } | null = await response.json().catch(() => null);
-      throw new Error(
-        errorData?.message || `Failed to load documents: ${response.status} ${response.statusText}`,
-      );
-    }
-
-    return response.json();
+    return apiClient.get<KnowledgeSourceDto[]>(`/knowledge/documents${params}`);
   },
 
   /**
-   * Get a knowledge source detail by ID (includes content and fragment count)
+   * Get a knowledge source detail by ID (includes content and fragment count).
    */
   getDocumentDetail: async (sourceId: string): Promise<KnowledgeSourceDetailDto> => {
-    const token = await getAccessToken();
-
-    const response = await fetch(
-      `${getBaseUrl()}/knowledge/documents/${encodeURIComponent(sourceId)}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-      },
+    return apiClient.get<KnowledgeSourceDetailDto>(
+      `/knowledge/documents/${encodeURIComponent(sourceId)}`,
     );
-
-    if (!response.ok) {
-      const errorData: { message?: string } | null = await response.json().catch(() => null);
-      throw new Error(
-        errorData?.message || `Failed to load document: ${response.status} ${response.statusText}`,
-      );
-    }
-
-    return response.json();
   },
 
   /**
-   * Upload a document to the knowledge base
-   * Uses multipart/form-data for file upload
+   * Upload a document to the knowledge base.
+   * Uses multipart/form-data via `apiClient.postFormData`.
+   * Response is validated with Zod.
    */
   uploadDocument: async (dto: UploadDocumentDto): Promise<UploadDocumentResponse> => {
-    const token = await getAccessToken();
-
     const formData = new FormData();
     formData.append('file', dto.file);
     formData.append('title', dto.title);
@@ -150,22 +104,8 @@ export const knowledgeApi = {
       formData.append('metadata', JSON.stringify(dto.metadata));
     }
 
-    const response = await fetch(`${getBaseUrl()}/knowledge/documents/upload`, {
-      method: 'POST',
-      headers: {
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      },
-      body: formData,
-    });
+    const rawData: unknown = await apiClient.postFormData('/knowledge/documents/upload', formData);
 
-    if (!response.ok) {
-      const errorData: { message?: string } | null = await response.json().catch(() => null);
-      throw new Error(
-        errorData?.message || `Upload failed: ${response.status} ${response.statusText}`,
-      );
-    }
-
-    const rawData: unknown = await response.json();
     const parsed = uploadDocumentResponseSchema.safeParse(rawData);
     if (!parsed.success) {
       throw new Error(`Invalid upload response: ${parsed.error.message}`);
@@ -174,29 +114,11 @@ export const knowledgeApi = {
   },
 
   /**
-   * Delete a source from the knowledge base
+   * Delete a source from the knowledge base.
    */
   deleteSource: async (sourceId: string, sectorId: string): Promise<DeleteSourceResponse> => {
-    const token = await getAccessToken();
-
-    const response = await fetch(
-      `${getBaseUrl()}/knowledge/documents/${encodeURIComponent(sourceId)}?sectorId=${encodeURIComponent(sectorId)}`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-      },
+    return apiClient.delete<DeleteSourceResponse>(
+      `/knowledge/documents/${encodeURIComponent(sourceId)}?sectorId=${encodeURIComponent(sectorId)}`,
     );
-
-    if (!response.ok) {
-      const errorData: { message?: string } | null = await response.json().catch(() => null);
-      throw new Error(
-        errorData?.message || `Delete failed: ${response.status} ${response.statusText}`,
-      );
-    }
-
-    return response.json();
   },
 };

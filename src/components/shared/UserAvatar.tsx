@@ -37,7 +37,7 @@ export function UserAvatar({ user, src, alt, size = 'md' }: UserAvatarProps) {
         alt={`${avatarName} avatar`}
         className="rounded-full object-cover"
       />
-      <AvatarFallback className="rounded-full bg-blue-600 text-sm font-medium text-white">
+      <AvatarFallback className="bg-primary text-primary-foreground rounded-full text-sm font-medium">
         {initials}
       </AvatarFallback>
     </Avatar>

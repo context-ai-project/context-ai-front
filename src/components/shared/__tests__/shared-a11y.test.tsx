@@ -81,8 +81,8 @@ describe('Shared Components — Accessibility', () => {
         </ErrorBoundary>,
       );
 
-      const tryAgainBtn = screen.getByRole('button', { name: /try again/i });
-      const reloadBtn = screen.getByRole('button', { name: /reload page/i });
+      const tryAgainBtn = screen.getByRole('button', { name: /tryAgain/i });
+      const reloadBtn = screen.getByRole('button', { name: /reloadPage/i });
       expect(tryAgainBtn).toBeEnabled();
       expect(reloadBtn).toBeEnabled();
     });

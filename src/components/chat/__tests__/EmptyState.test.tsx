@@ -12,35 +12,33 @@ describe('EmptyState', () => {
   it('should display welcome heading', () => {
     render(<EmptyState />);
 
-    expect(screen.getByText('Welcome to Context.ai')).toBeInTheDocument();
+    expect(screen.getByText('welcomeTitle')).toBeInTheDocument();
   });
 
   it('should display description text', () => {
     render(<EmptyState />);
 
-    expect(
-      screen.getByText('Your intelligent knowledge assistant powered by RAG technology'),
-    ).toBeInTheDocument();
+    expect(screen.getByText('subtitle')).toBeInTheDocument();
   });
 
   it('should display feature highlights', () => {
     render(<EmptyState />);
 
-    expect(screen.getByText('Natural Conversations')).toBeInTheDocument();
-    expect(screen.getByText('Context-Aware')).toBeInTheDocument();
-    expect(screen.getByText('Source Citations')).toBeInTheDocument();
+    expect(screen.getByText('features.naturalConversations.title')).toBeInTheDocument();
+    expect(screen.getByText('features.contextAware.title')).toBeInTheDocument();
+    expect(screen.getByText('features.sourceCitations.title')).toBeInTheDocument();
   });
 
   it('should display "Ask me anything about your documents" badge', () => {
     render(<EmptyState />);
 
-    expect(screen.getByText('Ask me anything about your documents')).toBeInTheDocument();
+    expect(screen.getByText('badge')).toBeInTheDocument();
   });
 
   it('should render suggested questions section', () => {
     render(<EmptyState />);
 
-    expect(screen.getByText('Try asking:')).toBeInTheDocument();
+    expect(screen.getByText('tryAsking')).toBeInTheDocument();
   });
 
   it('should call onQuestionClick when a suggested question is clicked', async () => {
@@ -61,14 +59,8 @@ describe('EmptyState', () => {
   it('should render feature descriptions', () => {
     render(<EmptyState />);
 
-    expect(
-      screen.getByText('Ask questions in plain language and get accurate answers'),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText("Responses based on your organization's knowledge base"),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText('Every answer includes references to source documents'),
-    ).toBeInTheDocument();
+    expect(screen.getByText('features.naturalConversations.description')).toBeInTheDocument();
+    expect(screen.getByText('features.contextAware.description')).toBeInTheDocument();
+    expect(screen.getByText('features.sourceCitations.description')).toBeInTheDocument();
   });
 });

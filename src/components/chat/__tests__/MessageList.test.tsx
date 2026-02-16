@@ -58,16 +58,20 @@ describe('MessageList', () => {
     expect(screen.getByText(/Jan 15, \d{2}:\d{2}/)).toBeInTheDocument();
   });
 
-  it('should display user avatar with "Y" initial for user messages', () => {
-    render(<MessageList messages={[mockUserMessage]} isLoading={false} />);
+  it('should display user icon for user messages', () => {
+    const { container } = render(<MessageList messages={[mockUserMessage]} isLoading={false} />);
 
-    expect(screen.getByText('Y')).toBeInTheDocument(); // "You" -> "Y"
+    const userIcon = container.querySelector('.lucide-user');
+    expect(userIcon).toBeInTheDocument();
   });
 
-  it('should display assistant avatar with "A" initial for assistant messages', () => {
-    render(<MessageList messages={[mockAssistantMessage]} isLoading={false} />);
+  it('should display brain icon for assistant messages', () => {
+    const { container } = render(
+      <MessageList messages={[mockAssistantMessage]} isLoading={false} />,
+    );
 
-    expect(screen.getByText('A')).toBeInTheDocument(); // "Assistant" -> "A"
+    const brainIcon = container.querySelector('.lucide-brain');
+    expect(brainIcon).toBeInTheDocument();
   });
 
   it('should filter out invalid messages (missing id, role, or content)', () => {

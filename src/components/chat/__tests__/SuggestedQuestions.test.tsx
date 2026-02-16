@@ -1,17 +1,25 @@
 import { render, screen } from '@/test/test-utils';
 import userEvent from '@testing-library/user-event';
 import { SuggestedQuestions } from '../SuggestedQuestions';
-import { SUGGESTED_QUESTIONS } from '@/constants/suggested-questions';
-import { SECTORS } from '@/constants/sectors';
+import { SUGGESTED_QUESTION_KEYS } from '@/constants/suggested-questions';
 import { vi } from 'vitest';
 
 // Mock the user store to return a specific sector
 const mockCurrentSectorId = vi.fn().mockReturnValue(null);
+const mockSectors = vi.fn().mockReturnValue([]);
 
 vi.mock('@/stores/user.store', () => ({
   useCurrentSectorId: () => mockCurrentSectorId(),
+  useSectors: () => mockSectors(),
   UserStoreProvider: ({ children }: { children: React.ReactNode }) => children,
 }));
+
+/** Mock sectors matching the SUGGESTED_QUESTION_KEYS sector names */
+const MOCK_SECTORS = [
+  { id: 'sector-hr-id', name: 'Human Resources' },
+  { id: 'sector-eng-id', name: 'Engineering' },
+  { id: 'sector-sales-id', name: 'Sales' },
+];
 
 describe('SuggestedQuestions', () => {
   const user = userEvent.setup();
@@ -19,77 +27,92 @@ describe('SuggestedQuestions', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockCurrentSectorId.mockReturnValue(null);
+    mockSectors.mockReturnValue(MOCK_SECTORS);
   });
 
   it('should render "Try asking:" heading', () => {
     render(<SuggestedQuestions />);
 
-    expect(screen.getByText('Try asking:')).toBeInTheDocument();
+    expect(screen.getByText('tryAsking')).toBeInTheDocument();
   });
 
-  it('should render default questions when no sector is selected', () => {
+  it('should render default question keys when no sector is selected', () => {
     render(<SuggestedQuestions />);
 
-    for (const question of SUGGESTED_QUESTIONS.default) {
-      expect(screen.getByText(question)).toBeInTheDocument();
+    for (const key of SUGGESTED_QUESTION_KEYS.default) {
+      expect(screen.getByText(key)).toBeInTheDocument();
     }
   });
 
-  it('should render sector-specific questions when sector is selected', () => {
-    const hrSectorId = SECTORS[0].id;
-    mockCurrentSectorId.mockReturnValue(hrSectorId);
+  it('should render sector-specific question keys when HR sector is selected', () => {
+    mockCurrentSectorId.mockReturnValue('sector-hr-id');
 
     render(<SuggestedQuestions />);
 
-    for (const question of SUGGESTED_QUESTIONS[hrSectorId]) {
-      expect(screen.getByText(question)).toBeInTheDocument();
+    const hrKeys = SUGGESTED_QUESTION_KEYS['human resources'];
+    for (const key of hrKeys) {
+      expect(screen.getByText(key)).toBeInTheDocument();
     }
   });
 
-  it('should render engineering sector questions', () => {
-    const engSectorId = SECTORS[1].id;
-    mockCurrentSectorId.mockReturnValue(engSectorId);
+  it('should render engineering sector question keys', () => {
+    mockCurrentSectorId.mockReturnValue('sector-eng-id');
 
     render(<SuggestedQuestions />);
 
-    for (const question of SUGGESTED_QUESTIONS[engSectorId]) {
-      expect(screen.getByText(question)).toBeInTheDocument();
+    const engKeys = SUGGESTED_QUESTION_KEYS.engineering;
+    for (const key of engKeys) {
+      expect(screen.getByText(key)).toBeInTheDocument();
     }
   });
 
-  it('should fall back to default questions for unknown sector', () => {
+  it('should fall back to default question keys for unknown sector', () => {
     mockCurrentSectorId.mockReturnValue('unknown-sector-id');
 
     render(<SuggestedQuestions />);
 
-    for (const question of SUGGESTED_QUESTIONS.default) {
-      expect(screen.getByText(question)).toBeInTheDocument();
+    for (const key of SUGGESTED_QUESTION_KEYS.default) {
+      expect(screen.getByText(key)).toBeInTheDocument();
     }
   });
 
-  it('should call onQuestionClick with the question text when clicked', async () => {
+  it('should fall back to default when sector name has no questions', () => {
+    mockSectors.mockReturnValue([
+      ...MOCK_SECTORS,
+      { id: 'sector-marketing-id', name: 'Marketing' },
+    ]);
+    mockCurrentSectorId.mockReturnValue('sector-marketing-id');
+
+    render(<SuggestedQuestions />);
+
+    for (const key of SUGGESTED_QUESTION_KEYS.default) {
+      expect(screen.getByText(key)).toBeInTheDocument();
+    }
+  });
+
+  it('should call onQuestionClick with the translated question text when clicked', async () => {
     const onQuestionClick = vi.fn();
     render(<SuggestedQuestions onQuestionClick={onQuestionClick} />);
 
-    const firstQuestion = SUGGESTED_QUESTIONS.default[0];
-    const button = screen.getByText(firstQuestion);
+    const firstKey = SUGGESTED_QUESTION_KEYS.default[0];
+    const button = screen.getByText(firstKey);
     await user.click(button);
 
-    expect(onQuestionClick).toHaveBeenCalledWith(firstQuestion);
+    expect(onQuestionClick).toHaveBeenCalledWith(firstKey);
   });
 
   it('should render 4 question buttons', () => {
     render(<SuggestedQuestions />);
 
     const buttons = screen.getAllByRole('button');
-    expect(buttons).toHaveLength(SUGGESTED_QUESTIONS.default.length);
+    expect(buttons).toHaveLength(SUGGESTED_QUESTION_KEYS.default.length);
   });
 
   it('should not throw when onQuestionClick is not provided', async () => {
     render(<SuggestedQuestions />);
 
-    const firstQuestion = SUGGESTED_QUESTIONS.default[0];
-    const button = screen.getByText(firstQuestion);
+    const firstKey = SUGGESTED_QUESTION_KEYS.default[0];
+    const button = screen.getByText(firstKey);
 
     // Should not throw when clicked without handler
     await user.click(button);

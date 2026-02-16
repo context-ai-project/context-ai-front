@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useSetCurrentSectorId, useSetSectors } from '@/stores/user.store';
-import { SECTORS } from '@/constants/sectors';
+import { useActiveSectors } from '@/stores/sector.store';
 import { Building2, Check, ChevronDown } from 'lucide-react';
 import {
   DropdownMenu,
@@ -25,13 +25,12 @@ export function SectorSelector() {
   const { currentSectorId, sectors } = useCurrentUser();
   const setCurrentSectorId = useSetCurrentSectorId();
   const setSectors = useSetSectors();
+  const activeSectors = useActiveSectors();
 
-  // Initialize sectors list on mount (from centralized constant)
+  // Sync user-store sectors with active sectors from the sector store
   useEffect(() => {
-    if (sectors.length === 0) {
-      setSectors(SECTORS.map((s) => ({ id: s.id, name: s.name })));
-    }
-  }, [sectors.length, setSectors]);
+    setSectors(activeSectors.map((s) => ({ id: s.id, name: s.name })));
+  }, [activeSectors, setSectors]);
 
   // Auto-set first sector if none selected
   useEffect(() => {

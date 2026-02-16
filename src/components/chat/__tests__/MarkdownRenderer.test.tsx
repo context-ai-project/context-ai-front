@@ -1,5 +1,5 @@
 import { render, screen } from '@/test/test-utils';
-import { MarkdownRenderer } from '../MarkdownRenderer';
+import { MarkdownRenderer } from '@/components/shared/MarkdownRenderer';
 
 // Mock react-syntax-highlighter to avoid ESM import issues in test environment
 vi.mock('react-syntax-highlighter', () => ({

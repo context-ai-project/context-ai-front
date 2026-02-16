@@ -8,7 +8,7 @@ import { routes } from '@/lib/routes';
 
 /**
  * Hero section for landing page
- * Large heading with gradient, subtitle, CTA buttons, and stats
+ * Large heading with gradient, subtitle and CTA buttons
  */
 export function HeroSection() {
   const t = useTranslations('landing.hero');
@@ -47,22 +47,6 @@ export function HeroSection() {
           <Button size="lg" variant="outline" className="bg-transparent px-8" asChild>
             <Link href={signInHref}>{t('cta.secondary')}</Link>
           </Button>
-        </div>
-
-        {/* Stats bar */}
-        <div className="border-border mx-auto mt-20 grid max-w-2xl grid-cols-3 gap-8 border-t pt-10">
-          <div>
-            <div className="text-foreground text-3xl font-bold">{t('stats.resolution.value')}</div>
-            <div className="text-muted-foreground mt-1 text-sm">{t('stats.resolution.label')}</div>
-          </div>
-          <div>
-            <div className="text-foreground text-3xl font-bold">{t('stats.onboarding.value')}</div>
-            <div className="text-muted-foreground mt-1 text-sm">{t('stats.onboarding.label')}</div>
-          </div>
-          <div>
-            <div className="text-foreground text-3xl font-bold">{t('stats.questions.value')}</div>
-            <div className="text-muted-foreground mt-1 text-sm">{t('stats.questions.label')}</div>
-          </div>
         </div>
       </div>
     </section>

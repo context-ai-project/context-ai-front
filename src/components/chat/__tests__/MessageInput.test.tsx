@@ -18,7 +18,8 @@ const TESTID_SEND = 'send-button';
 const TESTID_CLEAR = 'clear-button';
 const TEST_MESSAGE = 'Test message';
 const SEND_LABEL = 'Send message';
-const CLEAR_LABEL = 'Clear conversation';
+// next-intl mock returns the key, so t('clear') returns 'clear'
+const CLEAR_LABEL = 'clear';
 
 describe('MessageInput', () => {
   const user = userEvent.setup();
@@ -124,7 +125,7 @@ describe('MessageInput', () => {
     render(<MessageInput />);
 
     const input = screen.getByTestId(TESTID_INPUT);
-    expect(input).toHaveAttribute('placeholder', 'Waiting for response...');
+    expect(input).toHaveAttribute('placeholder', 'placeholderLoading');
   });
 
   it('should show character count when focused and has text', async () => {
@@ -145,7 +146,7 @@ describe('MessageInput', () => {
     const input = screen.getByTestId(TESTID_INPUT);
     fireEvent.change(input, { target: { value: 'a'.repeat(2001) } });
 
-    expect(screen.getByText(/exceeds maximum length/)).toBeInTheDocument();
+    expect(screen.getByText('input.characterLimit')).toBeInTheDocument();
   });
 
   it('should render clear button when onClearConversation is provided', () => {
@@ -166,33 +167,43 @@ describe('MessageInput', () => {
     expect(screen.getByLabelText(CLEAR_LABEL)).toBeInTheDocument();
   });
 
-  it('should call onClearConversation when clear is confirmed', async () => {
-    const onClear = vi.fn();
-    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true);
-
-    render(<MessageInput onClearConversation={onClear} />);
+  it('should open confirmation dialog when clear button is clicked', async () => {
+    render(<MessageInput onClearConversation={vi.fn()} />);
 
     await user.click(screen.getByTestId(TESTID_CLEAR));
 
-    expect(confirmSpy).toHaveBeenCalledWith('Are you sure you want to clear this conversation?');
-    expect(mockClearMessages).toHaveBeenCalled();
-    expect(onClear).toHaveBeenCalled();
-
-    confirmSpy.mockRestore();
+    // AlertDialog should show (next-intl mock returns the key as text)
+    expect(screen.getByRole('alertdialog')).toBeInTheDocument();
+    expect(screen.getByText('clearDialog.title')).toBeInTheDocument();
+    expect(screen.getByText('clearDialog.description')).toBeInTheDocument();
   });
 
-  it('should not clear conversation when confirm is cancelled', async () => {
+  it('should call onClearConversation when clear is confirmed in dialog', async () => {
     const onClear = vi.fn();
-    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(false);
-
     render(<MessageInput onClearConversation={onClear} />);
 
     await user.click(screen.getByTestId(TESTID_CLEAR));
+
+    // Click the confirm button in the AlertDialog (text is the translation key)
+    const confirmButton = screen.getByRole('button', { name: /clearDialog\.confirm/i });
+    await user.click(confirmButton);
+
+    expect(mockClearMessages).toHaveBeenCalled();
+    expect(onClear).toHaveBeenCalled();
+  });
+
+  it('should not clear conversation when cancel is clicked in dialog', async () => {
+    const onClear = vi.fn();
+    render(<MessageInput onClearConversation={onClear} />);
+
+    await user.click(screen.getByTestId(TESTID_CLEAR));
+
+    // Click the cancel button in the AlertDialog (text is the translation key)
+    const cancelButton = screen.getByRole('button', { name: /clearDialog\.cancel/i });
+    await user.click(cancelButton);
 
     expect(mockClearMessages).not.toHaveBeenCalled();
     expect(onClear).not.toHaveBeenCalled();
-
-    confirmSpy.mockRestore();
   });
 
   it('should not send whitespace-only messages', async () => {

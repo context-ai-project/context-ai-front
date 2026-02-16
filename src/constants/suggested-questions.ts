@@ -1,41 +1,35 @@
-import { SECTORS } from './sectors';
-
 /**
- * Suggested questions organized by sector.
- * These questions are displayed in the EmptyState to help users get started.
+ * Suggested question translation keys organized by sector name.
+ * These keys map to entries in messages/{locale}.json under "suggestedQuestions".
  *
- * Uses centralized sector IDs from constants/sectors.ts
+ * Keys are **normalized sector names** (lowercase) so the mapping is
+ * independent of backend-generated UUIDs and resilient to ID changes.
  */
-export const SUGGESTED_QUESTIONS: Record<string, string[]> = {
+export const SUGGESTED_QUESTION_KEYS: Record<string, string[]> = {
   // Human Resources sector
-  [SECTORS[0].id]: [
-    'What is the company vacation policy?',
-    'How do I submit an expense report?',
-    'What are the employee benefits?',
-    'How can I request time off?',
-  ],
+  'human resources': ['hr.vacationPolicy', 'hr.expenseReport', 'hr.benefits', 'hr.timeOff'],
 
   // Engineering sector
-  [SECTORS[1].id]: [
-    'What is our code review process?',
-    'How do we handle CI/CD deployments?',
-    'What are the coding standards?',
-    'How do I set up my development environment?',
+  engineering: [
+    'engineering.codeReview',
+    'engineering.cicd',
+    'engineering.standards',
+    'engineering.devSetup',
   ],
 
   // Sales sector
-  [SECTORS[2].id]: [
-    'What is our pricing strategy?',
-    'How do I qualify a lead?',
-    'What are the sales targets for this quarter?',
-    'How do I create a sales proposal?',
-  ],
+  sales: ['sales.pricing', 'sales.qualifyLead', 'sales.targets', 'sales.proposal'],
 
-  // Default questions (fallback)
-  default: [
-    'What information can you help me find?',
-    'How does this system work?',
-    'What documents do you have access to?',
-    'Can you summarize recent updates?',
-  ],
+  // Default questions (fallback when sector has no specific questions)
+  default: ['default.helpFind', 'default.howItWorks', 'default.documents', 'default.summarize'],
 };
+
+/**
+ * Normalizes a sector name for use as a lookup key.
+ *
+ * @param name - The sector name (e.g. "Human Resources", "Engineering")
+ * @returns A lowercase, trimmed string suitable for SUGGESTED_QUESTION_KEYS lookup
+ */
+export function normalizeSectorName(name: string): string {
+  return name.toLowerCase().trim();
+}

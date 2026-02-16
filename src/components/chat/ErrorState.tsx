@@ -1,6 +1,7 @@
 'use client';
 
 import { XCircle, RefreshCw, AlertTriangle, WifiOff, Lock } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { ErrorType, categorizeError } from '@/lib/api/error-handler';
 
@@ -20,33 +21,21 @@ const ERROR_ICONS = {
   [ErrorType.UNKNOWN]: XCircle,
 };
 
-const ERROR_TITLES = {
-  [ErrorType.NETWORK]: 'Network Error',
-  [ErrorType.AUTH]: 'Authentication Error',
-  [ErrorType.VALIDATION]: 'Validation Error',
-  [ErrorType.SERVER]: 'Server Error',
-  [ErrorType.TIMEOUT]: 'Request Timeout',
-  [ErrorType.UNKNOWN]: 'Unexpected Error',
-};
-
-const ERROR_DESCRIPTIONS = {
-  [ErrorType.NETWORK]:
-    'Unable to connect to the server. Please check your internet connection and try again.',
-  [ErrorType.AUTH]:
-    'Your session has expired or you do not have permission to perform this action. Please sign in again.',
-  [ErrorType.VALIDATION]:
-    'The information you provided is invalid. Please check your input and try again.',
-  [ErrorType.SERVER]:
-    'The server encountered an error while processing your request. Please try again later.',
-  [ErrorType.TIMEOUT]:
-    'The request took too long to complete. Please check your connection and try again.',
-  [ErrorType.UNKNOWN]:
-    'An unexpected error occurred. Please try again or contact support if the problem persists.',
+/** Maps ErrorType enum to translation key segment */
+const ERROR_TYPE_KEYS: Record<ErrorType, string> = {
+  [ErrorType.NETWORK]: 'network',
+  [ErrorType.AUTH]: 'auth',
+  [ErrorType.VALIDATION]: 'validation',
+  [ErrorType.SERVER]: 'server',
+  [ErrorType.TIMEOUT]: 'timeout',
+  [ErrorType.UNKNOWN]: 'unknown',
 };
 
 /**
  * ErrorState component displays user-friendly error messages with appropriate icons
  * and recovery options based on the error type.
+ *
+ * All UI text is internationalised via `next-intl` (CS-11).
  *
  * @example
  * ```tsx
@@ -58,11 +47,14 @@ const ERROR_DESCRIPTIONS = {
  * ```
  */
 export function ErrorState({ error, onRetry, onDismiss, variant = 'full' }: ErrorStateProps) {
+  const t = useTranslations('errors');
+
   const errorType = categorizeError(error);
   const Icon = ERROR_ICONS[errorType];
-  const title = ERROR_TITLES[errorType];
+  const typeKey = ERROR_TYPE_KEYS[errorType];
+  const title = t(`types.${typeKey}.title`);
   const description =
-    error instanceof Error && error.message ? error.message : ERROR_DESCRIPTIONS[errorType];
+    error instanceof Error && error.message ? error.message : t(`types.${typeKey}.description`);
 
   if (variant === 'inline') {
     return (
@@ -76,12 +68,12 @@ export function ErrorState({ error, onRetry, onDismiss, variant = 'full' }: Erro
               {onRetry && (
                 <Button onClick={onRetry} size="sm" variant="default" className="gap-2">
                   <RefreshCw className="h-3 w-3" />
-                  Try Again
+                  {t('tryAgain')}
                 </Button>
               )}
               {onDismiss && (
                 <Button onClick={onDismiss} size="sm" variant="ghost">
-                  Dismiss
+                  {t('dismiss')}
                 </Button>
               )}
             </div>
@@ -90,7 +82,7 @@ export function ErrorState({ error, onRetry, onDismiss, variant = 'full' }: Erro
             <button
               onClick={onDismiss}
               className="text-red-500 hover:text-red-700"
-              aria-label="Dismiss error"
+              aria-label={t('dismissError')}
             >
               <XCircle className="h-5 w-5" />
             </button>
@@ -116,7 +108,7 @@ export function ErrorState({ error, onRetry, onDismiss, variant = 'full' }: Erro
       {onRetry && (
         <Button onClick={onRetry} variant="default" className="gap-2">
           <RefreshCw className="h-4 w-4" />
-          Try Again
+          {t('tryAgain')}
         </Button>
       )}
     </div>

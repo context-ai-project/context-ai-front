@@ -18,6 +18,55 @@ vi.mock('@/lib/api/knowledge.api', () => ({
   },
 }));
 
+// Mock sector store to provide sectors
+vi.mock('@/stores/sector.store', () => ({
+  useAllSectors: () => [
+    {
+      id: '440e8400-e29b-41d4-a716-446655440000',
+      name: 'Human Resources',
+      description: '',
+      icon: 'users',
+      status: 'active',
+      documentCount: 0,
+      createdAt: '',
+      updatedAt: '',
+    },
+    {
+      id: '440e8400-e29b-41d4-a716-446655440001',
+      name: 'Engineering',
+      description: '',
+      icon: 'code',
+      status: 'active',
+      documentCount: 0,
+      createdAt: '',
+      updatedAt: '',
+    },
+  ],
+  useActiveSectors: () => [
+    {
+      id: '440e8400-e29b-41d4-a716-446655440000',
+      name: 'Human Resources',
+      description: '',
+      icon: 'users',
+      status: 'active',
+      documentCount: 0,
+      createdAt: '',
+      updatedAt: '',
+    },
+    {
+      id: '440e8400-e29b-41d4-a716-446655440001',
+      name: 'Engineering',
+      description: '',
+      icon: 'code',
+      status: 'active',
+      documentCount: 0,
+      createdAt: '',
+      updatedAt: '',
+    },
+  ],
+  SectorStoreProvider: ({ children }: { children: React.ReactNode }) => children,
+}));
+
 // Mock next-auth to provide admin roles
 vi.mock('next-auth/react', () => ({
   useSession: () => ({
@@ -125,14 +174,17 @@ describe('DocumentsView', () => {
     expect(await screen.findByText('sourceType.PDF')).toBeInTheDocument();
   });
 
-  it('should display view and delete buttons on document cards', async () => {
+  it('should display actions dropdown trigger on document cards', async () => {
     const docs = [createMockDoc()];
     mockListDocuments.mockResolvedValue(docs);
 
     render(<DocumentsView />);
 
-    expect(await screen.findByText('viewDocument')).toBeInTheDocument();
-    expect(screen.getByText('deleteDocument')).toBeInTheDocument();
+    // Wait for documents to load, then find the actions dropdown trigger
+    await screen.findByText('Test Document');
+    const actionButton = screen.getByRole('button', { name: 'actions' });
+    expect(actionButton).toBeInTheDocument();
+    expect(actionButton).toHaveAttribute('aria-haspopup', 'menu');
   });
 
   it('should call listDocuments API on mount', async () => {

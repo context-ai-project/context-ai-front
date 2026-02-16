@@ -86,9 +86,13 @@ async function fetchWithInterceptors(
   try {
     // Add auth token with shared timeout and signal
     const token = await getAccessToken(TOKEN_TIMEOUT_MS, controller.signal);
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-    };
+
+    // Skip Content-Type for FormData — browser sets it with boundary automatically
+    const isFormData = fetchOptions.body instanceof FormData;
+    const headers: Record<string, string> = {};
+    if (!isFormData) {
+      headers['Content-Type'] = 'application/json';
+    }
 
     // Add existing headers
     if (fetchOptions.headers) {
@@ -157,13 +161,30 @@ export const apiClient = {
   },
 
   /**
-   * POST request
+   * POST request (JSON body)
    */
   async post<T>(endpoint: string, data?: unknown, options?: RequestOptions): Promise<T> {
     const response = await fetchWithInterceptors(endpoint, {
       ...options,
       method: 'POST',
       body: JSON.stringify(data),
+    });
+    return response.json();
+  },
+
+  /**
+   * POST request with FormData body (multipart/form-data).
+   * Content-Type is NOT set — the browser adds it automatically with the boundary.
+   */
+  async postFormData<T>(
+    endpoint: string,
+    formData: FormData,
+    options?: RequestOptions,
+  ): Promise<T> {
+    const response = await fetchWithInterceptors(endpoint, {
+      ...options,
+      method: 'POST',
+      body: formData,
     });
     return response.json();
   },
@@ -176,6 +197,18 @@ export const apiClient = {
       ...options,
       method: 'PUT',
       body: JSON.stringify(data),
+    });
+    return response.json();
+  },
+
+  /**
+   * PATCH request
+   */
+  async patch<T>(endpoint: string, data?: unknown, options?: RequestOptions): Promise<T> {
+    const response = await fetchWithInterceptors(endpoint, {
+      ...options,
+      method: 'PATCH',
+      body: data !== undefined ? JSON.stringify(data) : undefined,
     });
     return response.json();
   },

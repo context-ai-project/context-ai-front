@@ -2,11 +2,27 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Brain, MessageSquare, LayoutDashboard, FileText, LogOut, ChevronUp } from 'lucide-react';
+import {
+  Brain,
+  MessageSquare,
+  LayoutDashboard,
+  FileText,
+  LogOut,
+  ChevronUp,
+  Layers,
+  ShieldCheck,
+} from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useLogout } from '@/hooks/useLogout';
 import { getUserInitials } from '@/lib/utils/get-user-initials';
+import { getUserRole } from '@/lib/utils/get-user-role';
+import {
+  hasPermission,
+  CAN_VIEW_DOCUMENTS,
+  CAN_VIEW_SECTORS,
+  CAN_VIEW_ADMIN,
+} from '@/constants/permissions';
 import { routes } from '@/lib/routes';
 import {
   Sidebar,
@@ -38,37 +54,58 @@ export function AppSidebar() {
   const { data: session } = useSession();
   const locale = useLocale();
   const { logout } = useLogout();
+  const t = useTranslations('nav');
 
-  /**
-   * Get user role from session
-   * Auth0 can send roles in custom claims, fallback to 'user' if not available
-   */
-  const getUserRole = (): string => {
-    const roles = session?.user?.roles;
-    if (roles && Array.isArray(roles) && roles.length > 0) {
-      return roles[0];
-    }
-    return 'user';
-  };
+  const userRole = getUserRole(session?.user?.roles);
 
-  const userRole = getUserRole();
+  const canViewDocuments = hasPermission(userRole, CAN_VIEW_DOCUMENTS);
+  const canViewSectors = hasPermission(userRole, CAN_VIEW_SECTORS);
+  const canViewAdmin = hasPermission(userRole, CAN_VIEW_ADMIN);
 
   const mainNav = [
     {
-      title: 'Dashboard',
+      title: t('dashboard'),
       href: routes.dashboard(locale),
       icon: LayoutDashboard,
     },
     {
-      title: 'Documents',
-      href: routes.documents(locale),
-      icon: FileText,
-    },
-    {
-      title: 'AI Chat',
+      title: t('chat'),
       href: routes.chat(locale),
       icon: MessageSquare,
     },
+    // Documents - all authenticated users (knowledge:read)
+    ...(canViewDocuments
+      ? [
+          {
+            title: t('documents'),
+            href: routes.documents(locale),
+            icon: FileText,
+          },
+        ]
+      : []),
+    // Sectors - admin only
+    ...(canViewSectors
+      ? [
+          {
+            title: t('sectors'),
+            href: routes.sectors(locale),
+            icon: Layers,
+          },
+        ]
+      : []),
+  ];
+
+  /** Management section – visible only for admin role */
+  const managementNav = [
+    ...(canViewAdmin
+      ? [
+          {
+            title: t('admin'),
+            href: routes.admin(locale),
+            icon: ShieldCheck,
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -86,7 +123,7 @@ export function AppSidebar() {
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Platform</SidebarGroupLabel>
+          <SidebarGroupLabel>{t('platform')}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {mainNav.map((item) => (
@@ -106,6 +143,30 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {managementNav.length > 0 && (
+          <SidebarGroup>
+            <SidebarGroupLabel>{t('management')}</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {managementNav.map((item) => (
+                  <SidebarMenuItem key={item.href}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={pathname.startsWith(item.href)}
+                      tooltip={item.title}
+                    >
+                      <Link href={item.href}>
+                        <item.icon className="h-4 w-4" />
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
       </SidebarContent>
 
       <SidebarSeparator />
@@ -116,7 +177,7 @@ export function AppSidebar() {
             <button
               type="button"
               className="hover:bg-sidebar-accent flex w-full items-center gap-3 rounded-lg p-2 text-left transition-colors"
-              aria-label="User menu"
+              aria-label={t('userMenu')}
             >
               <Avatar className="h-8 w-8">
                 {session?.user?.image && (
@@ -138,7 +199,7 @@ export function AppSidebar() {
           <DropdownMenuContent side="top" align="start" className="w-56">
             <DropdownMenuItem onClick={logout}>
               <LogOut className="mr-2 h-4 w-4" />
-              Sign Out
+              {t('signOut')}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

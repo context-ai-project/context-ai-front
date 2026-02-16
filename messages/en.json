@@ -15,25 +15,56 @@
   },
   "nav": {
     "dashboard": "Dashboard",
-    "chat": "Chat",
+    "chat": "AI Chat",
     "knowledge": "Knowledge Base",
+    "documents": "Documents",
+    "sectors": "Sectors",
+    "admin": "Admin",
+    "platform": "Platform",
+    "management": "Management",
     "profile": "Profile",
     "settings": "Settings",
     "signIn": "Sign In",
-    "signOut": "Sign Out"
+    "signOut": "Sign Out",
+    "userMenu": "User menu"
   },
   "chat": {
     "title": "Assistant Chat",
+    "header": {
+      "title": "Context.ai Assistant",
+      "subtitle": "Ask questions about your company knowledge"
+    },
     "placeholder": "Type your message... (press Enter to send)",
     "placeholderLoading": "Waiting for response...",
     "send": "Send message",
     "clear": "Clear conversation",
+    "clearDialog": {
+      "title": "Clear conversation?",
+      "description": "All messages in this conversation will be permanently deleted. This action cannot be undone.",
+      "cancel": "Cancel",
+      "confirm": "Clear conversation"
+    },
     "newConversation": "New conversation",
     "typing": "Assistant is typing...",
     "emptyState": {
-      "title": "Welcome to Context.AI Chat!",
-      "description": "I'm your intelligent assistant, ready to help you with your knowledge management needs. Ask me anything about your documents and data.",
-      "suggestionsTitle": "Start a conversation:"
+      "welcomeTitle": "Welcome to Context.ai",
+      "subtitle": "Your intelligent knowledge assistant powered by RAG technology",
+      "badge": "Ask me anything about your documents",
+      "tryAsking": "Try asking:",
+      "features": {
+        "naturalConversations": {
+          "title": "Natural Conversations",
+          "description": "Ask questions in plain language and get accurate answers"
+        },
+        "contextAware": {
+          "title": "Context-Aware",
+          "description": "Responses based on your organization's knowledge base"
+        },
+        "sourceCitations": {
+          "title": "Source Citations",
+          "description": "Every answer includes references to source documents"
+        }
+      }
     },
     "errors": {
       "networkError": "Network error. Please check your internet connection.",
@@ -76,6 +107,74 @@
     "sales": "Sales",
     "selectSector": "Select a Sector"
   },
+  "sectors": {
+    "title": "Knowledge Sectors",
+    "subtitle": "Isolated knowledge bases for each department",
+    "newSector": "New Sector",
+    "searchPlaceholder": "Search sectors...",
+    "noResults": "No sectors found matching your search.",
+    "empty": "No sectors yet. Create your first sector to start organizing knowledge.",
+    "loading": "Loading sectors...",
+    "documentCount": "{count} docs",
+    "updatedAt": "Updated {date}",
+    "active": "Active",
+    "inactive": "Inactive",
+    "form": {
+      "createTitle": "Create New Sector",
+      "editTitle": "Edit Sector",
+      "name": "Sector Name",
+      "namePlaceholder": "e.g., Marketing",
+      "description": "Description",
+      "descriptionPlaceholder": "Describe what knowledge this sector will contain...",
+      "icon": "Sector Icon",
+      "selectIcon": "Select an icon",
+      "createButton": "Create Sector",
+      "saveButton": "Save Changes",
+      "creating": "Creating...",
+      "saving": "Saving..."
+    },
+    "validation": {
+      "nameRequired": "Sector name is required.",
+      "descriptionRequired": "Description is required.",
+      "nameExists": "A sector with this name already exists.",
+      "nameSimilar": "A sector with a similar name already exists: \"{names}\". Do you want to continue?",
+      "nameMinLength": "Name must be at least 2 characters.",
+      "nameMaxLength": "Name must not exceed 50 characters.",
+      "descriptionMinLength": "Description must be at least 10 characters.",
+      "descriptionMaxLength": "Description must not exceed 300 characters."
+    },
+    "status": {
+      "activateTitle": "Activate Sector",
+      "activateMessage": "Activate \"{name}\"? It will become visible and accessible to users.",
+      "deactivateTitle": "Deactivate Sector",
+      "deactivateMessage": "Deactivate \"{name}\"? It will be hidden and inaccessible to all users.",
+      "confirm": "Confirm",
+      "cancel": "Cancel"
+    },
+    "delete": {
+      "title": "Delete Sector",
+      "message": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
+      "hasDocuments": "This sector has {count} associated document(s) and cannot be deleted. Please remove all documents first.",
+      "confirm": "Delete Sector",
+      "cancel": "Cancel",
+      "success": "Sector deleted successfully.",
+      "error": "Failed to delete sector."
+    },
+    "icons": {
+      "code": "Code",
+      "users": "Users",
+      "trending-up": "Trending",
+      "layout": "Layout",
+      "heart": "Heart",
+      "briefcase": "Briefcase",
+      "building": "Building",
+      "globe": "Globe",
+      "shield": "Shield",
+      "lightbulb": "Lightbulb",
+      "book": "Book",
+      "megaphone": "Megaphone"
+    }
+  },
   "auth": {
     "signInTitle": "Sign In with",
     "signInDescription": "Sign in to your account to access your knowledge management dashboard",
@@ -87,40 +186,64 @@
     "title": "Oops! Something went wrong.",
     "description": "We're sorry, but an unexpected error occurred. Please try again.",
     "tryAgain": "Try again",
-    "details": "Error Details"
+    "dismiss": "Dismiss",
+    "dismissError": "Dismiss error",
+    "reloadPage": "Reload Page",
+    "details": "Error Details",
+    "devOnlyDetails": "Error Details (Development Only)",
+    "somethingWentWrong": "Something went wrong",
+    "defaultBoundaryMessage": "An unexpected error occurred while rendering this component. Please try refreshing the page.",
+    "types": {
+      "network": {
+        "title": "Network Error",
+        "description": "Unable to connect to the server. Please check your internet connection and try again."
+      },
+      "auth": {
+        "title": "Authentication Error",
+        "description": "Your session has expired or you do not have permission to perform this action. Please sign in again."
+      },
+      "validation": {
+        "title": "Validation Error",
+        "description": "The information you provided is invalid. Please check your input and try again."
+      },
+      "server": {
+        "title": "Server Error",
+        "description": "The server encountered an error while processing your request. Please try again later."
+      },
+      "timeout": {
+        "title": "Request Timeout",
+        "description": "The request took too long to complete. Please check your connection and try again."
+      },
+      "unknown": {
+        "title": "Unexpected Error",
+        "description": "An unexpected error occurred. Please try again or contact support if the problem persists."
+      }
+    }
   },
   "suggestedQuestions": {
-    "contextAI": {
-      "benefits": "What are the key benefits of Context.AI?",
-      "privacy": "How does Context.AI handle data privacy?",
-      "integration": "Can Context.AI integrate with my existing systems?",
-      "architecture": "Tell me about the architecture of Context.AI.",
-      "rag": "What is RAG (Retrieval Augmented Generation)?",
-      "getStarted": "How can I get started with Context.AI?"
-    },
     "hr": {
-      "vacation": "How do I request vacation time?",
-      "benefits": "What benefits does the company offer?",
-      "remote": "What is the remote work policy?",
-      "performance": "When are performance reviews?",
-      "training": "What training programs are available?",
-      "policies": "Where can I find HR policies?"
+      "vacationPolicy": "What is the company vacation policy?",
+      "expenseReport": "How do I submit an expense report?",
+      "benefits": "What are the employee benefits?",
+      "timeOff": "How can I request time off?"
     },
     "engineering": {
-      "deploy": "How do I deploy to production?",
-      "architecture": "What is the system architecture?",
-      "testing": "What are the testing standards?",
-      "codeReview": "What is the code review process?",
-      "cicd": "How does the CI/CD pipeline work?",
-      "docs": "Where is the technical documentation?"
+      "codeReview": "What is our code review process?",
+      "cicd": "How do we handle CI/CD deployments?",
+      "standards": "What are the coding standards?",
+      "devSetup": "How do I set up my development environment?"
     },
     "sales": {
-      "pricing": "What is our pricing structure?",
-      "competitors": "Who are our main competitors?",
-      "demo": "How do I schedule a demo?",
-      "objections": "How do I handle common objections?",
-      "crm": "How do I use the CRM system?",
-      "targets": "What are the sales targets?"
+      "pricing": "What is our pricing strategy?",
+      "qualifyLead": "How do I qualify a lead?",
+      "targets": "What are the sales targets for this quarter?",
+      "proposal": "How do I create a sales proposal?"
+    },
+    "default": {
+      "helpFind": "What information can you help me find?",
+      "howItWorks": "How does this system work?",
+      "documents": "What documents do you have access to?",
+      "summarize": "Can you summarize recent updates?"
     }
   },
   "language": {
@@ -156,20 +279,6 @@
       "cta": {
         "primary": "Start Free Trial",
         "secondary": "View Demo"
-      },
-      "stats": {
-        "resolution": {
-          "value": "92%",
-          "label": "Query Resolution Rate"
-        },
-        "onboarding": {
-          "value": "30%",
-          "label": "Faster Onboarding"
-        },
-        "questions": {
-          "value": "1.2K+",
-          "label": "Questions Answered"
-        }
       }
     },
     "features": {
@@ -303,6 +412,7 @@
     "errorLoading": "Failed to load documents. Please try again.",
     "viewDocument": "View Document",
     "deleteDocument": "Delete Document",
+    "actions": "Document actions",
     "documentContent": "Document Content",
     "fragments": "Fragments",
     "createdAt": "Created",
@@ -321,30 +431,99 @@
       "error": "Failed to delete document."
     }
   },
+  "admin": {
+    "title": "Administration",
+    "subtitle": "Manage users, roles, and sector access permissions",
+    "tabs": {
+      "users": "Users",
+      "permissions": "Permissions"
+    },
+    "search": {
+      "placeholder": "Search users..."
+    },
+    "inviteUser": "Invite User",
+    "table": {
+      "user": "User",
+      "role": "Role",
+      "status": "Status",
+      "joined": "Joined",
+      "actions": "Actions"
+    },
+    "roles": {
+      "admin": "Admin",
+      "manager": "Manager",
+      "user": "User"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "actions": {
+      "changeRole": "Change Role",
+      "activate": "Activate",
+      "deactivate": "Deactivate",
+      "userActions": "User actions"
+    },
+    "permissions": {
+      "title": "Sector Access Matrix",
+      "subtitle": "Control which users have access to each knowledge sector. Admins always have access to all sectors.",
+      "searchPlaceholder": "Search by user name...",
+      "toggleAccess": "Toggle {user} access to {sector}"
+    },
+    "roleChange": {
+      "title": "Change Role",
+      "message": "Select a new role for {name}:",
+      "confirm": "Save",
+      "cancel": "Cancel",
+      "success": "Role updated successfully.",
+      "error": "Failed to update role."
+    },
+    "statusChange": {
+      "activateTitle": "Activate User",
+      "activateMessage": "Activate {name}? They will be able to access the application.",
+      "deactivateTitle": "Deactivate User",
+      "deactivateMessage": "Deactivate {name}? They will not be able to access the application.",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "success": "User status updated.",
+      "error": "Failed to update user status."
+    },
+    "loading": "Loading users...",
+    "noResults": "No users found matching your search.",
+    "error": "Failed to load users. Please try again."
+  },
   "dashboard": {
     "title": "Dashboard",
     "subtitle": "Overview of your knowledge platform",
     "stats": {
-      "queries": {
-        "title": "Total Queries",
-        "change": "92% resolved"
+      "conversations": {
+        "title": "Conversations",
+        "subtitle": "Across all users"
       },
       "documents": {
-        "title": "Total Documents",
-        "change": "+12 this month"
+        "title": "Documents",
+        "subtitle": "Knowledge sources"
       },
       "users": {
-        "title": "Active Users",
-        "change": "+3 this week"
+        "title": "Users",
+        "subtitle": "{recent} new this month"
       },
-      "accuracy": {
-        "title": "Accuracy Rate",
-        "change": "+5% improvement"
+      "sectors": {
+        "title": "Sectors",
+        "subtitle": "{active} active"
       }
     },
     "comingSoon": {
       "title": "More Insights Coming Soon",
       "description": "We're working on detailed analytics and reporting features for your knowledge base."
+    },
+    "welcome": {
+      "title": "Welcome to Context.ai",
+      "subtitle": "Your intelligent knowledge assistant",
+      "chatCta": "Start a conversation",
+      "chatDescription": "Ask questions about your company's knowledge base and get AI-powered answers.",
+      "documentsCta": "Browse documents",
+      "documentsDescription": "Explore the available knowledge sources in the platform."
     }
   }
 }
