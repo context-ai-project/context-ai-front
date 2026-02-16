@@ -42,20 +42,23 @@ test.describe('Dashboard Page — Content', () => {
   });
 
   test('should render the stats cards', async ({ page }) => {
+    // Scope assertions to main content to avoid ambiguity with sidebar links
+    const main = page.locator('main');
+
     // Conversations (i18n key: dashboard.stats.conversations.title)
-    await expect(page.getByText('Conversations')).toBeVisible();
-    await expect(page.getByText('1,247')).toBeVisible();
+    await expect(main.getByText('Conversations')).toBeVisible();
+    await expect(main.getByText('1,247')).toBeVisible();
 
     // Documents (i18n key: dashboard.stats.documents.title)
-    await expect(page.getByText('Documents')).toBeVisible();
-    await expect(page.getByText('156')).toBeVisible();
+    await expect(main.getByText('Documents')).toBeVisible();
+    await expect(main.getByText('156')).toBeVisible();
 
     // Users (i18n key: dashboard.stats.users.title)
-    await expect(page.getByText('Users')).toBeVisible();
-    await expect(page.getByText('24', { exact: true })).toBeVisible();
+    await expect(main.getByText('Users')).toBeVisible();
+    await expect(main.getByText('24', { exact: true })).toBeVisible();
 
     // Sectors (i18n key: dashboard.stats.sectors.title)
-    await expect(page.getByText('Sectors')).toBeVisible();
+    await expect(main.getByText('Sectors')).toBeVisible();
   });
 
   test('should render the "Coming Soon" placeholder', async ({ page }) => {
