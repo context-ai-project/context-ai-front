@@ -118,12 +118,28 @@ test.describe('Responsive — Protected Pages Mobile', () => {
   });
 
   test('should render dashboard on mobile viewport', async ({ page }) => {
+    // Mock the admin stats API so the admin dashboard loads predictable data
+    await page.route('**/admin/stats', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          totalConversations: 10,
+          totalUsers: 3,
+          recentUsers: 1,
+          totalDocuments: 5,
+          totalSectors: 2,
+          activeSectors: 2,
+        }),
+      });
+    });
+
     await page.goto(`/${LOCALE}/dashboard`);
     await page.waitForLoadState('networkidle');
 
     await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
-    // Stats should stack vertically on mobile (just check they're all visible)
-    await expect(page.getByText('Total Queries')).toBeVisible();
+    // Stats should stack vertically on mobile (i18n key: dashboard.stats.conversations.title)
+    await expect(page.getByText('Conversations')).toBeVisible();
   });
 });
 

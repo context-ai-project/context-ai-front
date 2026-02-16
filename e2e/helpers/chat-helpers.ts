@@ -91,12 +91,17 @@ export async function verifyMarkdownRendering(page: Page) {
 
 /**
  * Clear conversation
- * Handles the window.confirm() dialog that appears when clearing
+ * The clear button opens a shadcn/ui AlertDialog (DOM-based modal).
+ * We click the trigger, then confirm the action inside the dialog.
  */
 export async function clearConversation(page: Page) {
-  // Set up dialog handler BEFORE clicking to accept the confirm dialog
-  page.once('dialog', (dialog) => dialog.accept());
+  // Click the clear button — opens the AlertDialog
   await page.locator(expectedUIElements.clearButton).click();
+
+  // Wait for the AlertDialog confirm button ("Clear conversation") and click it
+  const confirmButton = page.getByRole('alertdialog').getByRole('button', { name: /clear conversation/i });
+  await expect(confirmButton).toBeVisible({ timeout: 5000 });
+  await confirmButton.click();
 }
 
 /**
