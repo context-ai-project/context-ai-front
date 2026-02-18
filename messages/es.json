@@ -91,7 +91,8 @@
       "enterToSend": "Presiona Enter para enviar",
       "shiftEnterForNewLine": "Shift+Enter para nueva línea",
       "characterLimit": "El mensaje excede la longitud máxima de {max} caracteres. Por favor acorta tu mensaje."
-    }
+    },
+    "noContextFound": "No se encontraron documentos relevantes para esta consulta"
   },
   "user": {
     "profile": "Perfil de Usuario",
