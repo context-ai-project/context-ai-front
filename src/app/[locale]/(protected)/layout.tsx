@@ -6,6 +6,7 @@ import { ChatStoreProvider } from '@/stores/chat.store';
 import { UserStoreProvider } from '@/stores/user.store';
 import { SectorStoreProvider } from '@/stores/sector.store';
 import { LanguageSelector } from '@/components/shared/LanguageSelector';
+import { NotificationBell } from '@/components/notifications/NotificationBell';
 import { isE2ETestMode } from '@/lib/test-auth';
 import { routes } from '@/lib/routes';
 
@@ -50,7 +51,10 @@ export default async function ProtectedLayout({
             <SidebarInset>
               <header className="border-border flex h-14 items-center justify-between gap-3 border-b px-6">
                 <SidebarTrigger />
-                <LanguageSelector />
+                <div className="flex items-center gap-2">
+                  <NotificationBell />
+                  <LanguageSelector />
+                </div>
               </header>
               <main className="relative flex-1 overflow-auto">{children}</main>
             </SidebarInset>

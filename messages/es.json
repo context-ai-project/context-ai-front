@@ -491,7 +491,37 @@
     },
     "loading": "Cargando usuarios...",
     "noResults": "No se encontraron usuarios que coincidan con tu búsqueda.",
-    "error": "Error al cargar usuarios. Por favor intenta de nuevo."
+    "error": "Error al cargar usuarios. Por favor intenta de nuevo.",
+    "invite": {
+      "title": "Invitar Usuario",
+      "description": "Envía un email de invitación a un nuevo usuario. Recibirá un enlace para configurar su cuenta.",
+      "email": "Correo Electrónico",
+      "emailPlaceholder": "nuevousuario@ejemplo.com",
+      "sectors": "Asignar Sectores (opcional)",
+      "sectorsPlaceholder": "Seleccionar sectores...",
+      "noSectors": "No hay sectores disponibles",
+      "sending": "Enviando invitación...",
+      "send": "Enviar Invitación",
+      "cancel": "Cancelar",
+      "success": "¡Invitación enviada exitosamente a {email}!",
+      "error": "Error al enviar la invitación.",
+      "errorUserExists": "Ya existe un usuario con este correo electrónico.",
+      "errorPendingInvitation": "Ya existe una invitación pendiente para este correo.",
+      "errorInvalidEmail": "Por favor ingresa un correo electrónico válido."
+    }
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "empty": "Sin notificaciones aún",
+    "markAllRead": "Marcar todas como leídas",
+    "markAsRead": "Marcar como leída",
+    "unreadCount": "{count} sin leer",
+    "timeAgo": {
+      "justNow": "Ahora mismo",
+      "minutesAgo": "hace {count}m",
+      "hoursAgo": "hace {count}h",
+      "daysAgo": "hace {count}d"
+    }
   },
   "dashboard": {
     "title": "Panel de Control",

@@ -16,8 +16,10 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { getUserInitials } from '@/lib/utils/get-user-initials';
 import type { AdminUserResponse } from '@/lib/api/admin.api';
+import type { Sector } from '@/types/sector.types';
 import { ChangeRoleDialog } from './ChangeRoleDialog';
 import { ToggleUserStatusDialog } from './ToggleUserStatusDialog';
+import { InviteUserDialog } from './InviteUserDialog';
 
 /** Role → badge variant mapping */
 const ROLE_BADGE_VARIANTS: Record<string, 'default' | 'secondary'> = {
@@ -28,18 +30,27 @@ const ROLE_BADGE_VARIANTS: Record<string, 'default' | 'secondary'> = {
 
 interface UsersTabProps {
   users: AdminUserResponse[];
+  sectors: Sector[];
   isLoading: boolean;
   error: string | null;
   onUserUpdated: (user: AdminUserResponse) => void;
+  onInviteSent?: () => void;
 }
 
-type DialogType = 'role' | 'status' | null;
+type DialogType = 'role' | 'status' | 'invite' | null;
 
 /**
  * Users management tab
  * Displays a searchable table of all users with role/status management
  */
-export function UsersTab({ users, isLoading, error, onUserUpdated }: UsersTabProps) {
+export function UsersTab({
+  users,
+  sectors,
+  isLoading,
+  error,
+  onUserUpdated,
+  onInviteSent,
+}: UsersTabProps) {
   const t = useTranslations('admin');
 
   const [search, setSearch] = useState('');
@@ -89,7 +100,7 @@ export function UsersTab({ users, isLoading, error, onUserUpdated }: UsersTabPro
             aria-label={t('search.placeholder')}
           />
         </div>
-        <Button className="gap-2" disabled>
+        <Button className="gap-2" onClick={() => setActiveDialog('invite')}>
           <UserPlus className="h-4 w-4" />
           {t('inviteUser')}
         </Button>
@@ -242,6 +253,16 @@ export function UsersTab({ users, isLoading, error, onUserUpdated }: UsersTabPro
         onOpenChange={(open) => !open && closeDialog()}
         user={selectedUser}
         onSuccess={onUserUpdated}
+      />
+
+      {/* Invite user dialog */}
+      <InviteUserDialog
+        open={activeDialog === 'invite'}
+        onOpenChange={(open) => {
+          if (!open) closeDialog();
+        }}
+        sectors={sectors}
+        onSuccess={onInviteSent}
       />
     </>
   );

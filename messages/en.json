@@ -491,7 +491,37 @@
     },
     "loading": "Loading users...",
     "noResults": "No users found matching your search.",
-    "error": "Failed to load users. Please try again."
+    "error": "Failed to load users. Please try again.",
+    "invite": {
+      "title": "Invite User",
+      "description": "Send an invitation email to a new user. They will receive a link to set up their account.",
+      "email": "Email Address",
+      "emailPlaceholder": "newuser@example.com",
+      "sectors": "Assign Sectors (optional)",
+      "sectorsPlaceholder": "Select sectors...",
+      "noSectors": "No sectors available",
+      "sending": "Sending invitation...",
+      "send": "Send Invitation",
+      "cancel": "Cancel",
+      "success": "Invitation sent successfully to {email}!",
+      "error": "Failed to send invitation.",
+      "errorUserExists": "A user with this email already exists.",
+      "errorPendingInvitation": "A pending invitation for this email already exists.",
+      "errorInvalidEmail": "Please enter a valid email address."
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "No notifications yet",
+    "markAllRead": "Mark all as read",
+    "markAsRead": "Mark as read",
+    "unreadCount": "{count} unread",
+    "timeAgo": {
+      "justNow": "Just now",
+      "minutesAgo": "{count}m ago",
+      "hoursAgo": "{count}h ago",
+      "daysAgo": "{count}d ago"
+    }
   },
   "dashboard": {
     "title": "Dashboard",
