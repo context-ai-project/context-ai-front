@@ -91,7 +91,8 @@
       "enterToSend": "Press Enter to send",
       "shiftEnterForNewLine": "Shift+Enter for new line",
       "characterLimit": "Message exceeds maximum length of {max} characters. Please shorten your message."
-    }
+    },
+    "noContextFound": "No relevant documents found for this query"
   },
   "user": {
     "profile": "User Profile",
