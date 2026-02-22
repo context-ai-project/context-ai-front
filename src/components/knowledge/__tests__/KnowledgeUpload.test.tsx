@@ -3,6 +3,8 @@ import { KnowledgeUpload } from '../KnowledgeUpload';
 
 const mockMutate = vi.fn();
 const mockReset = vi.fn();
+const inputFile = 'input[type="file"]';
+const applicationPdf = 'application/pdf';
 
 vi.mock('@/hooks/useUploadDocument', () => ({
   useUploadDocument: () => ({
@@ -147,9 +149,9 @@ describe('KnowledgeUpload', () => {
   describe('File handling', () => {
     it('should accept a valid PDF file', () => {
       render(<KnowledgeUpload />);
-      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      const fileInput = document.querySelector(inputFile) as HTMLInputElement;
 
-      const file = createFile('test.pdf', 1024, 'application/pdf');
+      const file = createFile('test.pdf', 1024, applicationPdf);
       fireEvent.change(fileInput, { target: { files: [file] } });
 
       expect(screen.getByText('fileSelected')).toBeInTheDocument();
@@ -158,7 +160,7 @@ describe('KnowledgeUpload', () => {
 
     it('should accept a valid markdown file', () => {
       render(<KnowledgeUpload />);
-      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      const fileInput = document.querySelector(inputFile) as HTMLInputElement;
 
       const file = createFile('readme.md', 512, 'text/markdown');
       fireEvent.change(fileInput, { target: { files: [file] } });
@@ -168,7 +170,7 @@ describe('KnowledgeUpload', () => {
 
     it('should fallback to extension for unknown MIME types (.md)', () => {
       render(<KnowledgeUpload />);
-      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      const fileInput = document.querySelector(inputFile) as HTMLInputElement;
 
       const file = createFile('doc.md', 256, 'application/octet-stream');
       fireEvent.change(fileInput, { target: { files: [file] } });
@@ -178,7 +180,7 @@ describe('KnowledgeUpload', () => {
 
     it('should fallback to extension for .txt files', () => {
       render(<KnowledgeUpload />);
-      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      const fileInput = document.querySelector(inputFile) as HTMLInputElement;
 
       const file = createFile('notes.txt', 128, 'application/octet-stream');
       fireEvent.change(fileInput, { target: { files: [file] } });
@@ -188,7 +190,7 @@ describe('KnowledgeUpload', () => {
 
     it('should fallback to extension for .pdf files', () => {
       render(<KnowledgeUpload />);
-      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      const fileInput = document.querySelector(inputFile) as HTMLInputElement;
 
       const file = createFile('report.pdf', 128, 'application/octet-stream');
       fireEvent.change(fileInput, { target: { files: [file] } });
@@ -198,7 +200,7 @@ describe('KnowledgeUpload', () => {
 
     it('should reject file with unsupported type and extension', () => {
       render(<KnowledgeUpload />);
-      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      const fileInput = document.querySelector(inputFile) as HTMLInputElement;
 
       const file = createFile('image.png', 1024, 'image/png');
       fireEvent.change(fileInput, { target: { files: [file] } });
@@ -208,9 +210,9 @@ describe('KnowledgeUpload', () => {
 
     it('should reject file that exceeds max size (10MB)', () => {
       render(<KnowledgeUpload />);
-      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      const fileInput = document.querySelector(inputFile) as HTMLInputElement;
 
-      const bigFile = createFile('huge.pdf', 11 * 1024 * 1024, 'application/pdf');
+      const bigFile = createFile('huge.pdf', 11 * 1024 * 1024, applicationPdf);
       fireEvent.change(fileInput, { target: { files: [bigFile] } });
 
       expect(screen.queryByText('fileSelected')).not.toBeInTheDocument();
@@ -218,10 +220,10 @@ describe('KnowledgeUpload', () => {
 
     it('should auto-fill title from filename when title is empty', () => {
       render(<KnowledgeUpload />);
-      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      const fileInput = document.querySelector(inputFile) as HTMLInputElement;
       const titleInput = screen.getByPlaceholderText('documentTitlePlaceholder');
 
-      const file = createFile('my-document.pdf', 1024, 'application/pdf');
+      const file = createFile('my-document.pdf', 1024, applicationPdf);
       fireEvent.change(fileInput, { target: { files: [file] } });
 
       expect(titleInput).toHaveValue('my-document');
@@ -229,9 +231,9 @@ describe('KnowledgeUpload', () => {
 
     it('should allow removing selected file', () => {
       render(<KnowledgeUpload />);
-      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      const fileInput = document.querySelector(inputFile) as HTMLInputElement;
 
-      const file = createFile('test.pdf', 1024, 'application/pdf');
+      const file = createFile('test.pdf', 1024, applicationPdf);
       fireEvent.change(fileInput, { target: { files: [file] } });
 
       expect(screen.getByText('fileSelected')).toBeInTheDocument();
@@ -245,7 +247,7 @@ describe('KnowledgeUpload', () => {
 
     it('should handle null file gracefully', () => {
       render(<KnowledgeUpload />);
-      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      const fileInput = document.querySelector(inputFile) as HTMLInputElement;
 
       fireEvent.change(fileInput, { target: { files: [] } });
 
@@ -259,8 +261,8 @@ describe('KnowledgeUpload', () => {
       // Set title first
       fireEvent.change(titleInput, { target: { value: 'Custom Title' } });
 
-      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-      const file = createFile('test.pdf', 1024, 'application/pdf');
+      const fileInput = document.querySelector(inputFile) as HTMLInputElement;
+      const file = createFile('test.pdf', 1024, applicationPdf);
       fireEvent.change(fileInput, { target: { files: [file] } });
 
       // Title should remain the custom one
@@ -293,7 +295,7 @@ describe('KnowledgeUpload', () => {
     it('should accept file on drop', () => {
       render(<KnowledgeUpload />);
       const dropZone = getDropZone();
-      const file = createFile('dropped.pdf', 1024, 'application/pdf');
+      const file = createFile('dropped.pdf', 1024, applicationPdf);
 
       fireEvent.drop(dropZone, {
         dataTransfer: { files: [file] },
@@ -308,7 +310,7 @@ describe('KnowledgeUpload', () => {
     it('should trigger file input on Enter key', () => {
       render(<KnowledgeUpload />);
       const dropZone = getDropZone();
-      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      const fileInput = document.querySelector(inputFile) as HTMLInputElement;
       const clickSpy = vi.spyOn(fileInput, 'click');
 
       fireEvent.keyDown(dropZone, { key: 'Enter' });
@@ -319,7 +321,7 @@ describe('KnowledgeUpload', () => {
     it('should trigger file input on Space key', () => {
       render(<KnowledgeUpload />);
       const dropZone = getDropZone();
-      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      const fileInput = document.querySelector(inputFile) as HTMLInputElement;
       const clickSpy = vi.spyOn(fileInput, 'click');
 
       fireEvent.keyDown(dropZone, { key: ' ' });
@@ -338,8 +340,8 @@ describe('KnowledgeUpload', () => {
 
     it('should keep button disabled when only file is selected (no sector)', () => {
       render(<KnowledgeUpload />);
-      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-      const file = createFile('test.pdf', 1024, 'application/pdf');
+      const fileInput = document.querySelector(inputFile) as HTMLInputElement;
+      const file = createFile('test.pdf', 1024, applicationPdf);
       fireEvent.change(fileInput, { target: { files: [file] } });
 
       // Title is auto-filled but sector is still missing
