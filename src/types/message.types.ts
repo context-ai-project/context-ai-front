@@ -61,6 +61,8 @@ export interface MessageDto {
   conversationId: string;
   role: MessageRole;
   content: string;
+  responseType?: RagResponseType; // v1.3: answer | no_context | error
+  structured?: StructuredResponse; // v1.3: structured response data
   sourcesUsed?: SourceFragment[];
   /** @planned Phase 6 - Sentiment analysis integration */
   sentimentScore?: number;
@@ -82,11 +84,51 @@ export interface ChatQueryDto {
 }
 
 /**
+ * Response types to distinguish between normal responses and fallbacks (v1.3)
+ */
+export enum RagResponseType {
+  /** Response with documentary context */
+  ANSWER = 'answer',
+  /** No relevant documents found */
+  NO_CONTEXT = 'no_context',
+  /** Error during processing */
+  ERROR = 'error',
+}
+
+/**
+ * Section types for structured responses (v1.3)
+ */
+export type SectionType = 'info' | 'steps' | 'warning' | 'tip';
+
+/**
+ * A single section in a structured response (v1.3)
+ */
+export interface ResponseSection {
+  title: string;
+  content: string;
+  type: SectionType;
+}
+
+/**
+ * Structured response from the API (v1.3)
+ */
+export interface StructuredResponse {
+  summary: string;
+  sections: ResponseSection[];
+  keyPoints?: string[];
+  relatedTopics?: string[];
+}
+
+/**
  * Chat response DTO (matches backend QueryAssistantResponseDto)
  * Backend returns the assistant's response text, not full Message objects
+ *
+ * v1.3: Added responseType and structured fields
  */
 export interface ChatResponseDto {
-  response: string; // Assistant's response text
+  response: string; // Assistant's response text (backward compatible)
+  responseType: RagResponseType; // v1.3: Type of response
+  structured?: StructuredResponse; // v1.3: Structured response data
   conversationId: string;
   sources: SourceFragment[];
   timestamp: string | Date; // ISO 8601 string or Date object
@@ -108,7 +150,7 @@ export function createUserMessage(content: string, conversationId: string | null
 
 /**
  * Factory function to create an assistant message DTO from API response
- * Handles timestamp normalization
+ * Handles timestamp normalization and v1.3 structured fields
  */
 export function createAssistantMessage(response: ChatResponseDto): MessageDto {
   return {
@@ -116,6 +158,8 @@ export function createAssistantMessage(response: ChatResponseDto): MessageDto {
     conversationId: response.conversationId,
     role: MessageRole.ASSISTANT,
     content: response.response,
+    responseType: response.responseType,
+    structured: response.structured,
     createdAt:
       typeof response.timestamp === 'string'
         ? response.timestamp

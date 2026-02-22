@@ -91,7 +91,8 @@
       "enterToSend": "Presiona Enter para enviar",
       "shiftEnterForNewLine": "Shift+Enter para nueva línea",
       "characterLimit": "El mensaje excede la longitud máxima de {max} caracteres. Por favor acorta tu mensaje."
-    }
+    },
+    "noContextFound": "No se encontraron documentos relevantes para esta consulta"
   },
   "user": {
     "profile": "Perfil de Usuario",
@@ -180,7 +181,14 @@
     "signInDescription": "Inicia sesión en tu cuenta para acceder a tu panel de gestión de conocimiento",
     "signOutConfirm": "¿Estás seguro de que quieres cerrar sesión?",
     "signOutDescription": "Cerrar sesión terminará tu sesión y necesitarás iniciar sesión de nuevo para acceder al contenido protegido.",
-    "welcomeTitle": "Bienvenido a Context.ai"
+    "welcomeTitle": "Bienvenido a Context.ai",
+    "inactive": {
+      "title": "Cuenta Inactiva",
+      "description": "Tu cuenta ha sido desactivada. No tienes permiso para acceder a la plataforma.",
+      "contact": "Si crees que esto es un error, contacta al administrador de tu organización.",
+      "logout": "Cerrar Sesión",
+      "loggingOut": "Cerrando sesión..."
+    }
   },
   "errors": {
     "title": "¡Ups! Algo salió mal.",
@@ -490,7 +498,65 @@
     },
     "loading": "Cargando usuarios...",
     "noResults": "No se encontraron usuarios que coincidan con tu búsqueda.",
-    "error": "Error al cargar usuarios. Por favor intenta de nuevo."
+    "error": "Error al cargar usuarios. Por favor intenta de nuevo.",
+    "invite": {
+      "title": "Invitar Usuario",
+      "description": "Envía un email de invitación a un nuevo usuario. Recibirá un enlace para configurar su cuenta.",
+      "name": "Nombre Completo",
+      "namePlaceholder": "Nombre del nuevo usuario",
+      "email": "Correo Electrónico",
+      "emailPlaceholder": "nuevousuario@ejemplo.com",
+      "sectors": "Asignar Sectores (opcional)",
+      "sectorsPlaceholder": "Seleccionar sectores...",
+      "noSectors": "No hay sectores disponibles",
+      "sending": "Enviando invitación...",
+      "send": "Enviar Invitación",
+      "cancel": "Cancelar",
+      "success": "¡Invitación enviada exitosamente a {email}!",
+      "error": "Error al enviar la invitación.",
+      "errorUserExists": "Ya existe un usuario con este correo electrónico.",
+      "errorPendingInvitation": "Ya existe una invitación pendiente para este correo.",
+      "errorInvalidEmail": "Por favor ingresa un correo electrónico válido."
+    }
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "empty": "Sin notificaciones aún",
+    "markAllRead": "Marcar todas como leídas",
+    "markAsRead": "Marcar como leída",
+    "unreadCount": "{count} sin leer",
+    "timeAgo": {
+      "justNow": "Ahora mismo",
+      "minutesAgo": "hace {count}m",
+      "hoursAgo": "hace {count}h",
+      "daysAgo": "hace {count}d"
+    },
+    "types": {
+      "invitationCreated": {
+        "title": "Nueva invitación enviada",
+        "message": "Se envió una invitación a {name} ({email}) con rol \"{role}\"."
+      },
+      "invitationAccepted": {
+        "title": "Invitación aceptada",
+        "message": "{name} ({email}) ha aceptado la invitación."
+      },
+      "invitationExpired": {
+        "title": "Invitación expirada",
+        "message": "La invitación para {email} ha expirado."
+      },
+      "userActivated": {
+        "title": "Nuevo usuario activado",
+        "message": "{name} ({email}) ha activado su cuenta."
+      },
+      "documentProcessed": {
+        "title": "Documento procesado",
+        "message": "El documento ha sido procesado exitosamente."
+      },
+      "documentFailed": {
+        "title": "Error en documento",
+        "message": "El procesamiento del documento ha fallado."
+      }
+    }
   },
   "dashboard": {
     "title": "Panel de Control",

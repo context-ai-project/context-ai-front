@@ -65,9 +65,9 @@ describe('syncUserWithBackend', () => {
     );
   });
 
-  it('should sync user and return id and roles on success', async () => {
+  it('should sync user and return id, roles and isActive on success', async () => {
     const mockId = '550e8400-e29b-41d4-a716-446655440000';
-    const mockResponse = { id: mockId, roles: ['admin'] };
+    const mockResponse = { id: mockId, roles: ['admin'], isActive: true };
 
     global.fetch = vi.fn().mockResolvedValueOnce({
       ok: true,
@@ -76,7 +76,7 @@ describe('syncUserWithBackend', () => {
 
     const result = await syncUserWithBackend(validProfile);
 
-    expect(result).toEqual({ id: mockId, roles: ['admin'] });
+    expect(result).toEqual({ id: mockId, roles: ['admin'], isActive: true });
     expect(global.fetch).toHaveBeenCalledWith(
       'http://localhost:3001/api/v1/users/sync',
       expect.objectContaining({
@@ -88,7 +88,21 @@ describe('syncUserWithBackend', () => {
     );
   });
 
-  it('should return roles as empty array when not present in response', async () => {
+  it('should return isActive false for inactive users', async () => {
+    const mockId = '550e8400-e29b-41d4-a716-446655440000';
+    const mockResponse = { id: mockId, roles: ['user'], isActive: false };
+
+    global.fetch = vi.fn().mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve(mockResponse),
+    });
+
+    const result = await syncUserWithBackend(validProfile);
+
+    expect(result).toEqual({ id: mockId, roles: ['user'], isActive: false });
+  });
+
+  it('should default roles to empty array and isActive to true when not present', async () => {
     const mockId = '660e8400-e29b-41d4-a716-446655440001';
     global.fetch = vi.fn().mockResolvedValueOnce({
       ok: true,
@@ -97,7 +111,7 @@ describe('syncUserWithBackend', () => {
 
     const result = await syncUserWithBackend(validProfile);
 
-    expect(result).toEqual({ id: mockId, roles: [] });
+    expect(result).toEqual({ id: mockId, roles: [], isActive: true });
   });
 
   it('should return null on invalid response format', async () => {

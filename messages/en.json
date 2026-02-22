@@ -91,7 +91,8 @@
       "enterToSend": "Press Enter to send",
       "shiftEnterForNewLine": "Shift+Enter for new line",
       "characterLimit": "Message exceeds maximum length of {max} characters. Please shorten your message."
-    }
+    },
+    "noContextFound": "No relevant documents found for this query"
   },
   "user": {
     "profile": "User Profile",
@@ -180,7 +181,14 @@
     "signInDescription": "Sign in to your account to access your knowledge management dashboard",
     "signOutConfirm": "Are you sure you want to sign out?",
     "signOutDescription": "Signing out will end your session and you will need to sign in again to access protected content.",
-    "welcomeTitle": "Welcome to Context.ai"
+    "welcomeTitle": "Welcome to Context.ai",
+    "inactive": {
+      "title": "Account Inactive",
+      "description": "Your account has been deactivated. You do not have permission to access the platform.",
+      "contact": "If you believe this is an error, please contact your organization administrator.",
+      "logout": "Sign Out",
+      "loggingOut": "Signing out..."
+    }
   },
   "errors": {
     "title": "Oops! Something went wrong.",
@@ -490,7 +498,65 @@
     },
     "loading": "Loading users...",
     "noResults": "No users found matching your search.",
-    "error": "Failed to load users. Please try again."
+    "error": "Failed to load users. Please try again.",
+    "invite": {
+      "title": "Invite User",
+      "description": "Send an invitation email to a new user. They will receive a link to set up their account.",
+      "name": "Full Name",
+      "namePlaceholder": "Name of the new user",
+      "email": "Email Address",
+      "emailPlaceholder": "newuser@example.com",
+      "sectors": "Assign Sectors (optional)",
+      "sectorsPlaceholder": "Select sectors...",
+      "noSectors": "No sectors available",
+      "sending": "Sending invitation...",
+      "send": "Send Invitation",
+      "cancel": "Cancel",
+      "success": "Invitation sent successfully to {email}!",
+      "error": "Failed to send invitation.",
+      "errorUserExists": "A user with this email already exists.",
+      "errorPendingInvitation": "A pending invitation for this email already exists.",
+      "errorInvalidEmail": "Please enter a valid email address."
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "No notifications yet",
+    "markAllRead": "Mark all as read",
+    "markAsRead": "Mark as read",
+    "unreadCount": "{count} unread",
+    "timeAgo": {
+      "justNow": "Just now",
+      "minutesAgo": "{count}m ago",
+      "hoursAgo": "{count}h ago",
+      "daysAgo": "{count}d ago"
+    },
+    "types": {
+      "invitationCreated": {
+        "title": "New Invitation Sent",
+        "message": "An invitation was sent to {name} ({email}) with role \"{role}\"."
+      },
+      "invitationAccepted": {
+        "title": "Invitation Accepted",
+        "message": "{name} ({email}) has accepted the invitation."
+      },
+      "invitationExpired": {
+        "title": "Invitation Expired",
+        "message": "The invitation for {email} has expired."
+      },
+      "userActivated": {
+        "title": "New User Activated",
+        "message": "{name} ({email}) has activated their account."
+      },
+      "documentProcessed": {
+        "title": "Document Processed",
+        "message": "The document has been processed successfully."
+      },
+      "documentFailed": {
+        "title": "Document Failed",
+        "message": "Document processing has failed."
+      }
+    }
   },
   "dashboard": {
     "title": "Dashboard",
