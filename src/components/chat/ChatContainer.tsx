@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 import { ChatHeader } from './ChatHeader';
 import { MessageList } from './MessageList';
@@ -30,7 +31,19 @@ export function ChatContainer() {
     setLoading,
     setError,
     clearMessages,
+    reset,
   } = useChatStore();
+
+  // Track the previous sector to detect changes (skip initial mount)
+  const prevSectorRef = useRef(currentSectorId);
+
+  useEffect(() => {
+    if (prevSectorRef.current && prevSectorRef.current !== currentSectorId) {
+      // Sector changed — clear conversation to start fresh
+      reset();
+    }
+    prevSectorRef.current = currentSectorId;
+  }, [currentSectorId, reset]);
 
   const handleSendMessage = async (messageContent: string) => {
     // Validate user session
