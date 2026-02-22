@@ -38,6 +38,17 @@ export const CAN_VIEW_ADMIN: readonly UserRole[] = [ROLES.ADMIN];
 /** Roles treated as "admin-level" (sector selector, etc.) */
 export const ADMIN_LEVEL_ROLES: readonly UserRole[] = [ROLES.ADMIN, ROLES.MANAGER];
 
+// ── Capsule permissions (v2 — Block A) ───────────────────────────────
+
+/**
+ * Roles allowed to view and play capsules.
+ * Per RBAC matrix: capsule:read → user ✅, manager ✅, admin ✅
+ */
+export const CAN_VIEW_CAPSULES: readonly UserRole[] = [ROLES.ADMIN, ROLES.MANAGER, ROLES.USER];
+
+/** Roles allowed to create capsules and trigger AI generation */
+export const CAN_CREATE_CAPSULES: readonly UserRole[] = [ROLES.ADMIN, ROLES.MANAGER];
+
 // ── Helper ───────────────────────────────────────────────────────────
 
 /**

@@ -20,6 +20,7 @@
     "documents": "Documents",
     "sectors": "Sectors",
     "admin": "Admin",
+    "capsules": "Capsules",
     "platform": "Platform",
     "management": "Management",
     "profile": "Profile",
@@ -525,6 +526,70 @@
       "chatDescription": "Ask questions about your company's knowledge base and get AI-powered answers.",
       "documentsCta": "Browse documents",
       "documentsDescription": "Explore the available knowledge sources in the platform."
+    }
+  },
+  "capsules": {
+    "title": "Multimedia Capsules",
+    "subtitle": "AI-generated audio content from your knowledge base",
+    "create": "Create Capsule",
+    "wizard": {
+      "step1Title": "Select Content",
+      "step2Title": "Create Capsule",
+      "selectType": "Capsule Type",
+      "typeAudio": "Audio",
+      "typeVideo": "Video",
+      "typeBoth": "Both",
+      "typeComingSoon": "Coming soon",
+      "selectSector": "Select a sector...",
+      "capsuleTitle": "Capsule Title",
+      "titlePlaceholder": "e.g., Onboarding — Vacation Policy",
+      "documentsAvailable": "Available documents in sector",
+      "searchDocuments": "Search documents...",
+      "documentsSelected": "documents selected",
+      "next": "Next",
+      "previous": "Back",
+      "introText": "Introductory Text",
+      "introPlaceholder": "Write a personalized introduction for the capsule...",
+      "script": "Narrative Script",
+      "scriptPlaceholder": "The script will appear here after generation...",
+      "generateScript": "Generate Script with AI",
+      "generatingScript": "Generating script...",
+      "selectVoice": "Select Voice",
+      "generateAudio": "Generate Audio",
+      "generatingAudio": "Generating audio...",
+      "previewPlaceholder": "Generate a script to get started",
+      "audioReady": "Audio generated successfully",
+      "downloadAudio": "Download Audio",
+      "error": "Generation error",
+      "retry": "Retry"
+    },
+    "list": {
+      "empty": "No capsules created yet",
+      "filterBySector": "Filter by sector",
+      "filterByStatus": "Filter by status",
+      "filterByType": "Filter by type",
+      "search": "Search by title..."
+    },
+    "status": {
+      "DRAFT": "Draft",
+      "GENERATING": "Generating",
+      "COMPLETED": "Completed",
+      "ACTIVE": "Active",
+      "FAILED": "Failed",
+      "ARCHIVED": "Archived"
+    },
+    "player": {
+      "playAudio": "Play Audio",
+      "download": "Download",
+      "sector": "Sector",
+      "createdBy": "Created by",
+      "duration": "Duration",
+      "createdAt": "Created"
+    },
+    "actions": {
+      "publish": "Publish",
+      "archive": "Archive",
+      "delete": "Delete"
     }
   }
 }
