@@ -41,10 +41,24 @@ function getTimeAgo(
 }
 
 /**
+ * Maps backend notification type (dot-separated) to i18n key (camelCase).
+ * next-intl does not allow dots in JSON keys, so we convert them here.
+ */
+const TYPE_TO_I18N_KEY: Record<string, string> = {
+  'invitation.created': 'invitationCreated',
+  'invitation.accepted': 'invitationAccepted',
+  'invitation.expired': 'invitationExpired',
+  'user.activated': 'userActivated',
+  'document.processed': 'documentProcessed',
+  'document.failed': 'documentFailed',
+};
+
+/**
  * NotificationBell
  *
  * Displays a bell icon in the header with an unread count badge.
  * Opens a dropdown with recent notifications and actions to mark as read.
+ * Translates notification content based on type + metadata using i18n.
  */
 export function NotificationBell() {
   const t = useTranslations('notifications');
@@ -54,6 +68,66 @@ export function NotificationBell() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  /**
+   * Get translated title for a notification.
+   * Falls back to the backend-provided title if no translation exists.
+   */
+  const getTitle = useCallback(
+    (notification: NotificationResponse): string => {
+      const i18nKey = TYPE_TO_I18N_KEY[notification.type];
+      if (i18nKey) {
+        try {
+          return t(`types.${i18nKey}.title`);
+        } catch {
+          return notification.title;
+        }
+      }
+      return notification.title;
+    },
+    [t],
+  );
+
+  /**
+   * Get translated message for a notification.
+   * Interpolates metadata values (name, email, role, etc.)
+   * Falls back to the backend-provided message if no translation exists
+   * or if required interpolation parameters are missing.
+   */
+  const getMessage = useCallback(
+    (notification: NotificationResponse): string => {
+      const i18nKey = TYPE_TO_I18N_KEY[notification.type];
+      if (!i18nKey || !notification.metadata) {
+        return notification.message;
+      }
+
+      try {
+        const params: Record<string, string> = {};
+        for (const [key, value] of Object.entries(notification.metadata)) {
+          if (typeof value === 'string') {
+            params[key] = value;
+          }
+        }
+
+        // Provide fallback for common params that may be missing in older notifications
+        params.name = params.name ?? params.email ?? '—';
+        params.email = params.email ?? '—';
+        params.role = params.role ?? '—';
+
+        const result = t(`types.${i18nKey}.message`, params);
+
+        // next-intl returns the key path when translation fails silently
+        if (result.startsWith('notifications.types.')) {
+          return notification.message;
+        }
+
+        return result;
+      } catch {
+        return notification.message;
+      }
+    },
+    [t],
+  );
 
   // Fetch unread count (lightweight, for polling)
   const fetchUnreadCount = useCallback(async () => {
@@ -103,7 +177,7 @@ export function NotificationBell() {
     try {
       await notificationApi.markAsRead(notificationId);
       setNotifications((prev) =>
-        prev.map((n) => (n.id === notificationId ? { ...n, readAt: new Date().toISOString() } : n)),
+        prev.map((n) => (n.id === notificationId ? { ...n, isRead: true } : n)),
       );
       setUnreadCount((prev) => Math.max(0, prev - 1));
     } catch {
@@ -115,9 +189,7 @@ export function NotificationBell() {
   const handleMarkAllAsRead = async () => {
     try {
       await notificationApi.markAllAsRead();
-      setNotifications((prev) =>
-        prev.map((n) => ({ ...n, readAt: n.readAt ?? new Date().toISOString() })),
-      );
+      setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
       setUnreadCount(0);
     } catch {
       // Silently fail
@@ -169,7 +241,7 @@ export function NotificationBell() {
           )}
 
           {notifications.map((notification) => {
-            const isUnread = !notification.readAt;
+            const isUnread = !notification.isRead;
             return (
               <div
                 key={notification.id}
@@ -186,11 +258,11 @@ export function NotificationBell() {
                   )}
                 </div>
 
-                {/* Content */}
+                {/* Content — translated based on type + metadata */}
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium">{notification.title}</p>
+                  <p className="truncate text-sm font-medium">{getTitle(notification)}</p>
                   <p className="text-muted-foreground line-clamp-2 text-xs">
-                    {notification.message}
+                    {getMessage(notification)}
                   </p>
                   <p className="text-muted-foreground mt-1 text-[10px]">
                     {getTimeAgo(notification.createdAt, t)}

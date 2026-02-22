@@ -13,6 +13,7 @@ declare module 'next-auth' {
       email?: string | null;
       image?: string | null;
       roles?: string[]; // Auth0 custom claims — roles assigned to the user
+      isActive?: boolean; // Whether the user account is active in the backend
     };
   }
 
@@ -22,6 +23,7 @@ declare module 'next-auth' {
     email?: string | null;
     image?: string | null;
     roles?: string[];
+    isActive?: boolean;
   }
 }
 
@@ -36,5 +38,6 @@ declare module 'next-auth/jwt' {
     email?: string;
     name?: string;
     roles?: string[];
+    isActive?: boolean; // Whether the user account is active in the backend
   }
 }

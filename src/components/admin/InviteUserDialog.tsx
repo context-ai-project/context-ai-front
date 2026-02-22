@@ -48,6 +48,7 @@ export function InviteUserDialog({
 }: InviteUserDialogProps) {
   const t = useTranslations('admin');
 
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [selectedSectorIds, setSelectedSectorIds] = useState<string[]>([]);
   const [isSending, setIsSending] = useState(false);
@@ -57,6 +58,7 @@ export function InviteUserDialog({
   // Reset form when dialog opens/closes
   useEffect(() => {
     if (open) {
+      setName('');
       setEmail('');
       setSelectedSectorIds([]);
       setError(null);
@@ -75,6 +77,10 @@ export function InviteUserDialog({
     setSuccessMessage(null);
 
     // Client-side validation
+    if (!name.trim() || name.trim().length < 2) {
+      setError(t('invite.errorInvalidEmail'));
+      return;
+    }
     if (!email.trim()) {
       setError(t('invite.errorInvalidEmail'));
       return;
@@ -88,6 +94,7 @@ export function InviteUserDialog({
     try {
       await invitationApi.createInvitation({
         email: email.trim(),
+        name: name.trim(),
         sectorIds: selectedSectorIds.length > 0 ? selectedSectorIds : undefined,
       });
 
@@ -130,6 +137,22 @@ export function InviteUserDialog({
         </DialogHeader>
 
         <div className="flex flex-col gap-4">
+          {/* Name input */}
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="invite-name" className="text-sm font-medium">
+              {t('invite.name')}
+            </label>
+            <Input
+              id="invite-name"
+              type="text"
+              placeholder={t('invite.namePlaceholder')}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              disabled={isSending}
+              autoFocus
+            />
+          </div>
+
           {/* Email input */}
           <div className="flex flex-col gap-1.5">
             <label htmlFor="invite-email" className="text-sm font-medium">
@@ -142,7 +165,6 @@ export function InviteUserDialog({
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={isSending}
-              autoFocus
             />
           </div>
 
@@ -188,7 +210,7 @@ export function InviteUserDialog({
             <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isSending}>
               {t('invite.cancel')}
             </Button>
-            <Button onClick={handleSend} disabled={isSending || !email.trim()}>
+            <Button onClick={handleSend} disabled={isSending || !name.trim() || !email.trim()}>
               {isSending ? t('invite.sending') : t('invite.send')}
             </Button>
           </div>

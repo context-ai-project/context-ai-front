@@ -264,10 +264,10 @@ export function SectorFormDialog({ open, onOpenChange, sector, onSuccess }: Sect
 
             {/* Similar name warning */}
             {similarWarning && !errors.name && (
-              <div className="border-warning/30 bg-warning/10 flex items-start gap-2 rounded-md border p-3">
-                <AlertTriangle className="text-warning mt-0.5 h-4 w-4 shrink-0" />
+              <div className="flex items-start gap-2 rounded-md border border-amber-300 bg-amber-50 p-3 dark:border-amber-700 dark:bg-amber-950/40">
+                <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
                 <div className="flex-1">
-                  <p className="text-warning-foreground text-xs">{similarWarning}</p>
+                  <p className="text-xs text-amber-800 dark:text-amber-200">{similarWarning}</p>
                   {similarAccepted && (
                     <Badge variant="secondary" className="mt-1 gap-1 text-xs">
                       <Check className="h-3 w-3" />

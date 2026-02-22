@@ -4,11 +4,13 @@ import { z } from 'zod';
 const userSyncResponseSchema = z.object({
   id: z.string().uuid(),
   roles: z.array(z.string()).default([]),
+  isActive: z.boolean().default(true),
 });
 
 export interface SyncResult {
   id: string;
   roles: string[];
+  isActive: boolean;
 }
 
 interface UserSyncProfile {
@@ -64,8 +66,13 @@ export async function syncUserWithBackend(profile: UserSyncProfile): Promise<Syn
         console.warn('[NextAuth] User synced successfully:', {
           userId: parsed.data.id,
           roles: parsed.data.roles,
+          isActive: parsed.data.isActive,
         });
-        return { id: parsed.data.id, roles: parsed.data.roles };
+        return {
+          id: parsed.data.id,
+          roles: parsed.data.roles,
+          isActive: parsed.data.isActive,
+        };
       }
 
       console.error('[NextAuth] Invalid /users/sync response:', parsed.error.format());

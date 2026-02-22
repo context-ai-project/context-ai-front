@@ -181,7 +181,14 @@
     "signInDescription": "Inicia sesión en tu cuenta para acceder a tu panel de gestión de conocimiento",
     "signOutConfirm": "¿Estás seguro de que quieres cerrar sesión?",
     "signOutDescription": "Cerrar sesión terminará tu sesión y necesitarás iniciar sesión de nuevo para acceder al contenido protegido.",
-    "welcomeTitle": "Bienvenido a Context.ai"
+    "welcomeTitle": "Bienvenido a Context.ai",
+    "inactive": {
+      "title": "Cuenta Inactiva",
+      "description": "Tu cuenta ha sido desactivada. No tienes permiso para acceder a la plataforma.",
+      "contact": "Si crees que esto es un error, contacta al administrador de tu organización.",
+      "logout": "Cerrar Sesión",
+      "loggingOut": "Cerrando sesión..."
+    }
   },
   "errors": {
     "title": "¡Ups! Algo salió mal.",
@@ -495,6 +502,8 @@
     "invite": {
       "title": "Invitar Usuario",
       "description": "Envía un email de invitación a un nuevo usuario. Recibirá un enlace para configurar su cuenta.",
+      "name": "Nombre Completo",
+      "namePlaceholder": "Nombre del nuevo usuario",
       "email": "Correo Electrónico",
       "emailPlaceholder": "nuevousuario@ejemplo.com",
       "sectors": "Asignar Sectores (opcional)",
@@ -521,6 +530,32 @@
       "minutesAgo": "hace {count}m",
       "hoursAgo": "hace {count}h",
       "daysAgo": "hace {count}d"
+    },
+    "types": {
+      "invitationCreated": {
+        "title": "Nueva invitación enviada",
+        "message": "Se envió una invitación a {name} ({email}) con rol \"{role}\"."
+      },
+      "invitationAccepted": {
+        "title": "Invitación aceptada",
+        "message": "{name} ({email}) ha aceptado la invitación."
+      },
+      "invitationExpired": {
+        "title": "Invitación expirada",
+        "message": "La invitación para {email} ha expirado."
+      },
+      "userActivated": {
+        "title": "Nuevo usuario activado",
+        "message": "{name} ({email}) ha activado su cuenta."
+      },
+      "documentProcessed": {
+        "title": "Documento procesado",
+        "message": "El documento ha sido procesado exitosamente."
+      },
+      "documentFailed": {
+        "title": "Error en documento",
+        "message": "El procesamiento del documento ha fallado."
+      }
     }
   },
   "dashboard": {

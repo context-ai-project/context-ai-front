@@ -7,29 +7,33 @@ import { apiClient } from './client';
 
 // ── Response types ─────────────────────────────────────────────────────────
 
-/** Notification type enum (mirrors backend) */
+/** Notification type enum (mirrors backend NotificationType) */
 export type NotificationType =
-  | 'invitation_sent'
-  | 'invitation_accepted'
-  | 'invitation_expired'
-  | 'invitation_revoked'
-  | 'new_document'
-  | 'document_updated'
-  | 'document_deleted'
-  | 'sector_created'
-  | 'sector_updated'
-  | 'sector_deleted'
-  | 'user_role_changed'
-  | 'user_status_changed';
+  | 'invitation.created'
+  | 'invitation.accepted'
+  | 'invitation.expired'
+  | 'user.activated'
+  | 'document.processed'
+  | 'document.failed';
+
+/** Notification metadata from backend */
+export interface NotificationMetadata {
+  invitationId?: string;
+  email?: string;
+  name?: string;
+  role?: string;
+  userId?: string;
+  [key: string]: unknown;
+}
 
 /** Notification response from backend */
 export interface NotificationResponse {
   id: string;
-  userId: string;
   type: NotificationType;
   title: string;
   message: string;
-  readAt: string | null;
+  isRead: boolean;
+  metadata?: NotificationMetadata | null;
   createdAt: string;
 }
 

@@ -10,6 +10,7 @@ import { apiClient } from './client';
 /** DTO for creating a new invitation */
 export interface CreateInvitationDto {
   email: string;
+  name: string;
   sectorIds?: string[];
 }
 
@@ -47,14 +48,14 @@ export const invitationApi = {
    * Sends an invitation email to the specified user
    */
   createInvitation: async (dto: CreateInvitationDto): Promise<InvitationResponse> => {
-    return apiClient.post<InvitationResponse>('/invitations', dto);
+    return apiClient.post<InvitationResponse>('/admin/invitations', dto);
   },
 
   /**
    * List all invitations (admin only)
    */
   listInvitations: async (): Promise<InvitationResponse[]> => {
-    return apiClient.get<InvitationResponse[]>('/invitations');
+    return apiClient.get<InvitationResponse[]>('/admin/invitations');
   },
 
   /**
@@ -62,7 +63,7 @@ export const invitationApi = {
    */
   revokeInvitation: async (id: string, reason?: string): Promise<{ message: string }> => {
     return apiClient.patch<{ message: string }>(
-      `/invitations/${encodeURIComponent(id)}/revoke`,
+      `/admin/invitations/${encodeURIComponent(id)}/revoke`,
       reason ? { reason } : undefined,
     );
   },

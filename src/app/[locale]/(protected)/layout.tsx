@@ -38,6 +38,11 @@ export default async function ProtectedLayout({
     if (!session) {
       redirect(routes.signIn(locale));
     }
+
+    // Redirect inactive users to a dedicated page
+    if (session.user?.isActive === false) {
+      redirect(routes.inactive(locale));
+    }
   }
   // E2E test mode: bypass authentication
 

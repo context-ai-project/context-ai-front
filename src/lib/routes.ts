@@ -5,6 +5,7 @@
 export const routes = {
   home: (locale: string) => `/${locale}`,
   signIn: (locale: string) => `/${locale}/auth/signin`,
+  inactive: (locale: string) => `/${locale}/auth/inactive`,
   dashboard: (locale: string) => `/${locale}/dashboard`,
   chat: (locale: string) => `/${locale}/chat`,
   documents: (locale: string) => `/${locale}/documents`,
