@@ -2,26 +2,42 @@
 
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { ArrowLeft, Download } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useLocale } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { CapsuleStatusBadge } from '@/components/capsules/shared/CapsuleStatusBadge';
 import { CapsuleTypeBadge } from '@/components/capsules/shared/CapsuleTypeBadge';
+import { CapsuleAudioPlayer } from './CapsuleAudioPlayer';
 import { capsuleApi, type CapsuleDto } from '@/lib/api/capsule.api';
 import { routes } from '@/lib/routes';
+import { useSession } from 'next-auth/react';
+import { getUserRole } from '@/lib/utils/get-user-role';
+import { hasPermission, CAN_CREATE_CAPSULES } from '@/constants/permissions';
 
 interface CapsulePlayerViewProps {
   capsuleId: string;
 }
 
+/** Format duration in seconds to m:ss */
+function formatDuration(seconds: number): string {
+  const m = Math.floor(seconds / 60);
+  const s = String(seconds % 60).padStart(2, '0');
+  return `${m}:${s} min`;
+}
+
 export function CapsulePlayerView({ capsuleId }: CapsulePlayerViewProps) {
   const t = useTranslations('capsules');
   const locale = useLocale();
+  const { data: session } = useSession();
   const [capsule, setCapsule] = useState<CapsuleDto | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isActing, setIsActing] = useState(false);
+
+  const userRole = getUserRole(session?.user?.roles);
+  const canManage = hasPermission(userRole, CAN_CREATE_CAPSULES);
 
   useEffect(() => {
     capsuleApi
@@ -36,13 +52,29 @@ export function CapsulePlayerView({ capsuleId }: CapsulePlayerViewProps) {
       });
   }, [capsuleId]);
 
-  const handleDownload = async () => {
-    if (!capsule?.id) return;
+  const handlePublish = async () => {
+    if (!capsule) return;
+    setIsActing(true);
     try {
-      const { url } = await capsuleApi.getDownloadUrl(capsule.id, 'audio');
-      window.open(url, '_blank');
+      const updated = await capsuleApi.publishCapsule(capsule.id);
+      setCapsule(updated);
     } catch {
       // silently ignored
+    } finally {
+      setIsActing(false);
+    }
+  };
+
+  const handleArchive = async () => {
+    if (!capsule) return;
+    setIsActing(true);
+    try {
+      const updated = await capsuleApi.archiveCapsule(capsule.id);
+      setCapsule(updated);
+    } catch {
+      // silently ignored
+    } finally {
+      setIsActing(false);
     }
   };
 
@@ -79,29 +111,34 @@ export function CapsulePlayerView({ capsuleId }: CapsulePlayerViewProps) {
         {t('list.title')}
       </Link>
 
-      {/* Title and badges */}
+      {/* Title + badges + management actions */}
       <div className="flex flex-col gap-2">
-        <div className="flex flex-wrap items-center gap-2">
-          <CapsuleStatusBadge status={capsule.status} />
-          <CapsuleTypeBadge type={capsule.type} />
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <CapsuleStatusBadge status={capsule.status} />
+            <CapsuleTypeBadge type={capsule.type} />
+          </div>
+          {canManage && (
+            <div className="flex items-center gap-2">
+              {capsule.status === 'COMPLETED' && (
+                <Button size="sm" onClick={handlePublish} disabled={isActing}>
+                  {t('actions.publish')}
+                </Button>
+              )}
+              {(capsule.status === 'ACTIVE' || capsule.status === 'COMPLETED') && (
+                <Button size="sm" variant="outline" onClick={handleArchive} disabled={isActing}>
+                  {t('actions.archive')}
+                </Button>
+              )}
+            </div>
+          )}
         </div>
         <h1 className="text-foreground text-2xl font-bold">{capsule.title}</h1>
       </div>
 
       {/* Audio player */}
       {capsule.audioUrl && (
-        <Card>
-          <CardContent className="flex flex-col gap-4 p-4">
-            <p className="text-foreground text-sm font-medium">{t('player.playAudio')}</p>
-            <audio controls src={capsule.audioUrl} className="w-full">
-              <track kind="captions" />
-            </audio>
-            <Button type="button" variant="outline" size="sm" onClick={handleDownload}>
-              <Download className="mr-2 h-4 w-4" />
-              {t('player.download')}
-            </Button>
-          </CardContent>
-        </Card>
+        <CapsuleAudioPlayer capsuleId={capsule.id} audioUrl={capsule.audioUrl} />
       )}
 
       {/* Metadata */}
@@ -117,8 +154,7 @@ export function CapsulePlayerView({ capsuleId }: CapsulePlayerViewProps) {
             <div>
               <p className="text-muted-foreground text-xs">{t('player.duration')}</p>
               <p className="text-foreground font-medium">
-                {Math.floor(capsule.durationSeconds / 60)}:
-                {String(capsule.durationSeconds % 60).padStart(2, '0')} min
+                {formatDuration(capsule.durationSeconds)}
               </p>
             </div>
           )}

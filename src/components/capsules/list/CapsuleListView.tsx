@@ -7,13 +7,15 @@ import { useLocale } from 'next-intl';
 import { Plus, Headphones } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { CapsuleStatusBadge } from '@/components/capsules/shared/CapsuleStatusBadge';
-import { CapsuleTypeBadge } from '@/components/capsules/shared/CapsuleTypeBadge';
-import { capsuleApi, type CapsuleDto } from '@/lib/api/capsule.api';
+import { CapsuleCard } from './CapsuleCard';
+import { CapsuleFilters } from './CapsuleFilters';
+import { capsuleApi, type CapsuleDto, type ListCapsulesParams } from '@/lib/api/capsule.api';
 import { routes } from '@/lib/routes';
 import { useSession } from 'next-auth/react';
 import { getUserRole } from '@/lib/utils/get-user-role';
 import { hasPermission, CAN_CREATE_CAPSULES } from '@/constants/permissions';
+
+const DEFAULT_FILTERS: ListCapsulesParams = { limit: 50 };
 
 export function CapsuleListView() {
   const t = useTranslations('capsules');
@@ -21,27 +23,41 @@ export function CapsuleListView() {
   const { data: session } = useSession();
   const [capsules, setCapsules] = useState<CapsuleDto[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [filters, setFilters] = useState<ListCapsulesParams>(DEFAULT_FILTERS);
 
   const userRole = getUserRole(session?.user?.roles);
   const canCreate = hasPermission(userRole, CAN_CREATE_CAPSULES);
 
   useEffect(() => {
-    capsuleApi
-      .listCapsules({ limit: 50 })
-      .then((res) => {
-        setCapsules(res.data);
-        setIsLoading(false);
-      })
-      .catch(() => setIsLoading(false));
-  }, []);
+    let cancelled = false;
+
+    const load = async () => {
+      setIsLoading(true);
+      try {
+        const res = await capsuleApi.listCapsules(filters);
+        if (!cancelled) setCapsules(res.data);
+      } catch {
+        // leave list empty on error
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    };
+
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, [filters]);
+
+  const handleFilterChange = (updated: Partial<ListCapsulesParams>) => {
+    setFilters((prev) => ({ ...prev, ...updated }));
+  };
 
   return (
     <div className="flex flex-1 flex-col gap-6 p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-foreground text-2xl font-bold">{t('list.title')}</h1>
-        </div>
+        <h1 className="text-foreground text-2xl font-bold">{t('list.title')}</h1>
         {canCreate && (
           <Link href={routes.capsuleCreate(locale)}>
             <Button>
@@ -51,6 +67,9 @@ export function CapsuleListView() {
           </Link>
         )}
       </div>
+
+      {/* Filters */}
+      <CapsuleFilters filters={filters} onChange={handleFilterChange} />
 
       {/* Loading skeletons */}
       {isLoading && (
@@ -85,30 +104,7 @@ export function CapsuleListView() {
       {!isLoading && capsules.length > 0 && (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {capsules.map((capsule) => (
-            <Link key={capsule.id} href={routes.capsuleDetail(locale, capsule.id)}>
-              <Card className="hover:border-primary cursor-pointer transition-colors">
-                <CardContent className="flex flex-col gap-2 p-4">
-                  <div className="flex items-start justify-between gap-2">
-                    <h2 className="text-foreground line-clamp-2 text-sm font-semibold">
-                      {capsule.title}
-                    </h2>
-                    <CapsuleStatusBadge status={capsule.status} />
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CapsuleTypeBadge type={capsule.type} />
-                  </div>
-                  {capsule.durationSeconds && (
-                    <p className="text-muted-foreground text-xs">
-                      {Math.floor(capsule.durationSeconds / 60)}:
-                      {String(capsule.durationSeconds % 60).padStart(2, '0')} min
-                    </p>
-                  )}
-                  <p className="text-muted-foreground text-xs">
-                    {new Date(capsule.createdAt).toLocaleDateString()}
-                  </p>
-                </CardContent>
-              </Card>
-            </Link>
+            <CapsuleCard key={capsule.id} capsule={capsule} />
           ))}
         </div>
       )}
