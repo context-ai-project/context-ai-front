@@ -532,6 +532,11 @@
     "title": "Cápsulas Multimedia",
     "subtitle": "Contenido de audio generado por IA desde tu base de conocimiento",
     "create": "Crear Cápsula",
+    "type": {
+      "audio": "Audio",
+      "video": "Video",
+      "both": "Ambos"
+    },
     "wizard": {
       "step1Title": "Seleccionar Contenido",
       "step2Title": "Crear Cápsula",
@@ -564,6 +569,7 @@
       "retry": "Reintentar"
     },
     "list": {
+      "title": "Cápsulas Multimedia",
       "empty": "No hay cápsulas creadas aún",
       "filterBySector": "Filtrar por sector",
       "filterByStatus": "Filtrar por estado",
@@ -571,12 +577,12 @@
       "search": "Buscar por título..."
     },
     "status": {
-      "DRAFT": "Borrador",
-      "GENERATING": "Generando",
-      "COMPLETED": "Completada",
-      "ACTIVE": "Activa",
-      "FAILED": "Fallida",
-      "ARCHIVED": "Archivada"
+      "draft": "Borrador",
+      "generating": "Generando",
+      "completed": "Completada",
+      "active": "Activa",
+      "failed": "Fallida",
+      "archived": "Archivada"
     },
     "player": {
       "playAudio": "Reproducir Audio",
@@ -590,6 +596,12 @@
       "publish": "Publicar",
       "archive": "Archivar",
       "delete": "Eliminar"
+    },
+    "delete": {
+      "title": "Eliminar Cápsula",
+      "message": "¿Estás seguro de que quieres eliminar \"{name}\"? Esta acción no se puede deshacer.",
+      "confirm": "Eliminar Cápsula",
+      "cancel": "Cancelar"
     }
   }
 }

@@ -10,11 +10,12 @@ import { Card, CardContent } from '@/components/ui/card';
 import { CapsuleStatusBadge } from '@/components/capsules/shared/CapsuleStatusBadge';
 import { CapsuleTypeBadge } from '@/components/capsules/shared/CapsuleTypeBadge';
 import { CapsuleAudioPlayer } from './CapsuleAudioPlayer';
+import { DeleteCapsuleDialog } from '@/components/capsules/list/DeleteCapsuleDialog';
 import { capsuleApi, type CapsuleDto } from '@/lib/api/capsule.api';
 import { routes } from '@/lib/routes';
 import { useSession } from 'next-auth/react';
 import { getUserRole } from '@/lib/utils/get-user-role';
-import { hasPermission, CAN_CREATE_CAPSULES } from '@/constants/permissions';
+import { hasPermission, CAN_CREATE_CAPSULES, CAN_DELETE_CAPSULES } from '@/constants/permissions';
 
 interface CapsulePlayerViewProps {
   capsuleId: string;
@@ -35,9 +36,11 @@ export function CapsulePlayerView({ capsuleId }: CapsulePlayerViewProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isActing, setIsActing] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const userRole = getUserRole(session?.user?.roles);
   const canManage = hasPermission(userRole, CAN_CREATE_CAPSULES);
+  const canDelete = hasPermission(userRole, CAN_DELETE_CAPSULES);
 
   useEffect(() => {
     capsuleApi
@@ -118,16 +121,26 @@ export function CapsulePlayerView({ capsuleId }: CapsulePlayerViewProps) {
             <CapsuleStatusBadge status={capsule.status} />
             <CapsuleTypeBadge type={capsule.type} />
           </div>
-          {canManage && (
+          {(canManage || canDelete) && (
             <div className="flex items-center gap-2">
-              {capsule.status === 'COMPLETED' && (
+              {canManage && capsule.status === 'COMPLETED' && (
                 <Button size="sm" onClick={handlePublish} disabled={isActing}>
                   {t('actions.publish')}
                 </Button>
               )}
-              {(capsule.status === 'ACTIVE' || capsule.status === 'COMPLETED') && (
+              {canManage && (capsule.status === 'ACTIVE' || capsule.status === 'COMPLETED') && (
                 <Button size="sm" variant="outline" onClick={handleArchive} disabled={isActing}>
                   {t('actions.archive')}
+                </Button>
+              )}
+              {canDelete && (
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  onClick={() => setDeleteDialogOpen(true)}
+                  disabled={isActing}
+                >
+                  {t('actions.delete')}
                 </Button>
               )}
             </div>
@@ -164,6 +177,17 @@ export function CapsulePlayerView({ capsuleId }: CapsulePlayerViewProps) {
           </div>
         </CardContent>
       </Card>
+
+      {/* Delete confirmation dialog */}
+      <DeleteCapsuleDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        capsule={capsule}
+        onSuccess={() => {
+          // Navigate back to the list after deletion
+          window.location.href = routes.capsules(locale);
+        }}
+      />
     </div>
   );
 }

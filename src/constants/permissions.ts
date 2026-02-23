@@ -49,6 +49,9 @@ export const CAN_VIEW_CAPSULES: readonly UserRole[] = [ROLES.ADMIN, ROLES.MANAGE
 /** Roles allowed to create capsules and trigger AI generation */
 export const CAN_CREATE_CAPSULES: readonly UserRole[] = [ROLES.ADMIN, ROLES.MANAGER];
 
+/** Roles allowed to delete (archive) capsules */
+export const CAN_DELETE_CAPSULES: readonly UserRole[] = [ROLES.ADMIN, ROLES.MANAGER];
+
 // ── Helper ───────────────────────────────────────────────────────────
 
 /**

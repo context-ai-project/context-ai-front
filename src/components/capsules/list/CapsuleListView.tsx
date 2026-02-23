@@ -9,11 +9,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { CapsuleCard } from './CapsuleCard';
 import { CapsuleFilters } from './CapsuleFilters';
+import { DeleteCapsuleDialog } from './DeleteCapsuleDialog';
 import { capsuleApi, type CapsuleDto, type ListCapsulesParams } from '@/lib/api/capsule.api';
 import { routes } from '@/lib/routes';
 import { useSession } from 'next-auth/react';
 import { getUserRole } from '@/lib/utils/get-user-role';
-import { hasPermission, CAN_CREATE_CAPSULES } from '@/constants/permissions';
+import { hasPermission, CAN_CREATE_CAPSULES, CAN_DELETE_CAPSULES } from '@/constants/permissions';
 
 const DEFAULT_FILTERS: ListCapsulesParams = { limit: 50 };
 
@@ -24,9 +25,12 @@ export function CapsuleListView() {
   const [capsules, setCapsules] = useState<CapsuleDto[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filters, setFilters] = useState<ListCapsulesParams>(DEFAULT_FILTERS);
+  const [selectedCapsule, setSelectedCapsule] = useState<CapsuleDto | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const userRole = getUserRole(session?.user?.roles);
   const canCreate = hasPermission(userRole, CAN_CREATE_CAPSULES);
+  const canDelete = hasPermission(userRole, CAN_DELETE_CAPSULES);
 
   useEffect(() => {
     let cancelled = false;
@@ -53,11 +57,21 @@ export function CapsuleListView() {
     setFilters((prev) => ({ ...prev, ...updated }));
   };
 
+  const handleDeleteClick = (capsule: CapsuleDto) => {
+    setSelectedCapsule(capsule);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteSuccess = () => {
+    setCapsules((prev) => prev.filter((c) => c.id !== selectedCapsule?.id));
+    setSelectedCapsule(null);
+  };
+
   return (
     <div className="flex flex-1 flex-col gap-6 p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-foreground text-2xl font-bold">{t('list.title')}</h1>
+        <h1 className="text-foreground text-2xl font-bold">{t('title')}</h1>
         {canCreate && (
           <Link href={routes.capsuleCreate(locale)}>
             <Button>
@@ -104,10 +118,26 @@ export function CapsuleListView() {
       {!isLoading && capsules.length > 0 && (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {capsules.map((capsule) => (
-            <CapsuleCard key={capsule.id} capsule={capsule} />
+            <CapsuleCard
+              key={capsule.id}
+              capsule={capsule}
+              canDelete={canDelete}
+              onDelete={handleDeleteClick}
+            />
           ))}
         </div>
       )}
+
+      {/* Delete confirmation dialog */}
+      <DeleteCapsuleDialog
+        open={deleteDialogOpen}
+        onOpenChange={(open) => {
+          setDeleteDialogOpen(open);
+          if (!open) setSelectedCapsule(null);
+        }}
+        capsule={selectedCapsule}
+        onSuccess={handleDeleteSuccess}
+      />
     </div>
   );
 }

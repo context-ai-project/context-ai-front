@@ -532,6 +532,11 @@
     "title": "Multimedia Capsules",
     "subtitle": "AI-generated audio content from your knowledge base",
     "create": "Create Capsule",
+    "type": {
+      "audio": "Audio",
+      "video": "Video",
+      "both": "Both"
+    },
     "wizard": {
       "step1Title": "Select Content",
       "step2Title": "Create Capsule",
@@ -564,6 +569,7 @@
       "retry": "Retry"
     },
     "list": {
+      "title": "Multimedia Capsules",
       "empty": "No capsules created yet",
       "filterBySector": "Filter by sector",
       "filterByStatus": "Filter by status",
@@ -571,12 +577,12 @@
       "search": "Search by title..."
     },
     "status": {
-      "DRAFT": "Draft",
-      "GENERATING": "Generating",
-      "COMPLETED": "Completed",
-      "ACTIVE": "Active",
-      "FAILED": "Failed",
-      "ARCHIVED": "Archived"
+      "draft": "Draft",
+      "generating": "Generating",
+      "completed": "Completed",
+      "active": "Active",
+      "failed": "Failed",
+      "archived": "Archived"
     },
     "player": {
       "playAudio": "Play Audio",
@@ -590,6 +596,12 @@
       "publish": "Publish",
       "archive": "Archive",
       "delete": "Delete"
+    },
+    "delete": {
+      "title": "Delete Capsule",
+      "message": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
+      "confirm": "Delete Capsule",
+      "cancel": "Cancel"
     }
   }
 }
