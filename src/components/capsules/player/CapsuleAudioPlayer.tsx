@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -8,27 +9,50 @@ import { capsuleApi } from '@/lib/api/capsule.api';
 
 interface CapsuleAudioPlayerProps {
   capsuleId: string;
-  audioUrl: string;
 }
 
-export function CapsuleAudioPlayer({ capsuleId, audioUrl }: CapsuleAudioPlayerProps) {
+export function CapsuleAudioPlayer({ capsuleId }: CapsuleAudioPlayerProps) {
   const t = useTranslations('capsules.player');
+  const [signedUrl, setSignedUrl] = useState<string | null>(null);
+  const [isLoadingUrl, setIsLoadingUrl] = useState(true);
 
-  const handleDownload = async () => {
-    try {
-      const { url } = await capsuleApi.getDownloadUrl(capsuleId, 'audio');
-      window.open(url, '_blank');
-    } catch {
-      // silently ignored — use direct URL as fallback
-      window.open(audioUrl, '_blank');
-    }
+  useEffect(() => {
+    capsuleApi
+      .getDownloadUrl(capsuleId, 'audio')
+      .then(({ url }) => setSignedUrl(url))
+      .catch(() => setSignedUrl(null))
+      .finally(() => setIsLoadingUrl(false));
+  }, [capsuleId]);
+
+  const handleDownload = () => {
+    if (signedUrl) window.open(signedUrl, '_blank');
   };
+
+  if (isLoadingUrl) {
+    return (
+      <Card>
+        <CardContent className="p-4">
+          <p className="text-muted-foreground text-sm">Loading audio…</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (!signedUrl) {
+    return (
+      <Card>
+        <CardContent className="p-4">
+          <p className="text-destructive text-sm">Audio not available.</p>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card>
       <CardContent className="flex flex-col gap-4 p-4">
         <p className="text-foreground text-sm font-medium">{t('playAudio')}</p>
-        <audio controls src={audioUrl} className="w-full">
+        <audio controls src={signedUrl} className="w-full">
           <track kind="captions" />
         </audio>
         <Button type="button" variant="outline" size="sm" onClick={handleDownload}>

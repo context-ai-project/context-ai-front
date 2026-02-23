@@ -136,10 +136,8 @@ export function CapsulePlayerView({ capsuleId }: CapsulePlayerViewProps) {
         <h1 className="text-foreground text-2xl font-bold">{capsule.title}</h1>
       </div>
 
-      {/* Audio player */}
-      {capsule.audioUrl && (
-        <CapsuleAudioPlayer capsuleId={capsule.id} audioUrl={capsule.audioUrl} />
-      )}
+      {/* Audio player — audioUrl holds the GCS storage path; signed URL fetched inside component */}
+      {capsule.audioUrl && <CapsuleAudioPlayer capsuleId={capsule.id} />}
 
       {/* Metadata */}
       <Card>
