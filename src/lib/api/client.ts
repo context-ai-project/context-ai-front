@@ -169,6 +169,10 @@ export const apiClient = {
       method: 'POST',
       body: JSON.stringify(data),
     });
+    // 202 Accepted and 204 No Content have no body
+    if (response.status === 202 || response.status === 204) {
+      return undefined as T;
+    }
     return response.json();
   },
 
@@ -186,6 +190,9 @@ export const apiClient = {
       method: 'POST',
       body: formData,
     });
+    if (response.status === 202 || response.status === 204) {
+      return undefined as T;
+    }
     return response.json();
   },
 
@@ -198,6 +205,9 @@ export const apiClient = {
       method: 'PUT',
       body: JSON.stringify(data),
     });
+    if (response.status === 202 || response.status === 204) {
+      return undefined as T;
+    }
     return response.json();
   },
 

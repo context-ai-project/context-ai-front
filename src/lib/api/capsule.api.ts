@@ -194,9 +194,10 @@ export const capsuleApi = {
 
   /**
    * Trigger the full audio generation pipeline (ElevenLabs TTS + GCS upload).
+   * Returns 202 Accepted with no body — poll getCapsuleStatus() for progress.
    */
-  generateAudio: async (id: string, voiceId: string): Promise<CapsuleDto> => {
-    return apiClient.post<CapsuleDto>(`/capsules/${encodeURIComponent(id)}/generate`, { voiceId });
+  generateAudio: async (id: string, voiceId: string): Promise<void> => {
+    await apiClient.post<void>(`/capsules/${encodeURIComponent(id)}/generate`, { voiceId });
   },
 
   /**
