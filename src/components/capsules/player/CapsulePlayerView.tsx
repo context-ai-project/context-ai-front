@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, PlayCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useLocale } from 'next-intl';
 import { Button } from '@/components/ui/button';
@@ -123,6 +123,14 @@ export function CapsulePlayerView({ capsuleId }: CapsulePlayerViewProps) {
           </div>
           {(canManage || canDelete) && (
             <div className="flex items-center gap-2">
+              {canManage && (capsule.status === 'DRAFT' || capsule.status === 'FAILED') && (
+                <Link href={routes.capsuleResume(locale, capsule.id)}>
+                  <Button size="sm" variant="outline" disabled={isActing}>
+                    <PlayCircle className="mr-2 h-4 w-4" />
+                    {t('actions.resume')}
+                  </Button>
+                </Link>
+              )}
               {canManage && capsule.status === 'COMPLETED' && (
                 <Button size="sm" onClick={handlePublish} disabled={isActing}>
                   {t('actions.publish')}

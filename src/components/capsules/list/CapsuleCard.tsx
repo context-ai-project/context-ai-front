@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
-import { Headphones, MoreVertical, Trash2 } from 'lucide-react';
+import { Headphones, MoreVertical, Trash2, PlayCircle } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
@@ -23,15 +23,27 @@ function formatDuration(seconds: number): string {
   return `${m}:${s} min`;
 }
 
+/** Statuses that allow resuming the creation wizard */
+const RESUMABLE_STATUSES = new Set(['DRAFT', 'FAILED']);
+
 interface CapsuleCardProps {
   capsule: CapsuleDto;
   canDelete?: boolean;
+  canResume?: boolean;
   onDelete?: (capsule: CapsuleDto) => void;
 }
 
-export function CapsuleCard({ capsule, canDelete = false, onDelete }: CapsuleCardProps) {
+export function CapsuleCard({
+  capsule,
+  canDelete = false,
+  canResume = false,
+  onDelete,
+}: CapsuleCardProps) {
   const locale = useLocale();
   const t = useTranslations('capsules');
+
+  const isResumable = canResume && RESUMABLE_STATUSES.has(capsule.status);
+  const showMenu = (canDelete && !!onDelete) || isResumable;
 
   return (
     <div className="group relative">
@@ -75,7 +87,7 @@ export function CapsuleCard({ capsule, canDelete = false, onDelete }: CapsuleCar
       </Link>
 
       {/* Actions dropdown — only visible on hover for managers/admins */}
-      {canDelete && onDelete && (
+      {showMenu && (
         <div className="absolute top-2 right-2 opacity-0 transition-opacity group-hover:opacity-100">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -89,16 +101,30 @@ export function CapsuleCard({ capsule, canDelete = false, onDelete }: CapsuleCar
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-44">
-              <DropdownMenuItem
-                onClick={(e) => {
-                  e.preventDefault();
-                  onDelete(capsule);
-                }}
-                className="text-destructive focus:text-destructive gap-2"
-              >
-                <Trash2 className="h-4 w-4" />
-                {t('delete.title')}
-              </DropdownMenuItem>
+              {isResumable && (
+                <DropdownMenuItem asChild>
+                  <Link
+                    href={routes.capsuleResume(locale, capsule.id)}
+                    className="flex items-center gap-2"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <PlayCircle className="h-4 w-4" />
+                    {t('actions.resume')}
+                  </Link>
+                </DropdownMenuItem>
+              )}
+              {canDelete && onDelete && (
+                <DropdownMenuItem
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onDelete(capsule);
+                  }}
+                  className="text-destructive focus:text-destructive gap-2"
+                >
+                  <Trash2 className="h-4 w-4" />
+                  {t('delete.title')}
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

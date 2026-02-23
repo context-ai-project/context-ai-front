@@ -62,6 +62,11 @@ interface CapsuleWizardActions {
   nextStep: () => Promise<void>;
   previousStep: () => void;
   resetWizard: () => void;
+  /**
+   * Hydrate the wizard from an existing DRAFT/FAILED capsule and jump to Step 2.
+   * Used by the "Resume" flow: no new capsule is created on the backend.
+   */
+  resumeWizard: (capsule: CapsuleDto) => void;
 
   // ── Async actions ────────────────────────────────────────────────────
   /** Fetch available ElevenLabs voices */
@@ -208,6 +213,24 @@ const createCapsuleStore = () => {
 
     resetWizard: () => set(DEFAULT_WIZARD_STATE),
 
+    resumeWizard: (capsule) => {
+      const sourceIds = (capsule.sources ?? []).map((s) => s.id);
+      set({
+        capsuleType: capsule.type,
+        selectedSectorId: capsule.sectorId,
+        capsuleTitle: capsule.title,
+        selectedDocumentIds: sourceIds,
+        introText: capsule.introText ?? '',
+        script: capsule.script ?? '',
+        selectedVoiceId: capsule.audioVoiceId ?? null,
+        currentStep: 2,
+        currentCapsuleId: capsule.id,
+        currentCapsule: capsule,
+        generationStatus: capsule.status,
+        error: null,
+      });
+    },
+
     // ── Async actions ─────────────────────────────────────────────────
 
     loadVoices: async () => {
@@ -350,6 +373,7 @@ export const useSetSelectedVoiceId = createCapsuleSelector((s) => s.setSelectedV
 export const useNextStep = createCapsuleSelector((s) => s.nextStep);
 export const usePreviousStep = createCapsuleSelector((s) => s.previousStep);
 export const useResetWizard = createCapsuleSelector((s) => s.resetWizard);
+export const useResumeWizard = createCapsuleSelector((s) => s.resumeWizard);
 export const useLoadVoices = createCapsuleSelector((s) => s.loadVoices);
 export const useGenerateScript = createCapsuleSelector((s) => s.generateScript);
 export const useGenerateAudio = createCapsuleSelector((s) => s.generateAudio);

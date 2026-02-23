@@ -595,7 +595,8 @@
     "actions": {
       "publish": "Publicar",
       "archive": "Archivar",
-      "delete": "Eliminar"
+      "delete": "Eliminar",
+      "resume": "Retomar"
     },
     "delete": {
       "title": "Eliminar Cápsula",

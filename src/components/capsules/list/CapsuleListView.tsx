@@ -31,6 +31,8 @@ export function CapsuleListView() {
   const userRole = getUserRole(session?.user?.roles);
   const canCreate = hasPermission(userRole, CAN_CREATE_CAPSULES);
   const canDelete = hasPermission(userRole, CAN_DELETE_CAPSULES);
+  // Managers and admins (those who can create) can also resume DRAFT/FAILED capsules
+  const canResume = canCreate;
 
   useEffect(() => {
     let cancelled = false;
@@ -122,6 +124,7 @@ export function CapsuleListView() {
               key={capsule.id}
               capsule={capsule}
               canDelete={canDelete}
+              canResume={canResume}
               onDelete={handleDeleteClick}
             />
           ))}

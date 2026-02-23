@@ -595,7 +595,8 @@
     "actions": {
       "publish": "Publish",
       "archive": "Archive",
-      "delete": "Delete"
+      "delete": "Delete",
+      "resume": "Resume"
     },
     "delete": {
       "title": "Delete Capsule",
