@@ -86,10 +86,12 @@ export interface CapsuleQuotaDto {
 
 /** Voice info returned by ElevenLabs voices endpoint */
 export interface VoiceInfoDto {
-  voiceId: string;
+  id: string;
   name: string;
+  description?: string;
   previewUrl?: string;
   category?: string;
+  labels?: Record<string, string>;
 }
 
 /** Paginated list response */

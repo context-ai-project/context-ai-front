@@ -44,7 +44,7 @@ export function CapsuleVoiceSelect() {
         </SelectTrigger>
         <SelectContent>
           {voices.map((voice) => (
-            <SelectItem key={voice.voiceId} value={voice.voiceId}>
+            <SelectItem key={voice.id} value={voice.id}>
               {voice.name}
               {voice.category ? ` — ${voice.category}` : ''}
             </SelectItem>
