@@ -18,7 +18,16 @@ import {
   useSelectedDocumentIds,
 } from '@/stores/capsule.store';
 
-export function CapsuleFormPanel() {
+interface CapsuleFormPanelProps {
+  /**
+   * Override the default "go to Step 1" back behaviour.
+   * Used by the Resume wizard to navigate back to the capsule detail page
+   * instead of returning to the create wizard's Step 1.
+   */
+  onBack?: () => void;
+}
+
+export function CapsuleFormPanel({ onBack }: CapsuleFormPanelProps = {}) {
   const t = useTranslations('capsules.wizard');
   const introText = useIntroText();
   const setIntroText = useSetIntroText();
@@ -29,6 +38,8 @@ export function CapsuleFormPanel() {
   const previousStep = usePreviousStep();
   const generateAudio = useGenerateAudio();
   const selectedDocumentIds = useSelectedDocumentIds();
+
+  const handleBack = onBack ?? previousStep;
 
   const canGenerateAudio = !!selectedVoiceId && script.trim().length > 0 && !isGeneratingAudio;
 
@@ -76,7 +87,7 @@ export function CapsuleFormPanel() {
 
       {/* Action buttons */}
       <div className="mt-auto flex items-center justify-between pt-4">
-        <Button type="button" variant="outline" onClick={previousStep} disabled={isGeneratingAudio}>
+        <Button type="button" variant="outline" onClick={handleBack} disabled={isGeneratingAudio}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           {t('previous')}
         </Button>

@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { CapsuleStepIndicator } from './CapsuleStepIndicator';
 import { CapsuleFormPanel } from './step2/CapsuleFormPanel';
@@ -23,9 +24,15 @@ interface CapsuleResumeWizardProps {
  */
 export function CapsuleResumeWizard({ capsuleId, locale }: CapsuleResumeWizardProps) {
   const t = useTranslations('capsules');
+  const router = useRouter();
   const resumeWizard = useResumeWizard();
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
+
+  // "Back" in the resume wizard goes to the capsule detail page, not to Step 1
+  const handleBack = useCallback(() => {
+    router.push(routes.capsuleDetail(locale, capsuleId));
+  }, [router, locale, capsuleId]);
 
   useEffect(() => {
     capsuleApi
@@ -70,9 +77,9 @@ export function CapsuleResumeWizard({ capsuleId, locale }: CapsuleResumeWizardPr
         <CapsuleStepIndicator />
       </div>
 
-      {/* Step 2 split panel — same as create wizard */}
+      {/* Step 2 split panel — same as create wizard, but Back navigates to the detail page */}
       <div className="grid flex-1 grid-cols-2 divide-x overflow-hidden">
-        <CapsuleFormPanel />
+        <CapsuleFormPanel onBack={handleBack} />
         <CapsulePreviewPanel />
       </div>
     </div>
