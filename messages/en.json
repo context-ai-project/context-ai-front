@@ -603,6 +603,12 @@
       "message": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
       "confirm": "Delete Capsule",
       "cancel": "Cancel"
+    },
+    "generation": {
+      "title": "Generating audio",
+      "synthesizing": "Synthesizing speech…",
+      "uploading": "Uploading audio…",
+      "hint": "This may take a minute. You can close this page and come back later."
     }
   }
 }

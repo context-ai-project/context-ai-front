@@ -37,6 +37,8 @@ interface CapsuleWizardState {
   currentCapsuleId: string | null;
   currentCapsule: CapsuleDto | null;
   generationStatus: CapsuleStatus | null;
+  /** Real generation progress 0-100 reported by the backend per chunk */
+  generationProgress: number;
   isCreating: boolean;
   isGeneratingScript: boolean;
   isGeneratingAudio: boolean;
@@ -96,6 +98,7 @@ const DEFAULT_WIZARD_STATE: CapsuleWizardState = {
   currentCapsuleId: null,
   currentCapsule: null,
   generationStatus: null,
+  generationProgress: 0,
   isCreating: false,
   isGeneratingScript: false,
   isGeneratingAudio: false,
@@ -130,13 +133,22 @@ async function pollGenerationStatus(id: string, set: SetFn, get: GetFn): Promise
 
   try {
     const status = await capsuleApi.getCapsuleStatus(id);
-    set({ generationStatus: status.status });
+    set({ generationStatus: status.status, generationProgress: status.progress ?? 0 });
 
     if (status.status === 'COMPLETED' || status.status === 'ACTIVE') {
       const capsule = await capsuleApi.getCapsule(id);
-      set({ currentCapsule: capsule, isGeneratingAudio: false, generationStatus: capsule.status });
+      set({
+        currentCapsule: capsule,
+        isGeneratingAudio: false,
+        generationStatus: capsule.status,
+        generationProgress: 100,
+      });
     } else if (status.status === 'FAILED') {
-      set({ isGeneratingAudio: false, error: status.errorMessage ?? 'Audio generation failed.' });
+      set({
+        isGeneratingAudio: false,
+        error: status.errorMessage ?? 'Audio generation failed.',
+        generationProgress: 0,
+      });
     } else {
       setTimeout(() => {
         pollGenerationStatus(id, set, get).catch(() => {
@@ -263,7 +275,12 @@ const createCapsuleStore = () => {
         return;
       }
 
-      set({ isGeneratingAudio: true, generationStatus: 'GENERATING', error: null });
+      set({
+        isGeneratingAudio: true,
+        generationStatus: 'GENERATING',
+        generationProgress: 0,
+        error: null,
+      });
       try {
         // Persist manual script edits before generating
         await capsuleApi.updateCapsule(currentCapsuleId, {
@@ -354,6 +371,7 @@ export const useCurrentStep = createCapsuleSelector((s) => s.currentStep);
 export const useCurrentCapsuleId = createCapsuleSelector((s) => s.currentCapsuleId);
 export const useCurrentCapsule = createCapsuleSelector((s) => s.currentCapsule);
 export const useGenerationStatus = createCapsuleSelector((s) => s.generationStatus);
+export const useGenerationProgress = createCapsuleSelector((s) => s.generationProgress);
 export const useIsCreating = createCapsuleSelector((s) => s.isCreating);
 export const useIsGeneratingScript = createCapsuleSelector((s) => s.isGeneratingScript);
 export const useIsGeneratingAudio = createCapsuleSelector((s) => s.isGeneratingAudio);
