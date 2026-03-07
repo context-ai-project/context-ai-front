@@ -96,7 +96,7 @@ export function CapsuleFilters({ filters, onChange }: CapsuleFiltersProps) {
           <SelectItem value={ALL}>{t('list.filterByType')}</SelectItem>
           {TYPES.map((tp) => (
             <SelectItem key={tp} value={tp}>
-              {tp.charAt(0) + tp.slice(1).toLowerCase()}
+              {t(`type.${tp.toLowerCase()}`)}
             </SelectItem>
           ))}
         </SelectContent>

@@ -40,7 +40,8 @@ export function CapsuleListView() {
     const load = async () => {
       setIsLoading(true);
       try {
-        const res = await capsuleApi.listCapsules(filters);
+        const params = userRole === 'user' ? { ...filters, onlyActive: true as const } : filters;
+        const res = await capsuleApi.listCapsules(params);
         if (!cancelled) setCapsules(res.data);
       } catch {
         // leave list empty on error
@@ -53,7 +54,7 @@ export function CapsuleListView() {
     return () => {
       cancelled = true;
     };
-  }, [filters]);
+  }, [filters, userRole]);
 
   const handleFilterChange = (updated: Partial<ListCapsulesParams>) => {
     setFilters((prev) => ({ ...prev, ...updated }));

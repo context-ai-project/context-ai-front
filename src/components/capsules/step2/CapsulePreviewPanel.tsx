@@ -1,7 +1,8 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Download, RefreshCw, Mic } from 'lucide-react';
+import { Download, RefreshCw, Mic, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { CapsuleGenerationProgress } from './CapsuleGenerationProgress';
 import {
@@ -14,6 +15,13 @@ import {
 } from '@/stores/capsule.store';
 import { capsuleApi } from '@/lib/api/capsule.api';
 
+/** Format duration in seconds to m:ss */
+function formatDuration(seconds: number): string {
+  const m = Math.floor(seconds / 60);
+  const s = String(seconds % 60).padStart(2, '0');
+  return `${m}:${s} min`;
+}
+
 export function CapsulePreviewPanel() {
   const t = useTranslations('capsules.wizard');
   const currentCapsule = useCurrentCapsule();
@@ -23,14 +31,36 @@ export function CapsulePreviewPanel() {
   const error = useCapsuleError();
   const generateAudio = useGenerateAudio();
 
-  const handleDownload = async () => {
-    if (!currentCapsule?.id) return;
-    try {
-      const { url } = await capsuleApi.getDownloadUrl(currentCapsule.id, 'audio');
-      window.open(url, '_blank');
-    } catch {
-      // Error is handled by the store
+  // Signed URL for the audio player — audioUrl is a GCS storage path, not a playable URL
+  const [signedUrl, setSignedUrl] = useState<string | null>(null);
+  const [isLoadingUrl, setIsLoadingUrl] = useState(false);
+
+  // Fetch a signed URL whenever the capsule has an audioUrl
+  useEffect(() => {
+    const capsuleId = currentCapsule?.id;
+    const audioUrl = currentCapsule?.audioUrl;
+
+    if (!capsuleId || !audioUrl) {
+      return;
     }
+
+    async function fetchSignedUrl() {
+      setIsLoadingUrl(true);
+      try {
+        const { url } = await capsuleApi.getDownloadUrl(capsuleId!, 'audio');
+        setSignedUrl(url);
+      } catch {
+        setSignedUrl(null);
+      } finally {
+        setIsLoadingUrl(false);
+      }
+    }
+
+    fetchSignedUrl();
+  }, [currentCapsule?.id, currentCapsule?.audioUrl]);
+
+  const handleDownload = () => {
+    if (signedUrl) window.open(signedUrl, '_blank');
   };
 
   // Generating audio
@@ -55,15 +85,42 @@ export function CapsulePreviewPanel() {
     );
   }
 
-  // Audio ready
+  // Audio ready — use signed URL for playback
   if (currentCapsule?.audioUrl) {
     return (
       <div className="flex h-full flex-col gap-4 p-6">
         <p className="text-foreground font-medium">{t('audioReady')}</p>
-        <audio controls src={currentCapsule.audioUrl} className="w-full">
-          <track kind="captions" />
-        </audio>
-        <Button type="button" variant="outline" size="sm" onClick={handleDownload}>
+
+        {/* Duration from backend metadata */}
+        {currentCapsule.durationSeconds != null && currentCapsule.durationSeconds > 0 && (
+          <p className="text-muted-foreground text-sm">
+            {t('duration')}: {formatDuration(currentCapsule.durationSeconds)}
+          </p>
+        )}
+
+        {/* Audio player with signed URL */}
+        {isLoadingUrl && (
+          <div className="flex items-center gap-2 py-4">
+            <Loader2 className="text-muted-foreground h-4 w-4 animate-spin" />
+            <span className="text-muted-foreground text-sm">Loading audio…</span>
+          </div>
+        )}
+        {!isLoadingUrl && signedUrl && (
+          <audio controls src={signedUrl} className="w-full">
+            <track kind="captions" />
+          </audio>
+        )}
+        {!isLoadingUrl && !signedUrl && (
+          <p className="text-destructive text-sm">Could not load audio preview.</p>
+        )}
+
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={handleDownload}
+          disabled={!signedUrl}
+        >
           <Download className="mr-2 h-4 w-4" />
           {t('downloadAudio')}
         </Button>

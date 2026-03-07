@@ -23,6 +23,18 @@ function formatDuration(seconds: number): string {
   return `${m}:${s} min`;
 }
 
+/** Derive a display label and flag emoji from a BCP-47 language code */
+function getLanguageDisplay(language: string): { flag: string; label: string } {
+  const code = language.toLowerCase();
+  if (code.startsWith('es')) return { flag: '🇪🇸', label: 'ES' };
+  if (code.startsWith('en')) return { flag: '🇬🇧', label: 'EN' };
+  if (code.startsWith('fr')) return { flag: '🇫🇷', label: 'FR' };
+  if (code.startsWith('de')) return { flag: '🇩🇪', label: 'DE' };
+  if (code.startsWith('pt')) return { flag: '🇵🇹', label: 'PT' };
+  if (code.startsWith('it')) return { flag: '🇮🇹', label: 'IT' };
+  return { flag: '🌐', label: language.slice(0, 5).toUpperCase() };
+}
+
 /** Statuses that allow resuming the creation wizard */
 const RESUMABLE_STATUSES = new Set(['DRAFT', 'FAILED']);
 
@@ -58,9 +70,22 @@ export function CapsuleCard({
               <CapsuleStatusBadge status={capsule.status} />
             </div>
 
-            {/* Type badge */}
+            {/* Type badge + language badge */}
             <div className="flex items-center gap-2">
               <CapsuleTypeBadge type={capsule.type} />
+              {capsule.language &&
+                (() => {
+                  const { flag, label } = getLanguageDisplay(capsule.language);
+                  return (
+                    <span
+                      className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-medium"
+                      title={capsule.language}
+                    >
+                      <span aria-hidden="true">{flag}</span>
+                      {label}
+                    </span>
+                  );
+                })()}
             </div>
 
             {/* Sector name */}

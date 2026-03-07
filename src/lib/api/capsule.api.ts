@@ -40,6 +40,8 @@ export interface CapsuleDto {
   thumbnailUrl?: string;
   durationSeconds?: number;
   audioVoiceId?: string;
+  /** BCP-47 language code of the generated script (e.g. "es-ES", "en-US") */
+  language?: string;
   generationMetadata?: Record<string, unknown>;
   createdBy: string;
   publishedAt?: string;
@@ -88,10 +90,24 @@ export interface CapsuleQuotaDto {
 export interface VoiceInfoDto {
   id: string;
   name: string;
+  category?: string;
   description?: string;
   previewUrl?: string;
-  category?: string;
   labels?: Record<string, string>;
+}
+
+/** Shared voice from the ElevenLabs Voice Library */
+export interface SharedVoiceInfoDto {
+  voiceId: string;
+  publicOwnerId: string;
+  name: string;
+  category?: string;
+  language?: string;
+  gender?: string;
+  accent?: string;
+  description?: string;
+  previewUrl?: string;
+  isAddedByUser?: boolean;
 }
 
 /** Paginated list response */
@@ -110,6 +126,8 @@ export interface ListCapsulesParams {
   status?: CapsuleStatus;
   type?: CapsuleType;
   search?: string;
+  /** When true, only ACTIVE capsules (for role user visibility) */
+  onlyActive?: boolean;
 }
 
 // ── Query keys (for TanStack Query integration if needed) ──────────────────
@@ -149,6 +167,7 @@ export const capsuleApi = {
       status: params?.status,
       type: params?.type,
       search: params?.search,
+      onlyActive: params?.onlyActive === true ? 'true' : undefined,
     });
     return apiClient.get<PaginatedCapsuleResponse>(`/capsules${qs}`);
   },
@@ -247,5 +266,14 @@ export const capsuleApi = {
    */
   getVoices: async (): Promise<VoiceInfoDto[]> => {
     return apiClient.get<VoiceInfoDto[]>('/capsules/voices');
+  },
+
+  /**
+   * Search the ElevenLabs shared voice library.
+   */
+  searchSharedVoices: async (query: string): Promise<SharedVoiceInfoDto[]> => {
+    return apiClient.get<SharedVoiceInfoDto[]>(
+      `/capsules/voices/search?q=${encodeURIComponent(query)}`,
+    );
   },
 };

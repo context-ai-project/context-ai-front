@@ -107,6 +107,7 @@ const createSectorStore = () => {
       try {
         const newSector = await sectorApi.createSector(dto);
         set((state) => ({ sectors: [newSector, ...state.sectors] }));
+        await get().fetchSectors();
         return newSector;
       } catch (error: unknown) {
         set({ error: getErrorMessage(error) });
@@ -118,6 +119,7 @@ const createSectorStore = () => {
       try {
         const updated = await sectorApi.updateSector(id, dto);
         set((state) => ({ sectors: replaceSector(state.sectors, id, updated) }));
+        await get().fetchSectors();
       } catch (error: unknown) {
         set({ error: getErrorMessage(error) });
         throw error;

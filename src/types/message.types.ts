@@ -9,6 +9,42 @@ export enum MessageRole {
 }
 
 /**
+ * RAG response type — matches backend QueryAssistantResponseDto
+ */
+export enum RagResponseType {
+  /** Response with documentary context */
+  ANSWER = 'answer',
+  /** No relevant documents found */
+  NO_CONTEXT = 'no_context',
+  /** Error during processing */
+  ERROR = 'error',
+}
+
+/**
+ * Section type for structured responses
+ */
+export type SectionType = 'info' | 'steps' | 'warning' | 'tip';
+
+/**
+ * Single section in a structured RAG response
+ */
+export interface ResponseSection {
+  title: string;
+  content: string;
+  type: SectionType;
+}
+
+/**
+ * Structured RAG response — matches backend StructuredResponseDto
+ */
+export interface StructuredRagResponse {
+  summary: string;
+  sections: ResponseSection[];
+  keyPoints?: string[];
+  relatedTopics?: string[];
+}
+
+/**
  * Typed metadata for source fragments
  * Provides type-safe access to common metadata fields
  */
@@ -62,6 +98,10 @@ export interface MessageDto {
   role: MessageRole;
   content: string;
   sourcesUsed?: SourceFragment[];
+  /** RAG response type: answer, no_context, or error */
+  responseType?: RagResponseType;
+  /** Structured response with sections when available */
+  structured?: StructuredRagResponse;
   /** @planned Phase 6 - Sentiment analysis integration */
   sentimentScore?: number;
   /** @planned Phase 7 - Extended message metadata */
@@ -90,6 +130,8 @@ export interface ChatResponseDto {
   conversationId: string;
   sources: SourceFragment[];
   timestamp: string | Date; // ISO 8601 string or Date object
+  responseType?: RagResponseType;
+  structured?: StructuredRagResponse;
 }
 
 /**
@@ -108,7 +150,7 @@ export function createUserMessage(content: string, conversationId: string | null
 
 /**
  * Factory function to create an assistant message DTO from API response
- * Handles timestamp normalization
+ * Handles timestamp normalization and structured response fields
  */
 export function createAssistantMessage(response: ChatResponseDto): MessageDto {
   return {
@@ -121,5 +163,7 @@ export function createAssistantMessage(response: ChatResponseDto): MessageDto {
         ? response.timestamp
         : new Date(response.timestamp).toISOString(),
     sourcesUsed: response.sources,
+    responseType: response.responseType,
+    structured: response.structured,
   };
 }

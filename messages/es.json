@@ -133,7 +133,13 @@
       "createButton": "Crear Sector",
       "saveButton": "Guardar Cambios",
       "creating": "Creando...",
-      "saving": "Guardando..."
+      "saving": "Guardando...",
+      "contactSection": "Información de Contacto",
+      "contactSectionHint": "Ingresa el nombre y número de teléfono del contacto del sector.",
+      "contactName": "Nombre del Contacto",
+      "contactNamePlaceholder": "ej., María García",
+      "contactPhone": "Número de Teléfono",
+      "contactPhonePlaceholder": "ej., +34 612 345 678"
     },
     "validation": {
       "nameRequired": "El nombre del sector es requerido.",
@@ -564,6 +570,7 @@
       "generatingAudio": "Generando audio...",
       "previewPlaceholder": "Genera un guion para comenzar",
       "audioReady": "Audio generado correctamente",
+      "duration": "Duración",
       "downloadAudio": "Descargar Audio",
       "error": "Error en la generación",
       "retry": "Reintentar"
