@@ -11,6 +11,7 @@ import {
   ChevronUp,
   Layers,
   ShieldCheck,
+  Headphones,
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useLocale, useTranslations } from 'next-intl';
@@ -22,6 +23,7 @@ import {
   CAN_VIEW_DOCUMENTS,
   CAN_VIEW_SECTORS,
   CAN_VIEW_ADMIN,
+  CAN_VIEW_CAPSULES,
 } from '@/constants/permissions';
 import { routes } from '@/lib/routes';
 import {
@@ -61,6 +63,7 @@ export function AppSidebar() {
   const canViewDocuments = hasPermission(userRole, CAN_VIEW_DOCUMENTS);
   const canViewSectors = hasPermission(userRole, CAN_VIEW_SECTORS);
   const canViewAdmin = hasPermission(userRole, CAN_VIEW_ADMIN);
+  const canViewCapsules = hasPermission(userRole, CAN_VIEW_CAPSULES);
 
   const mainNav = [
     {
@@ -90,6 +93,16 @@ export function AppSidebar() {
             title: t('sectors'),
             href: routes.sectors(locale),
             icon: Layers,
+          },
+        ]
+      : []),
+    // Capsules - all authenticated users (capsule:read)
+    ...(canViewCapsules
+      ? [
+          {
+            title: t('capsules'),
+            href: routes.capsules(locale),
+            icon: Headphones,
           },
         ]
       : []),

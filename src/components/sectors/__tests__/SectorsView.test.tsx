@@ -37,6 +37,7 @@ vi.mock('@/stores/sector.store', () => ({
   useAllSectors: () => mockAllSectors,
   useSectorLoading: () => mockLoading,
   useSectorError: () => mockError,
+  useFetchSectors: () => vi.fn(),
   useAddSector: () => vi.fn(),
   useUpdateSector: () => vi.fn(),
   useDeleteSector: () => vi.fn(),

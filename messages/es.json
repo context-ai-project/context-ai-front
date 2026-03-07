@@ -20,6 +20,7 @@
     "documents": "Documentos",
     "sectors": "Sectores",
     "admin": "Administración",
+    "capsules": "Cápsulas",
     "platform": "Plataforma",
     "management": "Gestión",
     "profile": "Perfil",
@@ -132,7 +133,13 @@
       "createButton": "Crear Sector",
       "saveButton": "Guardar Cambios",
       "creating": "Creando...",
-      "saving": "Guardando..."
+      "saving": "Guardando...",
+      "contactSection": "Información de Contacto",
+      "contactSectionHint": "Ingresa el nombre y número de teléfono del contacto del sector.",
+      "contactName": "Nombre del Contacto",
+      "contactNamePlaceholder": "ej., María García",
+      "contactPhone": "Número de Teléfono",
+      "contactPhonePlaceholder": "ej., +34 612 345 678"
     },
     "validation": {
       "nameRequired": "El nombre del sector es requerido.",
@@ -590,6 +597,90 @@
       "chatDescription": "Haz preguntas sobre la base de conocimiento de tu empresa y obtén respuestas con IA.",
       "documentsCta": "Explorar documentos",
       "documentsDescription": "Explora las fuentes de conocimiento disponibles en la plataforma."
+    }
+  },
+  "capsules": {
+    "title": "Cápsulas Multimedia",
+    "subtitle": "Contenido de audio generado por IA desde tu base de conocimiento",
+    "create": "Crear Cápsula",
+    "type": {
+      "audio": "Audio",
+      "video": "Video",
+      "both": "Ambos"
+    },
+    "wizard": {
+      "step1Title": "Seleccionar Contenido",
+      "step2Title": "Crear Cápsula",
+      "selectType": "Tipo de Cápsula",
+      "typeAudio": "Audio",
+      "typeVideo": "Video",
+      "typeBoth": "Ambos",
+      "typeComingSoon": "Próximamente",
+      "selectSector": "Selecciona un sector...",
+      "capsuleTitle": "Título de la Cápsula",
+      "titlePlaceholder": "ej., Onboarding — Política de Vacaciones",
+      "documentsAvailable": "Documentos disponibles en el sector",
+      "searchDocuments": "Buscar documentos...",
+      "documentsSelected": "documentos seleccionados",
+      "next": "Siguiente",
+      "previous": "Anterior",
+      "introText": "Texto Introductorio",
+      "introPlaceholder": "Escribe una introducción personalizada para la cápsula...",
+      "script": "Guion Narrativo",
+      "scriptPlaceholder": "El guion aparecerá aquí después de generarlo...",
+      "generateScript": "Generar Guion con IA",
+      "generatingScript": "Generando guion...",
+      "selectVoice": "Seleccionar Voz",
+      "generateAudio": "Generar Audio",
+      "generatingAudio": "Generando audio...",
+      "previewPlaceholder": "Genera un guion para comenzar",
+      "audioReady": "Audio generado correctamente",
+      "duration": "Duración",
+      "downloadAudio": "Descargar Audio",
+      "error": "Error en la generación",
+      "retry": "Reintentar"
+    },
+    "list": {
+      "title": "Cápsulas Multimedia",
+      "empty": "No hay cápsulas creadas aún",
+      "filterBySector": "Filtrar por sector",
+      "filterByStatus": "Filtrar por estado",
+      "filterByType": "Filtrar por tipo",
+      "search": "Buscar por título..."
+    },
+    "status": {
+      "draft": "Borrador",
+      "generating": "Generando",
+      "completed": "Completada",
+      "active": "Activa",
+      "failed": "Fallida",
+      "archived": "Archivada"
+    },
+    "player": {
+      "playAudio": "Reproducir Audio",
+      "download": "Descargar",
+      "sector": "Sector",
+      "createdBy": "Creado por",
+      "duration": "Duración",
+      "createdAt": "Fecha de creación"
+    },
+    "actions": {
+      "publish": "Publicar",
+      "archive": "Archivar",
+      "delete": "Eliminar",
+      "resume": "Retomar"
+    },
+    "delete": {
+      "title": "Eliminar Cápsula",
+      "message": "¿Estás seguro de que quieres eliminar \"{name}\"? Esta acción no se puede deshacer.",
+      "confirm": "Eliminar Cápsula",
+      "cancel": "Cancelar"
+    },
+    "generation": {
+      "title": "Generando audio",
+      "synthesizing": "Sintetizando voz…",
+      "uploading": "Subiendo audio…",
+      "hint": "Esto puede tardar un minuto. Puedes cerrar esta página y volver después."
     }
   }
 }

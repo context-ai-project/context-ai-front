@@ -11,4 +11,8 @@ export const routes = {
   documents: (locale: string) => `/${locale}/documents`,
   sectors: (locale: string) => `/${locale}/sectors`,
   admin: (locale: string) => `/${locale}/admin`,
+  capsules: (locale: string) => `/${locale}/capsules`,
+  capsuleDetail: (locale: string, id: string) => `/${locale}/capsules/${id}`,
+  capsuleCreate: (locale: string) => `/${locale}/capsules/create`,
+  capsuleResume: (locale: string, id: string) => `/${locale}/capsules/${id}/resume`,
 } as const;

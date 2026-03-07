@@ -22,6 +22,8 @@ interface SectorApiResponse {
   icon: SectorIcon;
   status: string; // 'ACTIVE' | 'INACTIVE'
   documentCount: number;
+  contactName?: string | null;
+  contactPhone?: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -58,6 +60,8 @@ function normalizeSector(raw: SectorApiResponse): Sector {
     icon: raw.icon,
     status: normalizeStatus(raw.status),
     documentCount: raw.documentCount,
+    contactName: raw.contactName ?? undefined,
+    contactPhone: raw.contactPhone ?? undefined,
     createdAt: raw.createdAt,
     updatedAt: raw.updatedAt,
   };
@@ -78,8 +82,18 @@ export const sectorApi = {
    * Returns sectors with document counts, normalized to frontend types
    */
   listSectors: async (): Promise<Sector[]> => {
-    const raw = await apiClient.get<SectorApiResponse[]>('/sectors');
-    return raw.map(normalizeSector);
+    const raw = await apiClient.get<SectorApiResponse[] | { data?: SectorApiResponse[] }>(
+      '/sectors',
+    );
+    let list: SectorApiResponse[];
+    if (Array.isArray(raw)) {
+      list = raw;
+    } else if (Array.isArray((raw as { data?: SectorApiResponse[] })?.data)) {
+      list = (raw as { data: SectorApiResponse[] }).data;
+    } else {
+      list = [];
+    }
+    return list.map(normalizeSector);
   },
 
   /**
@@ -108,6 +122,8 @@ export const sectorApi = {
       ...(dto.name !== undefined && { name: dto.name }),
       ...(dto.description !== undefined && { description: dto.description }),
       ...(dto.icon !== undefined && { icon: dto.icon }),
+      ...(dto.contactName !== undefined && { contactName: dto.contactName }),
+      ...(dto.contactPhone !== undefined && { contactPhone: dto.contactPhone }),
     };
     const raw = await apiClient.patch<SectorApiResponse>(
       `/sectors/${encodeURIComponent(id)}`,

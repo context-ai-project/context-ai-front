@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { Plus, Search, FolderOpen, Power, Trash2, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -13,7 +13,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useAllSectors, useSectorLoading, useSectorError } from '@/stores/sector.store';
+import {
+  useAllSectors,
+  useSectorLoading,
+  useSectorError,
+  useFetchSectors,
+} from '@/stores/sector.store';
 import type { Sector } from '@/types/sector.types';
 import { SectorCard } from './SectorCard';
 import { SectorFormDialog } from './SectorFormDialog';
@@ -38,6 +43,11 @@ export function SectorsView() {
   const sectors = useAllSectors();
   const isLoading = useSectorLoading();
   const error = useSectorError();
+  const fetchSectors = useFetchSectors();
+
+  useEffect(() => {
+    fetchSectors();
+  }, [fetchSectors]);
 
   // Search state
   const [searchQuery, setSearchQuery] = useState('');

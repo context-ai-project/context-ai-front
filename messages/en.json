@@ -20,6 +20,7 @@
     "documents": "Documents",
     "sectors": "Sectors",
     "admin": "Admin",
+    "capsules": "Capsules",
     "platform": "Platform",
     "management": "Management",
     "profile": "Profile",
@@ -132,7 +133,13 @@
       "createButton": "Create Sector",
       "saveButton": "Save Changes",
       "creating": "Creating...",
-      "saving": "Saving..."
+      "saving": "Saving...",
+      "contactSection": "Contact Information",
+      "contactSectionHint": "Enter the name and phone number of the contact person for this sector.",
+      "contactName": "Contact Name",
+      "contactNamePlaceholder": "e.g., María García",
+      "contactPhone": "Contact Phone",
+      "contactPhonePlaceholder": "e.g., +34 612 345 678"
     },
     "validation": {
       "nameRequired": "Sector name is required.",
@@ -590,6 +597,90 @@
       "chatDescription": "Ask questions about your company's knowledge base and get AI-powered answers.",
       "documentsCta": "Browse documents",
       "documentsDescription": "Explore the available knowledge sources in the platform."
+    }
+  },
+  "capsules": {
+    "title": "Multimedia Capsules",
+    "subtitle": "AI-generated audio content from your knowledge base",
+    "create": "Create Capsule",
+    "type": {
+      "audio": "Audio",
+      "video": "Video",
+      "both": "Both"
+    },
+    "wizard": {
+      "step1Title": "Select Content",
+      "step2Title": "Create Capsule",
+      "selectType": "Capsule Type",
+      "typeAudio": "Audio",
+      "typeVideo": "Video",
+      "typeBoth": "Both",
+      "typeComingSoon": "Coming soon",
+      "selectSector": "Select a sector...",
+      "capsuleTitle": "Capsule Title",
+      "titlePlaceholder": "e.g., Onboarding — Vacation Policy",
+      "documentsAvailable": "Available documents in sector",
+      "searchDocuments": "Search documents...",
+      "documentsSelected": "documents selected",
+      "next": "Next",
+      "previous": "Back",
+      "introText": "Introductory Text",
+      "introPlaceholder": "Write a personalized introduction for the capsule...",
+      "script": "Narrative Script",
+      "scriptPlaceholder": "The script will appear here after generation...",
+      "generateScript": "Generate Script with AI",
+      "generatingScript": "Generating script...",
+      "selectVoice": "Select Voice",
+      "generateAudio": "Generate Audio",
+      "generatingAudio": "Generating audio...",
+      "previewPlaceholder": "Generate a script to get started",
+      "audioReady": "Audio generated successfully",
+      "duration": "Duration",
+      "downloadAudio": "Download Audio",
+      "error": "Generation error",
+      "retry": "Retry"
+    },
+    "list": {
+      "title": "Multimedia Capsules",
+      "empty": "No capsules created yet",
+      "filterBySector": "Filter by sector",
+      "filterByStatus": "Filter by status",
+      "filterByType": "Filter by type",
+      "search": "Search by title..."
+    },
+    "status": {
+      "draft": "Draft",
+      "generating": "Generating",
+      "completed": "Completed",
+      "active": "Active",
+      "failed": "Failed",
+      "archived": "Archived"
+    },
+    "player": {
+      "playAudio": "Play Audio",
+      "download": "Download",
+      "sector": "Sector",
+      "createdBy": "Created by",
+      "duration": "Duration",
+      "createdAt": "Created"
+    },
+    "actions": {
+      "publish": "Publish",
+      "archive": "Archive",
+      "delete": "Delete",
+      "resume": "Resume"
+    },
+    "delete": {
+      "title": "Delete Capsule",
+      "message": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
+      "confirm": "Delete Capsule",
+      "cancel": "Cancel"
+    },
+    "generation": {
+      "title": "Generating audio",
+      "synthesizing": "Synthesizing speech…",
+      "uploading": "Uploading audio…",
+      "hint": "This may take a minute. You can close this page and come back later."
     }
   }
 }

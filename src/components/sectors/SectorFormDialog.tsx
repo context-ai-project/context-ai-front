@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, type FormEvent } from 'react';
 import { useTranslations } from 'next-intl';
-import { AlertTriangle, Check } from 'lucide-react';
+import { AlertTriangle, Check, Phone, User } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -30,6 +30,8 @@ const NAME_MIN = 2;
 const NAME_MAX = 50;
 const DESC_MIN = 10;
 const DESC_MAX = 300;
+const CONTACT_NAME_MAX = 150;
+const CONTACT_PHONE_MAX = 30;
 
 // ── Props ────────────────────────────────────────────────────────────────────
 
@@ -48,6 +50,8 @@ interface FieldErrors {
   name?: string;
   description?: string;
   icon?: string;
+  contactName?: string;
+  contactPhone?: string;
 }
 
 /** Get the submit button label based on current state */
@@ -74,6 +78,8 @@ export function SectorFormDialog({ open, onOpenChange, sector, onSuccess }: Sect
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [icon, setIcon] = useState<SectorIcon>('layout');
+  const [contactName, setContactName] = useState('');
+  const [contactPhone, setContactPhone] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [similarWarning, setSimilarWarning] = useState<string | null>(null);
@@ -91,6 +97,8 @@ export function SectorFormDialog({ open, onOpenChange, sector, onSuccess }: Sect
       setName(sector?.name ?? '');
       setDescription(sector?.description ?? '');
       setIcon(sector?.icon ?? 'layout');
+      setContactName(sector?.contactName ?? '');
+      setContactPhone(sector?.contactPhone ?? '');
       setErrors({});
       setSimilarWarning(null);
       setSimilarAccepted(false);
@@ -139,46 +147,69 @@ export function SectorFormDialog({ open, onOpenChange, sector, onSuccess }: Sect
     }
   }, [name, sector?.id, sectorNameExists, findSimilarNames, t]);
 
+  const validateContactName = useCallback(
+    (value: string): string | undefined => {
+      if (value.trim().length > CONTACT_NAME_MAX) return t('validation.contactNameMaxLength');
+      return undefined;
+    },
+    [t],
+  );
+
+  const validateContactPhone = useCallback(
+    (value: string): string | undefined => {
+      if (value.trim().length > CONTACT_PHONE_MAX) return t('validation.contactPhoneMaxLength');
+      return undefined;
+    },
+    [t],
+  );
+
   // Validate all fields
   const validateAll = (): boolean => {
     const newErrors: FieldErrors = {
       name: validateName(name),
       description: validateDescription(description),
+      contactName: validateContactName(contactName),
+      contactPhone: validateContactPhone(contactPhone),
     };
     setErrors(newErrors);
-    return !newErrors.name && !newErrors.description;
+    return (
+      !newErrors.name && !newErrors.description && !newErrors.contactName && !newErrors.contactPhone
+    );
   };
 
-  // Handle form submission
+  const performSave = async (): Promise<void> => {
+    if (isEdit && sector) {
+      const dto: UpdateSectorDto = {};
+      if (name.trim() !== sector.name) dto.name = name.trim();
+      if (description.trim() !== sector.description) dto.description = description.trim();
+      if (icon !== sector.icon) dto.icon = icon;
+      if (contactName.trim() !== (sector.contactName ?? ''))
+        dto.contactName = contactName.trim() || null;
+      if (contactPhone.trim() !== (sector.contactPhone ?? ''))
+        dto.contactPhone = contactPhone.trim() || null;
+      await updateSector(sector.id, dto);
+    } else {
+      const dto: CreateSectorDto = {
+        name: name.trim(),
+        description: description.trim(),
+        icon,
+        ...(contactName.trim() && { contactName: contactName.trim() }),
+        ...(contactPhone.trim() && { contactPhone: contactPhone.trim() }),
+      };
+      await addSector(dto);
+    }
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
     if (!validateAll()) return;
-
-    // If there's a similar name warning and user hasn't accepted it
     if (similarWarning && !similarAccepted) {
       setSimilarAccepted(true);
-      return; // Show the warning, user must click again to confirm
+      return;
     }
-
     setIsSaving(true);
-
     try {
-      if (isEdit && sector) {
-        const dto: UpdateSectorDto = {};
-        if (name.trim() !== sector.name) dto.name = name.trim();
-        if (description.trim() !== sector.description) dto.description = description.trim();
-        if (icon !== sector.icon) dto.icon = icon;
-        await updateSector(sector.id, dto);
-      } else {
-        const dto: CreateSectorDto = {
-          name: name.trim(),
-          description: description.trim(),
-          icon,
-        };
-        await addSector(dto);
-      }
-
+      await performSave();
       onSuccess?.();
       onOpenChange(false);
     } catch {
@@ -320,6 +351,80 @@ export function SectorFormDialog({ open, onOpenChange, sector, onSuccess }: Sect
               <span className="text-muted-foreground text-xs">
                 {description.length}/{DESC_MAX}
               </span>
+            </div>
+          </div>
+
+          {/* Contact section */}
+          <div className="flex flex-col gap-3 rounded-lg border p-4">
+            <div className="flex items-center gap-2">
+              <User className="text-muted-foreground h-4 w-4" />
+              <span className="text-sm font-medium">{t('form.contactSection')}</span>
+            </div>
+            <p className="text-muted-foreground -mt-1 text-xs">{t('form.contactSectionHint')}</p>
+
+            {/* Contact name */}
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="contact-name" className="text-sm">
+                {t('form.contactName')}
+              </label>
+              <Input
+                id="contact-name"
+                value={contactName}
+                onChange={(e) => {
+                  setContactName(e.target.value);
+                  if (errors.contactName)
+                    setErrors((prev) => ({
+                      ...prev,
+                      contactName: validateContactName(e.target.value),
+                    }));
+                }}
+                onBlur={() =>
+                  setErrors((prev) => ({ ...prev, contactName: validateContactName(contactName) }))
+                }
+                placeholder={t('form.contactNamePlaceholder')}
+                maxLength={CONTACT_NAME_MAX}
+                aria-invalid={Boolean(errors.contactName)}
+                className={cn(errors.contactName && 'border-destructive')}
+              />
+              {errors.contactName && (
+                <p className="text-destructive text-xs">{errors.contactName}</p>
+              )}
+            </div>
+
+            {/* Contact phone */}
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="contact-phone" className="text-sm">
+                {t('form.contactPhone')}
+              </label>
+              <div className="relative">
+                <Phone className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 h-3.5 w-3.5 -translate-y-1/2" />
+                <Input
+                  id="contact-phone"
+                  value={contactPhone}
+                  onChange={(e) => {
+                    setContactPhone(e.target.value);
+                    if (errors.contactPhone)
+                      setErrors((prev) => ({
+                        ...prev,
+                        contactPhone: validateContactPhone(e.target.value),
+                      }));
+                  }}
+                  onBlur={() =>
+                    setErrors((prev) => ({
+                      ...prev,
+                      contactPhone: validateContactPhone(contactPhone),
+                    }))
+                  }
+                  placeholder={t('form.contactPhonePlaceholder')}
+                  maxLength={CONTACT_PHONE_MAX}
+                  className={cn('pl-8', errors.contactPhone && 'border-destructive')}
+                  aria-invalid={Boolean(errors.contactPhone)}
+                  type="tel"
+                />
+              </div>
+              {errors.contactPhone && (
+                <p className="text-destructive text-xs">{errors.contactPhone}</p>
+              )}
             </div>
           </div>
 
