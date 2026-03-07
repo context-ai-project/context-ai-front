@@ -1,100 +1,90 @@
 'use client';
 
-import { Info, ListOrdered, AlertTriangle, Lightbulb, Sparkles, ArrowRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import type { StructuredRagResponse } from '@/types/message.types';
 import { MarkdownRenderer } from '@/components/shared/MarkdownRenderer';
-import type {
-  StructuredResponse as StructuredResponseType,
-  SectionType,
-} from '@/types/message.types';
+import { cn } from '@/lib/utils';
+import { Info, ListOrdered, AlertTriangle, Lightbulb } from 'lucide-react';
 
-/**
- * Configuration for section type visual styling
- */
-interface SectionConfig {
-  icon: React.ComponentType<{ className?: string }>;
-  label: string;
-  borderColor: string;
-  bgColor: string;
-  iconColor: string;
-}
+const SECTION_ICONS = {
+  info: Info,
+  steps: ListOrdered,
+  warning: AlertTriangle,
+  tip: Lightbulb,
+} as const;
 
-const SECTION_CONFIG: Record<SectionType, SectionConfig> = {
-  info: {
-    icon: Info,
-    label: 'Information',
-    borderColor: 'border-blue-200',
-    bgColor: 'bg-blue-50/50',
-    iconColor: 'text-blue-500',
-  },
-  steps: {
-    icon: ListOrdered,
-    label: 'Steps',
-    borderColor: 'border-emerald-200',
-    bgColor: 'bg-emerald-50/50',
-    iconColor: 'text-emerald-500',
-  },
-  warning: {
-    icon: AlertTriangle,
-    label: 'Important',
-    borderColor: 'border-amber-200',
-    bgColor: 'bg-amber-50/50',
-    iconColor: 'text-amber-500',
-  },
-  tip: {
-    icon: Lightbulb,
-    label: 'Tip',
-    borderColor: 'border-violet-200',
-    bgColor: 'bg-violet-50/50',
-    iconColor: 'text-violet-500',
-  },
-};
+const SECTION_STYLES = {
+  info: 'border-blue-200 bg-blue-50/50',
+  steps: 'border-emerald-200 bg-emerald-50/50',
+  warning: 'border-amber-200 bg-amber-50/50',
+  tip: 'border-violet-200 bg-violet-50/50',
+} as const;
 
 interface StructuredResponseProps {
-  data: StructuredResponseType;
+  data: StructuredRagResponse;
   className?: string;
 }
 
 /**
- * StructuredResponse renders an AI response organized into typed sections.
- *
- * Displays a summary, sections with visual indicators, key points, and
- * related topics. Falls back gracefully if any part is missing.
- *
- * @param data - The structured response from the API
- * @param className - Optional additional class names
+ * Renders a structured RAG response with summary, sections, key points, and related topics.
+ * Section types (info, steps, warning, tip) get distinct visual treatment.
  */
+/** Normalize string for safe comparison: trim, collapse spaces, lowercase. Avoids ReDoS. */
+function normalizeForCompare(s: string): string {
+  return s.trim().replace(/\s+/g, ' ').toLowerCase();
+}
+
+/** Hide internal "type: info" entries. Uses string comparison instead of backtracking regex. */
+function isInternalTypeLine(value: string): boolean {
+  const n = normalizeForCompare(value);
+  return n === 'type: info' || n === '"type":"info"';
+}
+
+function isTypeInfoOnlyLine(line: string): boolean {
+  let t = line.trim();
+  const bullet = t.charAt(0);
+  if (bullet === '•' || bullet === '-' || bullet === '*') t = t.slice(1).trim();
+  const n = normalizeForCompare(t);
+  return n === 'type: info' || n === '"type":"info"';
+}
+
+/** Remove lines that are only "type: info" (or bullet variants). Non-backtracking. */
+function sanitizeStructuredText(text: string): string {
+  if (!text?.trim()) return text;
+  return text
+    .split('\n')
+    .filter((line) => !isTypeInfoOnlyLine(line))
+    .join('\n');
+}
+
 export function StructuredResponse({ data, className }: StructuredResponseProps) {
   const { summary, sections, keyPoints, relatedTopics } = data;
+  const filteredKeyPoints = keyPoints?.filter((p) => !isInternalTypeLine(p));
 
   return (
     <div className={cn('space-y-4', className)} data-testid="structured-response">
-      {/* Summary */}
-      <div className="text-sm leading-relaxed font-medium" data-testid="structured-summary">
-        <MarkdownRenderer content={summary} />
+      {/* Brief summary */}
+      <div className="text-sm leading-relaxed" data-testid="structured-summary">
+        <MarkdownRenderer content={sanitizeStructuredText(summary)} />
       </div>
 
-      {/* Sections */}
-      {sections.length > 0 && (
+      {/* Sections with type-based styling */}
+      {sections && sections.length > 0 && (
         <div className="space-y-3">
           {sections.map((section, index) => {
-            const config = SECTION_CONFIG[section.type] ?? SECTION_CONFIG.info;
-            const Icon = config.icon;
-
+            const Icon = SECTION_ICONS[section.type] ?? Info;
+            const style = SECTION_STYLES[section.type] ?? SECTION_STYLES.info;
             return (
               <div
-                key={`${section.type}-${index}`}
-                className={cn('rounded-lg border-l-4 p-3', config.borderColor, config.bgColor)}
+                key={index}
+                className={cn('rounded-lg border p-4', style)}
                 data-testid={`section-${section.type}`}
               >
-                <div className="mb-1 flex items-center gap-2">
-                  <Icon className={cn('h-4 w-4', config.iconColor)} aria-hidden="true" />
-                  <span className="text-xs font-semibold tracking-wider text-gray-500 uppercase">
-                    {section.title}
-                  </span>
+                <div className="mb-2 flex items-center gap-2">
+                  <Icon className="h-4 w-4 shrink-0" aria-hidden />
+                  <h4 className="text-sm font-semibold">{section.title}</h4>
                 </div>
-                <div className="text-sm">
-                  <MarkdownRenderer content={section.content} />
+                <div className="text-sm leading-relaxed">
+                  <MarkdownRenderer content={sanitizeStructuredText(section.content)} />
                 </div>
               </div>
             );
@@ -102,45 +92,34 @@ export function StructuredResponse({ data, className }: StructuredResponseProps)
         </div>
       )}
 
-      {/* Key Points */}
-      {keyPoints && keyPoints.length > 0 && (
-        <div
-          className="rounded-lg border border-gray-200 bg-gray-50/50 p-3"
-          data-testid="key-points"
-        >
-          <div className="mb-2 flex items-center gap-2">
-            <Sparkles className="h-4 w-4 text-gray-500" aria-hidden="true" />
-            <span className="text-xs font-semibold tracking-wider text-gray-500 uppercase">
-              Key Points
-            </span>
-          </div>
-          <ul className="space-y-1">
-            {keyPoints.map((point, index) => (
-              <li key={`kp-${index}`} className="flex items-start gap-2 text-sm text-gray-700">
-                <span
-                  className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gray-400"
-                  aria-hidden="true"
-                />
-                {point}
-              </li>
+      {/* Key takeaways */}
+      {filteredKeyPoints && filteredKeyPoints.length > 0 && (
+        <div data-testid="key-points">
+          <h5 className="mb-2 text-xs font-semibold tracking-wide text-gray-600 uppercase">
+            Key takeaways
+          </h5>
+          <ul className="list-disc space-y-1 pl-5 text-sm">
+            {filteredKeyPoints.map((point, index) => (
+              <li key={index}>{point}</li>
             ))}
           </ul>
         </div>
       )}
 
-      {/* Related Topics */}
+      {/* Related topics */}
       {relatedTopics && relatedTopics.length > 0 && (
-        <div className="flex flex-wrap items-center gap-2" data-testid="related-topics">
-          <span className="text-xs text-gray-400">Related:</span>
-          {relatedTopics.map((topic, index) => (
-            <span
-              key={`rt-${index}`}
-              className="inline-flex items-center gap-1 rounded-full border border-gray-200 bg-white px-2.5 py-0.5 text-xs text-gray-600 transition-colors hover:bg-gray-50"
-            >
-              <ArrowRight className="h-3 w-3" aria-hidden="true" />
-              {topic}
-            </span>
-          ))}
+        <div data-testid="related-topics">
+          <h5 className="mb-2 text-xs font-semibold tracking-wide text-gray-600 uppercase">
+            Related topics
+          </h5>
+          <p className="text-sm text-gray-600">
+            {relatedTopics.map((topic, index) => (
+              <span key={index}>
+                {index > 0 && ' • '}
+                <span>{topic}</span>
+              </span>
+            ))}
+          </p>
         </div>
       )}
     </div>

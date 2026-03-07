@@ -188,6 +188,10 @@ describe('SectorStore', () => {
         updatedAt: '2025-04-01T00:00:00Z',
       };
       mockCreateSector.mockResolvedValue(newSector);
+      // After create, fetchSectors is called — return updated list including new sector
+      mockListSectors
+        .mockResolvedValueOnce(MOCK_SECTORS) // initial mount fetch
+        .mockResolvedValueOnce([newSector, ...MOCK_SECTORS]); // refetch after addSector
 
       const { result } = renderHook(
         () => ({
@@ -220,6 +224,10 @@ describe('SectorStore', () => {
     it('should replace sector in list', async () => {
       const updated = { ...MOCK_SECTORS[0], name: 'HR Updated' };
       mockUpdateSector.mockResolvedValue(updated);
+      // After update, fetchSectors is called — return list with updated sector
+      mockListSectors
+        .mockResolvedValueOnce(MOCK_SECTORS) // initial mount fetch
+        .mockResolvedValueOnce([updated, ...MOCK_SECTORS.slice(1)]); // refetch after updateSector
 
       const { result } = renderHook(
         () => ({

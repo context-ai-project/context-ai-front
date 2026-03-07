@@ -34,6 +34,10 @@ export interface Sector {
   icon: SectorIcon;
   status: SectorStatus;
   documentCount: number;
+  /** Full name (first + last) of the sector responsible contact */
+  contactName?: string | null;
+  /** Phone number of the sector responsible contact */
+  contactPhone?: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -43,6 +47,8 @@ export interface CreateSectorDto {
   name: string;
   description: string;
   icon: SectorIcon;
+  contactName?: string;
+  contactPhone?: string;
 }
 
 /** DTO for updating a sector */
@@ -51,4 +57,6 @@ export interface UpdateSectorDto {
   description?: string;
   icon?: SectorIcon;
   status?: SectorStatus;
+  contactName?: string | null;
+  contactPhone?: string | null;
 }
