@@ -39,23 +39,41 @@ type SectorStoreState = SectorState & SectorActions;
 // ── Pure helper functions (extracted to avoid nesting) ───────────────────────
 
 /**
+ * Minimum character length for substring-based similarity checks.
+ * Prevents false positives like "Ma" matching "Human Resources".
+ */
+const MIN_SIMILARITY_LENGTH = 5;
+
+/**
  * Checks if two names are similar (fuzzy match).
  * Returns true if names share significant common substrings.
+ * Requires the shorter string to be at least MIN_SIMILARITY_LENGTH chars
+ * to avoid noisy matches on very short inputs.
  */
 function isSimilar(a: string, b: string): boolean {
   const la = a.toLowerCase().trim();
   const lb = b.toLowerCase().trim();
   if (la === lb) return false; // Exact match handled separately
 
+  const shorter = la.length <= lb.length ? la : lb;
+
+  // Skip similarity checks if the query is too short
+  if (shorter.length < MIN_SIMILARITY_LENGTH) return false;
+
   // Check if one contains the other
   if (la.includes(lb) || lb.includes(la)) return true;
 
-  // Check word overlap
+  // Check word overlap (only compare words with meaningful length)
   const wordsA = la.split(/\s+/);
   const wordsB = lb.split(/\s+/);
   const threshold = Math.min(wordsA.length, wordsB.length) * 0.5;
-  const commonCount = wordsA.filter((w) =>
-    wordsB.some((wb) => wb === w || wb.includes(w) || w.includes(wb)),
+  const commonCount = wordsA.filter(
+    (w) =>
+      w.length >= MIN_SIMILARITY_LENGTH &&
+      wordsB.some(
+        (wb) =>
+          wb.length >= MIN_SIMILARITY_LENGTH && (wb === w || wb.includes(w) || w.includes(wb)),
+      ),
   ).length;
   return commonCount > 0 && commonCount >= threshold;
 }

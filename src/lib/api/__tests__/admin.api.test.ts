@@ -1,6 +1,8 @@
 import { adminApi, adminKeys, type AdminUserResponse } from '../admin.api';
 import { apiClient } from '../client';
 
+const id = 'user-uuid-1';
+
 // Mock the API client
 vi.mock('../client', () => ({
   apiClient: {
@@ -15,7 +17,7 @@ const mockGet = vi.mocked(apiClient.get);
 const mockPatch = vi.mocked(apiClient.patch);
 
 const mockUser: AdminUserResponse = {
-  id: 'user-uuid-1',
+  id: id,
   auth0UserId: 'auth0|abc123',
   email: 'admin@example.com',
   name: 'Admin User',
@@ -79,10 +81,10 @@ describe('Admin API', () => {
     it('should get user by ID', async () => {
       mockGet.mockResolvedValueOnce(mockUser);
 
-      const result = await adminApi.getUser('user-uuid-1');
+      const result = await adminApi.getUser(id);
 
       expect(mockGet).toHaveBeenCalledWith('/admin/users/user-uuid-1');
-      expect(result.id).toBe('user-uuid-1');
+      expect(result.id).toBe(id);
     });
   });
 
@@ -93,7 +95,7 @@ describe('Admin API', () => {
       const updated = { ...mockUser, roles: ['manager'] };
       mockPatch.mockResolvedValueOnce(updated);
 
-      const result = await adminApi.updateUserRole('user-uuid-1', 'manager');
+      const result = await adminApi.updateUserRole(id, 'manager');
 
       expect(mockPatch).toHaveBeenCalledWith('/admin/users/user-uuid-1/role', {
         role: 'manager',
@@ -109,7 +111,7 @@ describe('Admin API', () => {
       const updated = { ...mockUser, isActive: false };
       mockPatch.mockResolvedValueOnce(updated);
 
-      const result = await adminApi.toggleUserStatus('user-uuid-1', false);
+      const result = await adminApi.toggleUserStatus(id, false);
 
       expect(mockPatch).toHaveBeenCalledWith('/admin/users/user-uuid-1/status', {
         isActive: false,
@@ -125,7 +127,7 @@ describe('Admin API', () => {
       const updated = { ...mockUser, sectorIds: ['sector-1', 'sector-2'] };
       mockPatch.mockResolvedValueOnce(updated);
 
-      const result = await adminApi.updateUserSectors('user-uuid-1', ['sector-1', 'sector-2']);
+      const result = await adminApi.updateUserSectors(id, ['sector-1', 'sector-2']);
 
       expect(mockPatch).toHaveBeenCalledWith('/admin/users/user-uuid-1/sectors', {
         sectorIds: ['sector-1', 'sector-2'],
@@ -137,7 +139,7 @@ describe('Admin API', () => {
       const updated = { ...mockUser, sectorIds: [] };
       mockPatch.mockResolvedValueOnce(updated);
 
-      const result = await adminApi.updateUserSectors('user-uuid-1', []);
+      const result = await adminApi.updateUserSectors(id, []);
 
       expect(mockPatch).toHaveBeenCalledWith('/admin/users/user-uuid-1/sectors', {
         sectorIds: [],

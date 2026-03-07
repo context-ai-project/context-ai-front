@@ -42,8 +42,21 @@ describe('LogoutButton', () => {
     expect(screen.getByRole('button', { name: 'Logout' })).toBeInTheDocument();
   });
 
-  it('should call signOut when confirmed', async () => {
+  it('should call signOut and redirect to federated logout when confirmed', async () => {
     const user = userEvent.setup();
+
+    // Mock window.location.href to capture the redirect
+    const hrefSetter = vi.fn();
+    Object.defineProperty(window, 'location', {
+      value: { ...window.location, href: '' },
+      writable: true,
+      configurable: true,
+    });
+    Object.defineProperty(window.location, 'href', {
+      set: hrefSetter,
+      configurable: true,
+    });
+
     render(<LogoutButton />);
 
     // Open dialog
@@ -54,7 +67,10 @@ describe('LogoutButton', () => {
     const confirmButton = dialogButtons[dialogButtons.length - 1];
     await user.click(confirmButton);
 
-    expect(mockSignOut).toHaveBeenCalledWith(expect.objectContaining({ callbackUrl: '/en' }));
+    // 1. Local NextAuth session is cleared (no redirect)
+    expect(mockSignOut).toHaveBeenCalledWith({ redirect: false });
+    // 2. Browser is redirected to Auth0 federated logout route
+    expect(hrefSetter).toHaveBeenCalledWith('/api/auth/logout');
   });
 
   it('should close dialog when Cancel is clicked', async () => {

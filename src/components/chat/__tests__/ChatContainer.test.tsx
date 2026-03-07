@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ChatContainer } from '../ChatContainer';
 import { chatApi } from '@/lib/api/chat.api';
-import { MessageRole } from '@/types/message.types';
+import { MessageRole, RagResponseType } from '@/types/message.types';
 
 // Mock the chat API
 vi.mock('@/lib/api/chat.api', () => ({
@@ -179,6 +179,7 @@ describe('ChatContainer', () => {
     const mockResponse = {
       conversationId: 'conv-new',
       response: 'This is the AI response',
+      responseType: RagResponseType.ANSWER,
       sources: [],
       timestamp: '2026-01-01T00:00:00Z',
     };
@@ -247,6 +248,7 @@ describe('ChatContainer', () => {
     const mockResponse = {
       conversationId: 'conv-1',
       response: 'Test response',
+      responseType: RagResponseType.ANSWER,
       sources: [],
       timestamp: new Date('2026-01-01T00:00:00Z'),
     };
@@ -274,6 +276,7 @@ describe('ChatContainer', () => {
     const mockResponse = {
       conversationId: 'existing-conv-id',
       response: 'Test response',
+      responseType: RagResponseType.ANSWER,
       sources: [],
       timestamp: '2026-01-01T00:00:00Z',
     };

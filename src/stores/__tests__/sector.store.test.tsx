@@ -41,10 +41,12 @@ function Wrapper({ children }: { children: ReactNode }) {
   return <SectorStoreProvider>{children}</SectorStoreProvider>;
 }
 
+const name = 'Human Resources';
+
 const MOCK_SECTORS: Sector[] = [
   {
     id: 's1',
-    name: 'Human Resources',
+    name: name,
     description: 'HR docs',
     icon: 'users',
     status: 'active',
@@ -151,7 +153,7 @@ describe('SectorStore', () => {
         expect(result.current.all).toHaveLength(3);
       });
 
-      expect(result.current.sector?.name).toBe('Human Resources');
+      expect(result.current.sector?.name).toBe(name);
     });
 
     it('useSectorById should return undefined for unknown id', async () => {
@@ -308,8 +310,8 @@ describe('SectorStore', () => {
         expect(result.current.sectors).toHaveLength(3);
       });
 
-      expect(result.current.exists('Human Resources')).toBe(true);
-      expect(result.current.exists('human resources')).toBe(true);
+      expect(result.current.exists(name)).toBe(true);
+      expect(result.current.exists(name)).toBe(true);
       expect(result.current.exists('Nonexistent')).toBe(false);
     });
 
@@ -326,7 +328,7 @@ describe('SectorStore', () => {
         expect(result.current.sectors).toHaveLength(3);
       });
 
-      expect(result.current.exists('Human Resources', 's1')).toBe(false);
+      expect(result.current.exists(name, 's1')).toBe(false);
     });
   });
 
@@ -347,7 +349,7 @@ describe('SectorStore', () => {
       });
 
       // "Human" should match "Human Resources" (contains)
-      expect(result.current.findSimilar('Human')).toEqual(['Human Resources']);
+      expect(result.current.findSimilar('Human')).toEqual([name]);
     });
 
     it('should return empty array when no similar names', async () => {

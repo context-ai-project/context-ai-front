@@ -74,9 +74,11 @@ export function AdminView() {
         <TabsContent value="users">
           <UsersTab
             users={users}
+            sectors={sectors}
             isLoading={isLoading}
             error={error}
             onUserUpdated={handleUserUpdated}
+            onInviteSent={fetchData}
           />
         </TabsContent>
 

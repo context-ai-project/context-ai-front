@@ -2,12 +2,20 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { UsersTab } from '../UsersTab';
 import type { AdminUserResponse } from '@/lib/api/admin.api';
+import type { Sector } from '@/types/sector.types';
 
 // Mock admin API
 vi.mock('@/lib/api/admin.api', () => ({
   adminApi: {
     updateUserRole: vi.fn(),
     toggleUserStatus: vi.fn(),
+  },
+}));
+
+// Mock invitation API
+vi.mock('@/lib/api/invitation.api', () => ({
+  invitationApi: {
+    createInvitation: vi.fn(),
   },
 }));
 
@@ -36,6 +44,19 @@ const mockUsers: AdminUserResponse[] = [
   },
 ];
 
+const mockSectors: Sector[] = [
+  {
+    id: 's1',
+    name: 'Engineering',
+    description: 'Engineering sector',
+    icon: 'code',
+    status: 'active',
+    documentCount: 5,
+    createdAt: '2025-01-01T00:00:00Z',
+    updatedAt: '2025-01-01T00:00:00Z',
+  },
+];
+
 describe('UsersTab', () => {
   const onUserUpdated = vi.fn();
 
@@ -45,7 +66,13 @@ describe('UsersTab', () => {
 
   it('should render users in table', () => {
     render(
-      <UsersTab users={mockUsers} isLoading={false} error={null} onUserUpdated={onUserUpdated} />,
+      <UsersTab
+        users={mockUsers}
+        sectors={mockSectors}
+        isLoading={false}
+        error={null}
+        onUserUpdated={onUserUpdated}
+      />,
     );
 
     expect(screen.getByText('Admin User')).toBeInTheDocument();
@@ -55,7 +82,15 @@ describe('UsersTab', () => {
   });
 
   it('should show loading state when loading and no users', () => {
-    render(<UsersTab users={[]} isLoading={true} error={null} onUserUpdated={onUserUpdated} />);
+    render(
+      <UsersTab
+        users={[]}
+        sectors={mockSectors}
+        isLoading={true}
+        error={null}
+        onUserUpdated={onUserUpdated}
+      />,
+    );
 
     expect(screen.getByText('loading')).toBeInTheDocument();
   });
@@ -64,6 +99,7 @@ describe('UsersTab', () => {
     render(
       <UsersTab
         users={mockUsers}
+        sectors={mockSectors}
         isLoading={false}
         error="Something went wrong"
         onUserUpdated={onUserUpdated}
@@ -74,14 +110,28 @@ describe('UsersTab', () => {
   });
 
   it('should show no results when filtered list is empty', () => {
-    render(<UsersTab users={[]} isLoading={false} error={null} onUserUpdated={onUserUpdated} />);
+    render(
+      <UsersTab
+        users={[]}
+        sectors={mockSectors}
+        isLoading={false}
+        error={null}
+        onUserUpdated={onUserUpdated}
+      />,
+    );
 
     expect(screen.getByText('noResults')).toBeInTheDocument();
   });
 
   it('should filter users by search', async () => {
     render(
-      <UsersTab users={mockUsers} isLoading={false} error={null} onUserUpdated={onUserUpdated} />,
+      <UsersTab
+        users={mockUsers}
+        sectors={mockSectors}
+        isLoading={false}
+        error={null}
+        onUserUpdated={onUserUpdated}
+      />,
     );
 
     const input = screen.getByRole('textbox');
@@ -93,7 +143,13 @@ describe('UsersTab', () => {
 
   it('should show role badge and status indicator', () => {
     render(
-      <UsersTab users={mockUsers} isLoading={false} error={null} onUserUpdated={onUserUpdated} />,
+      <UsersTab
+        users={mockUsers}
+        sectors={mockSectors}
+        isLoading={false}
+        error={null}
+        onUserUpdated={onUserUpdated}
+      />,
     );
 
     // Role badges — using translation keys (mock returns key as text)
@@ -115,6 +171,7 @@ describe('UsersTab', () => {
     render(
       <UsersTab
         users={[noRoleUser]}
+        sectors={mockSectors}
         isLoading={false}
         error={null}
         onUserUpdated={onUserUpdated}
@@ -124,12 +181,18 @@ describe('UsersTab', () => {
     expect(screen.getByText('roles.user')).toBeInTheDocument();
   });
 
-  it('should render invite button (disabled)', () => {
+  it('should render invite button (enabled)', () => {
     render(
-      <UsersTab users={mockUsers} isLoading={false} error={null} onUserUpdated={onUserUpdated} />,
+      <UsersTab
+        users={mockUsers}
+        sectors={mockSectors}
+        isLoading={false}
+        error={null}
+        onUserUpdated={onUserUpdated}
+      />,
     );
 
     const inviteBtn = screen.getByText('inviteUser');
-    expect(inviteBtn.closest('button')).toBeDisabled();
+    expect(inviteBtn.closest('button')).not.toBeDisabled();
   });
 });

@@ -1,6 +1,6 @@
 import { chatApi, chatKeys } from '../chat.api';
 import { apiClient } from '../client';
-import type { ChatQueryDto, ChatResponseDto } from '@/types/message.types';
+import { RagResponseType, type ChatQueryDto, type ChatResponseDto } from '@/types/message.types';
 
 // Mock the API client
 vi.mock('../client', () => ({
@@ -50,6 +50,7 @@ describe('Chat API', () => {
 
       const mockResponse: ChatResponseDto = {
         response: 'You have 20 days of vacation.',
+        responseType: RagResponseType.ANSWER,
         conversationId: 'conv-1',
         sources: [],
         timestamp: '2026-01-15T10:30:05Z',
@@ -71,6 +72,7 @@ describe('Chat API', () => {
 
       const mockResponse: ChatResponseDto = {
         response: 'Hi there!',
+        responseType: RagResponseType.ANSWER,
         conversationId: 'new-conv-123',
         sources: [],
         timestamp: '2026-01-15T10:30:05Z',

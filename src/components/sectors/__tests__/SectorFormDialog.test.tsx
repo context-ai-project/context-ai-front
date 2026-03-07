@@ -8,6 +8,8 @@ const mockAddSector = vi.fn();
 const mockUpdateSector = vi.fn();
 const mockSectorNameExists = vi.fn().mockReturnValue(false);
 const mockFindSimilarNames = vi.fn().mockReturnValue([]);
+const formNamePlaceholder = 'form.namePlaceholder';
+const formDescriptionPlaceholder = 'form.descriptionPlaceholder';
 
 vi.mock('@/stores/sector.store', () => ({
   useAddSector: () => mockAddSector,
@@ -61,8 +63,8 @@ describe('SectorFormDialog', () => {
   it('should render name and description fields', () => {
     render(<SectorFormDialog open={true} onOpenChange={onOpenChange} onSuccess={onSuccess} />);
 
-    expect(screen.getByPlaceholderText('form.namePlaceholder')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('form.descriptionPlaceholder')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(formNamePlaceholder)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(formDescriptionPlaceholder)).toBeInTheDocument();
   });
 
   it('should render icon selector', () => {
@@ -101,9 +103,9 @@ describe('SectorFormDialog', () => {
       />,
     );
 
-    const nameInput = screen.getByPlaceholderText('form.namePlaceholder') as HTMLInputElement;
+    const nameInput = screen.getByPlaceholderText(formNamePlaceholder) as HTMLInputElement;
     const descInput = screen.getByPlaceholderText(
-      'form.descriptionPlaceholder',
+      formDescriptionPlaceholder,
     ) as HTMLTextAreaElement;
 
     expect(nameInput.value).toBe('HR Department');
@@ -115,7 +117,7 @@ describe('SectorFormDialog', () => {
   it('should show validation error for empty name on blur', async () => {
     render(<SectorFormDialog open={true} onOpenChange={onOpenChange} onSuccess={onSuccess} />);
 
-    const nameInput = screen.getByPlaceholderText('form.namePlaceholder');
+    const nameInput = screen.getByPlaceholderText(formNamePlaceholder);
     fireEvent.blur(nameInput);
 
     await waitFor(() => {
@@ -126,7 +128,7 @@ describe('SectorFormDialog', () => {
   it('should show validation error for empty description on blur', async () => {
     render(<SectorFormDialog open={true} onOpenChange={onOpenChange} onSuccess={onSuccess} />);
 
-    const descInput = screen.getByPlaceholderText('form.descriptionPlaceholder');
+    const descInput = screen.getByPlaceholderText(formDescriptionPlaceholder);
     fireEvent.blur(descInput);
 
     await waitFor(() => {
@@ -137,7 +139,7 @@ describe('SectorFormDialog', () => {
   it('should show validation error for short name', async () => {
     render(<SectorFormDialog open={true} onOpenChange={onOpenChange} onSuccess={onSuccess} />);
 
-    const nameInput = screen.getByPlaceholderText('form.namePlaceholder');
+    const nameInput = screen.getByPlaceholderText(formNamePlaceholder);
     fireEvent.change(nameInput, { target: { value: 'A' } });
     fireEvent.blur(nameInput);
 
@@ -149,7 +151,7 @@ describe('SectorFormDialog', () => {
   it('should show validation error for short description', async () => {
     render(<SectorFormDialog open={true} onOpenChange={onOpenChange} onSuccess={onSuccess} />);
 
-    const descInput = screen.getByPlaceholderText('form.descriptionPlaceholder');
+    const descInput = screen.getByPlaceholderText(formDescriptionPlaceholder);
     fireEvent.change(descInput, { target: { value: 'Short' } });
     fireEvent.blur(descInput);
 
@@ -163,7 +165,7 @@ describe('SectorFormDialog', () => {
 
     render(<SectorFormDialog open={true} onOpenChange={onOpenChange} onSuccess={onSuccess} />);
 
-    const nameInput = screen.getByPlaceholderText('form.namePlaceholder');
+    const nameInput = screen.getByPlaceholderText(formNamePlaceholder);
     fireEvent.change(nameInput, { target: { value: 'Existing Name' } });
     fireEvent.blur(nameInput);
 
@@ -175,8 +177,8 @@ describe('SectorFormDialog', () => {
   it('should call addSector on create submission', async () => {
     render(<SectorFormDialog open={true} onOpenChange={onOpenChange} onSuccess={onSuccess} />);
 
-    const nameInput = screen.getByPlaceholderText('form.namePlaceholder');
-    const descInput = screen.getByPlaceholderText('form.descriptionPlaceholder');
+    const nameInput = screen.getByPlaceholderText(formNamePlaceholder);
+    const descInput = screen.getByPlaceholderText(formDescriptionPlaceholder);
 
     fireEvent.change(nameInput, { target: { value: 'New Sector' } });
     fireEvent.change(descInput, { target: { value: 'This is a new sector description' } });
@@ -203,7 +205,7 @@ describe('SectorFormDialog', () => {
       />,
     );
 
-    const nameInput = screen.getByPlaceholderText('form.namePlaceholder');
+    const nameInput = screen.getByPlaceholderText(formNamePlaceholder);
 
     fireEvent.change(nameInput, { target: { value: 'Updated Name' } });
 
@@ -227,7 +229,7 @@ describe('SectorFormDialog', () => {
 
     render(<SectorFormDialog open={true} onOpenChange={onOpenChange} onSuccess={onSuccess} />);
 
-    const nameInput = screen.getByPlaceholderText('form.namePlaceholder');
+    const nameInput = screen.getByPlaceholderText(formNamePlaceholder);
     fireEvent.change(nameInput, { target: { value: 'HR Department' } });
 
     await waitFor(() => {

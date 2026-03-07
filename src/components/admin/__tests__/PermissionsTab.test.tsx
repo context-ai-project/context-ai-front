@@ -4,6 +4,8 @@ import { PermissionsTab } from '../PermissionsTab';
 import type { AdminUserResponse } from '@/lib/api/admin.api';
 import type { Sector } from '@/types/sector.types';
 
+const createdAt = '2025-01-01T00:00:00Z';
+
 // Mock admin API
 vi.mock('@/lib/api/admin.api', () => ({
   adminApi: {
@@ -20,7 +22,7 @@ const mockUsers: AdminUserResponse[] = [
     isActive: true,
     roles: ['admin'],
     sectorIds: [],
-    createdAt: '2025-01-01T00:00:00Z',
+    createdAt: createdAt,
     lastLoginAt: null,
   },
   {
@@ -31,7 +33,7 @@ const mockUsers: AdminUserResponse[] = [
     isActive: true,
     roles: ['user'],
     sectorIds: ['s1'],
-    createdAt: '2025-06-01T00:00:00Z',
+    createdAt: createdAt,
     lastLoginAt: null,
   },
 ];
@@ -44,8 +46,8 @@ const mockSectors: Sector[] = [
     icon: 'code',
     status: 'active',
     documentCount: 5,
-    createdAt: '2025-01-01T00:00:00Z',
-    updatedAt: '2025-01-01T00:00:00Z',
+    createdAt: createdAt,
+    updatedAt: createdAt,
   },
   {
     id: 's2',
@@ -54,8 +56,8 @@ const mockSectors: Sector[] = [
     icon: 'briefcase',
     status: 'inactive',
     documentCount: 2,
-    createdAt: '2025-01-01T00:00:00Z',
-    updatedAt: '2025-01-01T00:00:00Z',
+    createdAt: createdAt,
+    updatedAt: createdAt,
   },
 ];
 

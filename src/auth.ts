@@ -41,17 +41,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           const syncResult = await syncUserWithBackend(profile);
           token.userId = syncResult?.id ?? undefined;
           token.roles = syncResult?.roles ?? [];
+          token.isActive = syncResult?.isActive ?? true;
         }
       }
 
       return token;
     },
     async session({ session, token }) {
-      // Send properties to the client, including user ID and roles
+      // Send properties to the client, including user ID, roles, and active status
       session.accessToken = token.accessToken as string;
       session.user.image = token.picture as string;
       session.user.id = token.userId as string; // Internal UUID from backend
       session.user.roles = (token.roles as string[]) ?? [];
+      session.user.isActive = (token.isActive as boolean) ?? true;
 
       // If userId is not available, log warning
       if (!token.userId) {
