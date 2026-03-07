@@ -128,46 +128,8 @@ export interface ChatQueryDto {
 }
 
 /**
- * Response types to distinguish between normal responses and fallbacks (v1.3)
- */
-export enum RagResponseType {
-  /** Response with documentary context */
-  ANSWER = 'answer',
-  /** No relevant documents found */
-  NO_CONTEXT = 'no_context',
-  /** Error during processing */
-  ERROR = 'error',
-}
-
-/**
- * Section types for structured responses (v1.3)
- */
-export type SectionType = 'info' | 'steps' | 'warning' | 'tip';
-
-/**
- * A single section in a structured response (v1.3)
- */
-export interface ResponseSection {
-  title: string;
-  content: string;
-  type: SectionType;
-}
-
-/**
- * Structured response from the API (v1.3)
- */
-export interface StructuredResponse {
-  summary: string;
-  sections: ResponseSection[];
-  keyPoints?: string[];
-  relatedTopics?: string[];
-}
-
-/**
  * Chat response DTO (matches backend QueryAssistantResponseDto)
  * Backend returns the assistant's response text, not full Message objects
- *
- * v1.3: Added responseType and structured fields
  */
 export interface ChatResponseDto {
   response: string; // Assistant's response text (backward compatible)
