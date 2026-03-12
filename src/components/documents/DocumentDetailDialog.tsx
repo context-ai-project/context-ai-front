@@ -22,9 +22,6 @@ import { useAllSectors } from '@/stores/sector.store';
 import { TYPE_ICONS, STATUS_BADGE_VARIANTS } from '@/constants/document-mappings';
 import { formatDate } from '@/lib/utils/format-date';
 
-/** Maximum content length shown before truncation */
-const MAX_PREVIEW_CHARS = 8000;
-
 /** Minimum line length to trigger paragraph splitting */
 const LONG_LINE_THRESHOLD = 200;
 
@@ -157,11 +154,7 @@ export function DocumentDetailDialog({ document, open, onOpenChange }: DocumentD
   const sectorName = allSectors.find((s) => s.id === document.sectorId)?.name ?? 'Unknown';
 
   const rawContent = detail?.content ?? null;
-  const truncated =
-    rawContent && rawContent.length > MAX_PREVIEW_CHARS
-      ? rawContent.slice(0, MAX_PREVIEW_CHARS) + '…'
-      : rawContent;
-  const contentPreview = truncated ? normalizeDocumentContent(truncated) : null;
+  const contentPreview = rawContent ? normalizeDocumentContent(rawContent) : null;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

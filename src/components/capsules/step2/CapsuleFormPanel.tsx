@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { ArrowLeft, Loader2, Headphones } from 'lucide-react';
+import { ArrowLeft, Loader2, Headphones, Video } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { CapsuleScriptEditor } from './CapsuleScriptEditor';
@@ -16,7 +16,9 @@ import {
   usePreviousStep,
   useGenerateAudio,
   useSelectedDocumentIds,
+  useCapsuleType,
 } from '@/stores/capsule.store';
+import { countWords, MAX_SCRIPT_WORDS } from '@/lib/utils/word-count';
 
 interface CapsuleFormPanelProps {
   /**
@@ -38,10 +40,14 @@ export function CapsuleFormPanel({ onBack }: CapsuleFormPanelProps = {}) {
   const previousStep = usePreviousStep();
   const generateAudio = useGenerateAudio();
   const selectedDocumentIds = useSelectedDocumentIds();
+  const capsuleType = useCapsuleType();
 
+  const isVideo = capsuleType === 'VIDEO';
   const handleBack = onBack ?? previousStep;
 
-  const canGenerateAudio = !!selectedVoiceId && script.trim().length > 0 && !isGeneratingAudio;
+  const scriptOverLimit = countWords(script) > MAX_SCRIPT_WORDS;
+  const canGenerateAudio =
+    !!selectedVoiceId && script.trim().length > 0 && !isGeneratingAudio && !scriptOverLimit;
 
   return (
     <div className="flex h-full flex-col gap-4 overflow-y-auto p-6">
@@ -96,12 +102,16 @@ export function CapsuleFormPanel({ onBack }: CapsuleFormPanelProps = {}) {
           {isGeneratingAudio ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              {t('generatingAudio')}
+              {isVideo ? t('generatingVideo') : t('generatingAudio')}
             </>
           ) : (
             <>
-              <Headphones className="mr-2 h-4 w-4" />
-              {t('generateAudio')}
+              {isVideo ? (
+                <Video className="mr-2 h-4 w-4" />
+              ) : (
+                <Headphones className="mr-2 h-4 w-4" />
+              )}
+              {isVideo ? t('generateVideo') : t('generateAudio')}
             </>
           )}
         </Button>

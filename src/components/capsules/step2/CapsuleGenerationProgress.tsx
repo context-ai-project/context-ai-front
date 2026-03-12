@@ -1,24 +1,39 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { Loader2, Volume2, Upload } from 'lucide-react';
+import { Loader2, Volume2, Upload, Image, Clapperboard } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import type { CapsuleStatus } from '@/lib/api/capsule.api';
-import { useGenerationProgress } from '@/stores/capsule.store';
+import { useGenerationProgress, useCurrentCapsule } from '@/stores/capsule.store';
 
 interface CapsuleGenerationProgressProps {
   status: CapsuleStatus;
 }
 
+function getVideoStageInfo(status: CapsuleStatus, progress: number, t: (key: string) => string) {
+  if (status === 'RENDERING') return { Icon: Clapperboard, label: t('assemblingVideo') };
+  if (progress < 40) return { Icon: Image, label: t('generatingImages') };
+  if (progress < 80) return { Icon: Volume2, label: t('generatingAudio') };
+  return { Icon: Upload, label: t('uploading') };
+}
+
+function getAudioStageInfo(progress: number, t: (key: string) => string) {
+  if (progress >= 80) return { Icon: Upload, label: t('uploading') };
+  return { Icon: Volume2, label: t('synthesizing') };
+}
+
 export function CapsuleGenerationProgress({ status }: CapsuleGenerationProgressProps) {
   const t = useTranslations('capsules.generation');
   const progress = useGenerationProgress();
+  const capsule = useCurrentCapsule();
 
-  if (status !== 'GENERATING') return null;
+  if (status !== 'GENERATING_ASSETS' && status !== 'RENDERING') return null;
 
-  const isUploading = progress >= 80;
-  const Icon = isUploading ? Upload : Volume2;
-  const label = isUploading ? t('uploading') : t('synthesizing');
+  const isVideo = capsule?.type === 'VIDEO';
+  const { Icon, label } = isVideo
+    ? getVideoStageInfo(status, progress, t)
+    : getAudioStageInfo(progress, t);
+  const hint = isVideo ? t('videoHint') : t('hint');
 
   return (
     <div className="flex flex-col items-center justify-center gap-4 py-8">
@@ -34,13 +49,12 @@ export function CapsuleGenerationProgress({ status }: CapsuleGenerationProgressP
         </div>
       </div>
 
-      {/* Progress bar */}
       <div className="w-full max-w-xs">
         <Progress value={progress} className="h-2" />
         <p className="text-muted-foreground mt-1 text-center text-xs">{progress}%</p>
       </div>
 
-      <p className="text-muted-foreground max-w-xs text-center text-xs">{t('hint')}</p>
+      <p className="text-muted-foreground max-w-xs text-center text-xs">{hint}</p>
     </div>
   );
 }

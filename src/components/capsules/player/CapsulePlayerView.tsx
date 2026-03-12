@@ -10,6 +10,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { CapsuleStatusBadge } from '@/components/capsules/shared/CapsuleStatusBadge';
 import { CapsuleTypeBadge } from '@/components/capsules/shared/CapsuleTypeBadge';
 import { CapsuleAudioPlayer } from './CapsuleAudioPlayer';
+import { CapsuleVideoPlayer } from './CapsuleVideoPlayer';
 import { DeleteCapsuleDialog } from '@/components/capsules/list/DeleteCapsuleDialog';
 import { capsuleApi, type CapsuleDto } from '@/lib/api/capsule.api';
 import { routes } from '@/lib/routes';
@@ -157,8 +158,11 @@ export function CapsulePlayerView({ capsuleId }: CapsulePlayerViewProps) {
         <h1 className="text-foreground text-2xl font-bold">{capsule.title}</h1>
       </div>
 
+      {/* Video player — videoUrl holds the GCS storage path; signed URL fetched inside component */}
+      {capsule.videoUrl && <CapsuleVideoPlayer capsuleId={capsule.id} />}
+
       {/* Audio player — audioUrl holds the GCS storage path; signed URL fetched inside component */}
-      {capsule.audioUrl && <CapsuleAudioPlayer capsuleId={capsule.id} />}
+      {capsule.audioUrl && !capsule.videoUrl && <CapsuleAudioPlayer capsuleId={capsule.id} />}
 
       {/* Metadata */}
       <Card>

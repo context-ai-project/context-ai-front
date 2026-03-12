@@ -1,6 +1,6 @@
 'use client';
 
-import { Headphones, Video, Layers } from 'lucide-react';
+import { Headphones, Video } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import { useCapsuleType, useSetCapsuleType } from '@/stores/capsule.store';
@@ -8,15 +8,13 @@ import type { CapsuleType } from '@/lib/api/capsule.api';
 
 interface TypeOption {
   value: CapsuleType;
-  labelKey: 'typeAudio' | 'typeVideo' | 'typeBoth';
+  labelKey: 'typeAudio' | 'typeVideo';
   Icon: React.ElementType;
-  disabled: boolean;
 }
 
 const TYPE_OPTIONS: TypeOption[] = [
-  { value: 'AUDIO', labelKey: 'typeAudio', Icon: Headphones, disabled: false },
-  { value: 'VIDEO', labelKey: 'typeVideo', Icon: Video, disabled: true },
-  { value: 'BOTH', labelKey: 'typeBoth', Icon: Layers, disabled: true },
+  { value: 'AUDIO', labelKey: 'typeAudio', Icon: Headphones },
+  { value: 'VIDEO', labelKey: 'typeVideo', Icon: Video },
 ];
 
 export function CapsuleTypeSelector() {
@@ -27,20 +25,16 @@ export function CapsuleTypeSelector() {
   return (
     <div>
       <p className="text-foreground mb-2 text-sm font-medium">{t('selectType')}</p>
-      <div className="grid grid-cols-3 gap-3">
-        {TYPE_OPTIONS.map(({ value, labelKey, Icon, disabled }) => (
+      <div className="grid grid-cols-2 gap-3">
+        {TYPE_OPTIONS.map(({ value, labelKey, Icon }) => (
           <button
             key={value}
             type="button"
-            disabled={disabled}
-            onClick={() => !disabled && setCapsuleType(value)}
-            title={disabled ? 'Disponible próximamente' : undefined}
+            onClick={() => setCapsuleType(value)}
             className={cn(
               'flex flex-col items-center gap-2 rounded-lg border p-4 text-sm font-medium transition-colors',
-              disabled
-                ? 'cursor-not-allowed opacity-40'
-                : 'hover:border-primary hover:bg-primary/5 cursor-pointer',
-              capsuleType === value && !disabled
+              'hover:border-primary hover:bg-primary/5 cursor-pointer',
+              capsuleType === value
                 ? 'border-primary bg-primary/10 text-primary'
                 : 'border-border text-foreground',
             )}

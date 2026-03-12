@@ -40,11 +40,10 @@ export interface UploadDocumentDto {
 export const uploadDocumentResponseSchema = z.object({
   sourceId: z.string(),
   title: z.string(),
-  sectorId: z.string(),
-  sourceType: z.string(),
+  fragmentCount: z.number(),
+  contentSize: z.number(),
   status: z.string(),
-  totalFragments: z.number(),
-  processingTimeMs: z.number(),
+  errorMessage: z.string().optional(),
 });
 
 /** Response from document upload */

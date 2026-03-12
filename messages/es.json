@@ -419,7 +419,7 @@
       "fileSelected": "Archivo seleccionado:",
       "uploading": "Subiendo...",
       "success": "¡Documento subido exitosamente!",
-      "successDetails": "Procesados {fragments} fragmentos en {time}ms",
+      "successDetails": "Procesados {fragments} fragmentos",
       "error": "Error al subir",
       "requiresPermission": "Necesitas permisos de admin o manager para subir documentos."
     },
@@ -562,6 +562,10 @@
       "documentFailed": {
         "title": "Error en documento",
         "message": "El procesamiento del documento ha fallado."
+      },
+      "capsuleGenerated": {
+        "title": "Cápsula de {capsuleType} lista",
+        "message": "Tu cápsula de {capsuleType} \"{capsuleTitle}\" ha sido generada y está lista para visualizarse."
       }
     }
   },
@@ -605,8 +609,7 @@
     "create": "Crear Cápsula",
     "type": {
       "audio": "Audio",
-      "video": "Video",
-      "both": "Ambos"
+      "video": "Video"
     },
     "wizard": {
       "step1Title": "Seleccionar Contenido",
@@ -614,8 +617,6 @@
       "selectType": "Tipo de Cápsula",
       "typeAudio": "Audio",
       "typeVideo": "Video",
-      "typeBoth": "Ambos",
-      "typeComingSoon": "Próximamente",
       "selectSector": "Selecciona un sector...",
       "capsuleTitle": "Título de la Cápsula",
       "titlePlaceholder": "ej., Onboarding — Política de Vacaciones",
@@ -635,8 +636,14 @@
       "generatingAudio": "Generando audio...",
       "previewPlaceholder": "Genera un guion para comenzar",
       "audioReady": "Audio generado correctamente",
+      "videoReady": "Video generado correctamente",
       "duration": "Duración",
       "downloadAudio": "Descargar Audio",
+      "downloadVideo": "Descargar Video",
+      "generateVideo": "Generar Video",
+      "generatingVideo": "Generando video...",
+      "words": "palabras",
+      "scriptTooLong": "El guion supera el límite de palabras. Acórtalo para poder generar.",
       "error": "Error en la generación",
       "retry": "Reintentar"
     },
@@ -650,7 +657,8 @@
     },
     "status": {
       "draft": "Borrador",
-      "generating": "Generando",
+      "generating_assets": "Generando recursos",
+      "rendering": "Ensamblando video",
       "completed": "Completada",
       "active": "Activa",
       "failed": "Fallida",
@@ -658,7 +666,9 @@
     },
     "player": {
       "playAudio": "Reproducir Audio",
+      "playVideo": "Reproducir Video",
       "download": "Descargar",
+      "downloadVideo": "Descargar Video",
       "sector": "Sector",
       "createdBy": "Creado por",
       "duration": "Duración",
@@ -677,10 +687,19 @@
       "cancel": "Cancelar"
     },
     "generation": {
-      "title": "Generando audio",
+      "title": "Generando contenido",
       "synthesizing": "Sintetizando voz…",
-      "uploading": "Subiendo audio…",
-      "hint": "Esto puede tardar un minuto. Puedes cerrar esta página y volver después."
+      "generatingAudio": "Generando audio…",
+      "generatingImages": "Generando ilustraciones de escenas…",
+      "assemblingVideo": "Ensamblando video…",
+      "uploading": "Subiendo…",
+      "hint": "Esto puede tardar un minuto. Puedes cerrar esta página y volver después.",
+      "videoHint": "La generación de video tarda 3-8 minutos. Puedes cerrar esta página y volver después."
+    },
+    "quota": {
+      "title": "Cuota de Video",
+      "used": "{used} de {limit} videos usados este mes",
+      "exhausted": "Cuota mensual de video agotada"
     }
   }
 }
