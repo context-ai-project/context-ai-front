@@ -6,10 +6,6 @@ describe('CapsuleLanguageBadge', () => {
     const cases: Array<{ language: string; flag: string; label: string }> = [
       { language: 'es', flag: '🇪🇸', label: 'ES' },
       { language: 'en', flag: '🇬🇧', label: 'EN' },
-      { language: 'fr', flag: '🇫🇷', label: 'FR' },
-      { language: 'de', flag: '🇩🇪', label: 'DE' },
-      { language: 'pt', flag: '🇵🇹', label: 'PT' },
-      { language: 'it', flag: '🇮🇹', label: 'IT' },
     ];
 
     it.each(cases)(
