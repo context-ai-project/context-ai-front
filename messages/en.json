@@ -672,6 +672,7 @@
       "sector": "Sector",
       "createdBy": "Created by",
       "duration": "Duration",
+      "language": "Language",
       "createdAt": "Created"
     },
     "actions": {

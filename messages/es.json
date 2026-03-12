@@ -672,6 +672,7 @@
       "sector": "Sector",
       "createdBy": "Creado por",
       "duration": "Duración",
+      "language": "Idioma",
       "createdAt": "Fecha de creación"
     },
     "actions": {

@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { CapsuleStatusBadge } from '@/components/capsules/shared/CapsuleStatusBadge';
 import { CapsuleTypeBadge } from '@/components/capsules/shared/CapsuleTypeBadge';
+import { CapsuleLanguageBadge } from '@/components/capsules/shared/CapsuleLanguageBadge';
 import { CapsuleAudioPlayer } from './CapsuleAudioPlayer';
 import { CapsuleVideoPlayer } from './CapsuleVideoPlayer';
 import { DeleteCapsuleDialog } from '@/components/capsules/list/DeleteCapsuleDialog';
@@ -121,6 +122,7 @@ export function CapsulePlayerView({ capsuleId }: CapsulePlayerViewProps) {
           <div className="flex flex-wrap items-center gap-2">
             <CapsuleStatusBadge status={capsule.status} />
             <CapsuleTypeBadge type={capsule.type} />
+            {capsule.language && <CapsuleLanguageBadge language={capsule.language} />}
           </div>
           {(canManage || canDelete) && (
             <div className="flex items-center gap-2">
@@ -179,6 +181,14 @@ export function CapsulePlayerView({ capsuleId }: CapsulePlayerViewProps) {
               <p className="text-foreground font-medium">
                 {formatDuration(capsule.durationSeconds)}
               </p>
+            </div>
+          )}
+          {capsule.language && (
+            <div>
+              <p className="text-muted-foreground text-xs">{t('player.language')}</p>
+              <div className="mt-0.5">
+                <CapsuleLanguageBadge language={capsule.language} />
+              </div>
             </div>
           )}
           <div>

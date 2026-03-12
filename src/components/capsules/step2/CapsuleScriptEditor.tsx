@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Loader2, Sparkles } from 'lucide-react';
@@ -14,6 +14,7 @@ import { countWords, MAX_SCRIPT_WORDS } from '@/lib/utils/word-count';
 
 export function CapsuleScriptEditor() {
   const t = useTranslations('capsules.wizard');
+  const locale = useLocale();
   const script = useCapsuleScript();
   const setScript = useSetScript();
   const isGeneratingScript = useIsGeneratingScript();
@@ -32,7 +33,7 @@ export function CapsuleScriptEditor() {
           type="button"
           size="sm"
           variant="outline"
-          onClick={generateScript}
+          onClick={() => generateScript(locale)}
           disabled={isGeneratingScript}
         >
           {isGeneratingScript ? (

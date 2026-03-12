@@ -77,7 +77,7 @@ interface CapsuleWizardActions {
   /** Fetch available ElevenLabs voices */
   loadVoices: () => Promise<void>;
   /** Generate narration script via Gemini RAG */
-  generateScript: () => Promise<void>;
+  generateScript: (language: string) => Promise<void>;
   /** Trigger ElevenLabs audio pipeline and start polling */
   generateAudio: () => Promise<void>;
   /** Poll the generation status endpoint once */
@@ -278,13 +278,13 @@ const createCapsuleStore = () => {
       }
     },
 
-    generateScript: async () => {
+    generateScript: async (language: string) => {
       const { currentCapsuleId } = get();
       if (!currentCapsuleId) return;
 
       set({ isGeneratingScript: true, error: null });
       try {
-        const result = await capsuleApi.generateScript(currentCapsuleId);
+        const result = await capsuleApi.generateScript(currentCapsuleId, language);
         set({ script: result.script, isGeneratingScript: false });
       } catch (error: unknown) {
         set({ error: getErrorMessage(error), isGeneratingScript: false });
