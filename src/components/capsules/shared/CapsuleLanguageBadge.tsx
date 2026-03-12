@@ -7,10 +7,6 @@ interface CapsuleLanguageBadgeProps {
 const LANGUAGE_MAP: Record<string, { flag: string; label: string }> = {
   es: { flag: '🇪🇸', label: 'ES' },
   en: { flag: '🇬🇧', label: 'EN' },
-  fr: { flag: '🇫🇷', label: 'FR' },
-  de: { flag: '🇩🇪', label: 'DE' },
-  pt: { flag: '🇵🇹', label: 'PT' },
-  it: { flag: '🇮🇹', label: 'IT' },
 };
 
 function getLanguageDisplay(language: string): { flag: string; label: string } {

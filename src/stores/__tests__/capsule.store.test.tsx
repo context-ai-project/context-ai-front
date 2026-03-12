@@ -292,8 +292,8 @@ describe('CapsuleStore', () => {
         result.current.setDocIds(['d1']);
       });
       await act(async () => result.current.nextStep());
-      await act(async () => result.current.generateScript());
-      expect(mockGenerateScript).toHaveBeenCalledWith('cap-1');
+      await act(async () => result.current.generateScript('es'));
+      expect(mockGenerateScript).toHaveBeenCalledWith('cap-1', 'es');
     });
   });
 });
