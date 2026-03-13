@@ -21,7 +21,10 @@ describe('CapsuleVideoPlayer', () => {
   });
 
   it('shows video element when URL loads', async () => {
-    vi.mocked(capsuleApi.getDownloadUrl).mockResolvedValueOnce({ url: 'https://video.mp4' });
+    vi.mocked(capsuleApi.getDownloadUrl).mockResolvedValueOnce({
+      url: 'https://video.mp4',
+      expiresAt: '2026-12-31T23:59:59Z',
+    });
     render(<CapsuleVideoPlayer capsuleId="c1" />);
     await waitFor(() => {
       expect(screen.getByText('playVideo')).toBeInTheDocument();

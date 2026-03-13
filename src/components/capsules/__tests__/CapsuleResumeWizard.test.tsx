@@ -48,6 +48,11 @@ describe('CapsuleResumeWizard', () => {
       title: 'Test',
       status: 'DRAFT',
       script: 'text',
+      sectorId: 's1',
+      type: 'AUDIO',
+      createdBy: 'user-1',
+      createdAt: '2026-01-01T00:00:00Z',
+      updatedAt: '2026-01-01T00:00:00Z',
     });
     render(<CapsuleResumeWizard capsuleId="c1" locale="en" />);
     await waitFor(() => {
@@ -71,6 +76,11 @@ describe('CapsuleResumeWizard', () => {
       title: 'Test',
       status: 'DRAFT',
       script: '',
+      sectorId: 's1',
+      type: 'AUDIO',
+      createdBy: 'user-1',
+      createdAt: '2026-01-01T00:00:00Z',
+      updatedAt: '2026-01-01T00:00:00Z',
     });
     render(<CapsuleResumeWizard capsuleId="c1" locale="en" />);
     await waitFor(() => {

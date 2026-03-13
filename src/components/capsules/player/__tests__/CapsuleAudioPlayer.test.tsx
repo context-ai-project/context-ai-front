@@ -21,7 +21,10 @@ describe('CapsuleAudioPlayer', () => {
   });
 
   it('shows audio element when URL loads', async () => {
-    vi.mocked(capsuleApi.getDownloadUrl).mockResolvedValueOnce({ url: 'https://audio.mp3' });
+    vi.mocked(capsuleApi.getDownloadUrl).mockResolvedValueOnce({
+      url: 'https://audio.mp3',
+      expiresAt: '2026-12-31T23:59:59Z',
+    });
     render(<CapsuleAudioPlayer capsuleId="c1" />);
     await waitFor(() => {
       expect(screen.getByText('playAudio')).toBeInTheDocument();

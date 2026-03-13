@@ -270,7 +270,7 @@ describe('CapsuleStore', () => {
       const { result } = renderHook(() => ({ generateScript: useGenerateScript() }), {
         wrapper: Wrapper,
       });
-      await act(async () => result.current.generateScript());
+      await act(async () => result.current.generateScript('en'));
       expect(mockGenerateScript).not.toHaveBeenCalled();
     });
     it('calls API and updates script when capsule exists', async () => {

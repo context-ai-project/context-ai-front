@@ -3,7 +3,10 @@ import { CapsulePreviewPanel } from '../CapsulePreviewPanel';
 
 vi.mock('@/lib/api/capsule.api', () => ({
   capsuleApi: {
-    getDownloadUrl: vi.fn().mockResolvedValue({ url: 'https://signed-url.com/audio.mp3' }),
+    getDownloadUrl: vi.fn().mockResolvedValue({
+      url: 'https://signed-url.com/audio.mp3',
+      expiresAt: '2026-12-31T23:59:59Z',
+    }),
   },
 }));
 
@@ -69,7 +72,10 @@ describe('CapsulePreviewPanel', () => {
   });
 
   it('shows video ready when video capsule has videoUrl', async () => {
-    vi.mocked(capsuleApi.getDownloadUrl).mockResolvedValue({ url: 'https://video.mp4' });
+    vi.mocked(capsuleApi.getDownloadUrl).mockResolvedValue({
+      url: 'https://video.mp4',
+      expiresAt: '2026-12-31T23:59:59Z',
+    });
     mockStore.currentCapsule = {
       id: 'c1',
       type: 'VIDEO',
@@ -84,7 +90,10 @@ describe('CapsulePreviewPanel', () => {
   });
 
   it('shows audio ready when audio capsule has audioUrl', async () => {
-    vi.mocked(capsuleApi.getDownloadUrl).mockResolvedValue({ url: 'https://audio.mp3' });
+    vi.mocked(capsuleApi.getDownloadUrl).mockResolvedValue({
+      url: 'https://audio.mp3',
+      expiresAt: '2026-12-31T23:59:59Z',
+    });
     mockStore.currentCapsule = {
       id: 'c2',
       type: 'AUDIO',
@@ -99,7 +108,10 @@ describe('CapsulePreviewPanel', () => {
   });
 
   it('shows duration when available', async () => {
-    vi.mocked(capsuleApi.getDownloadUrl).mockResolvedValue({ url: 'https://audio.mp3' });
+    vi.mocked(capsuleApi.getDownloadUrl).mockResolvedValue({
+      url: 'https://audio.mp3',
+      expiresAt: '2026-12-31T23:59:59Z',
+    });
     mockStore.currentCapsule = {
       id: 'c2',
       type: 'AUDIO',

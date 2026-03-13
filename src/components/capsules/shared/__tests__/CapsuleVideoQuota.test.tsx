@@ -27,6 +27,8 @@ describe('CapsuleVideoQuota', () => {
       used: 3,
       limit: 10,
       remaining: 7,
+      capsulesCost: 1,
+      capsulesRemaining: 7,
     });
     render(<CapsuleVideoQuota />);
     await waitFor(() => {
@@ -39,6 +41,8 @@ describe('CapsuleVideoQuota', () => {
       used: 10,
       limit: 10,
       remaining: 0,
+      capsulesCost: 1,
+      capsulesRemaining: 0,
     });
     render(<CapsuleVideoQuota />);
     await waitFor(() => {
@@ -51,6 +55,8 @@ describe('CapsuleVideoQuota', () => {
       used: 9,
       limit: 10,
       remaining: 1,
+      capsulesCost: 1,
+      capsulesRemaining: 1,
     });
     const { container } = render(<CapsuleVideoQuota />);
     await waitFor(() => {

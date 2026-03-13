@@ -59,7 +59,12 @@ describe('CapsuleListView', () => {
   });
 
   it('shows empty state when no capsules returned', async () => {
-    vi.mocked(capsuleApi.listCapsules).mockResolvedValueOnce({ data: [], total: 0 });
+    vi.mocked(capsuleApi.listCapsules).mockResolvedValueOnce({
+      data: [],
+      total: 0,
+      page: 1,
+      limit: 10,
+    });
     render(<CapsuleListView />);
     await waitFor(() => {
       expect(screen.getByText('list.empty')).toBeInTheDocument();
@@ -71,7 +76,12 @@ describe('CapsuleListView', () => {
       { id: 'c1', title: 'Cap 1', status: 'ACTIVE', type: 'AUDIO' },
       { id: 'c2', title: 'Cap 2', status: 'DRAFT', type: 'VIDEO' },
     ] as CapsuleDto[];
-    vi.mocked(capsuleApi.listCapsules).mockResolvedValueOnce({ data: capsules, total: 2 });
+    vi.mocked(capsuleApi.listCapsules).mockResolvedValueOnce({
+      data: capsules,
+      total: 2,
+      page: 1,
+      limit: 10,
+    });
     render(<CapsuleListView />);
     await waitFor(() => {
       expect(screen.getAllByTestId('capsule-card')).toHaveLength(2);

@@ -21,7 +21,10 @@ describe('CapsuleMediaPlayer', () => {
   });
 
   it('shows audio player when URL is loaded', async () => {
-    vi.mocked(capsuleApi.getDownloadUrl).mockResolvedValueOnce({ url: 'https://audio.mp3' });
+    vi.mocked(capsuleApi.getDownloadUrl).mockResolvedValueOnce({
+      url: 'https://audio.mp3',
+      expiresAt: '2026-12-31T23:59:59Z',
+    });
     render(<CapsuleMediaPlayer capsuleId="c1" type="audio" />);
     await waitFor(() => {
       expect(screen.getByText('playAudio')).toBeInTheDocument();
@@ -29,7 +32,10 @@ describe('CapsuleMediaPlayer', () => {
   });
 
   it('shows video player when type is video', async () => {
-    vi.mocked(capsuleApi.getDownloadUrl).mockResolvedValueOnce({ url: 'https://video.mp4' });
+    vi.mocked(capsuleApi.getDownloadUrl).mockResolvedValueOnce({
+      url: 'https://video.mp4',
+      expiresAt: '2026-12-31T23:59:59Z',
+    });
     render(<CapsuleMediaPlayer capsuleId="c1" type="video" />);
     await waitFor(() => {
       expect(screen.getByText('playVideo')).toBeInTheDocument();
@@ -53,7 +59,10 @@ describe('CapsuleMediaPlayer', () => {
   });
 
   it('renders download button', async () => {
-    vi.mocked(capsuleApi.getDownloadUrl).mockResolvedValueOnce({ url: 'https://audio.mp3' });
+    vi.mocked(capsuleApi.getDownloadUrl).mockResolvedValueOnce({
+      url: 'https://audio.mp3',
+      expiresAt: '2026-12-31T23:59:59Z',
+    });
     render(<CapsuleMediaPlayer capsuleId="c1" type="audio" />);
     await waitFor(() => {
       expect(screen.getByText('download')).toBeInTheDocument();

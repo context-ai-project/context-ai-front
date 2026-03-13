@@ -30,7 +30,7 @@ const mockSectors: Sector[] = [
     id: 's2',
     name: 'Finance',
     description: 'Finance dept',
-    icon: 'dollar',
+    icon: 'briefcase',
     status: 'active',
     documentCount: 3,
     createdAt: '',
@@ -40,7 +40,7 @@ const mockSectors: Sector[] = [
     id: 's3',
     name: 'Archived',
     description: 'Old',
-    icon: 'archive',
+    icon: 'book',
     status: 'inactive',
     documentCount: 0,
     createdAt: '',
@@ -54,7 +54,18 @@ describe('InviteUserDialog', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(invitationApi.createInvitation).mockResolvedValue({});
+    vi.mocked(invitationApi.createInvitation).mockResolvedValue({
+      id: 'inv-1',
+      email: 'test@example.com',
+      status: 'pending',
+      expiresAt: '2026-01-01T00:00:00Z',
+      createdByUserId: 'u1',
+      createdByName: 'Admin',
+      sectorIds: [],
+      acceptedAt: null,
+      createdAt: '2026-01-01T00:00:00Z',
+      updatedAt: '2026-01-01T00:00:00Z',
+    });
   });
 
   it('renders dialog title and description', () => {
@@ -196,7 +207,7 @@ describe('InviteUserDialog', () => {
         id: 's3',
         name: 'Archived',
         description: 'Old',
-        icon: 'archive',
+        icon: 'book',
         status: 'inactive',
         documentCount: 0,
         createdAt: '',
