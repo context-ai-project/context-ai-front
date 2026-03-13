@@ -278,6 +278,7 @@ export const capsuleApi = {
 
   /**
    * Search the ElevenLabs shared voice library.
+   * @internal Prepared for future Voice Browser UI — no production consumer yet.
    */
   searchSharedVoices: async (query: string): Promise<SharedVoiceInfoDto[]> => {
     return apiClient.get<SharedVoiceInfoDto[]>(

@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, type ReactNode } from 'react';
 import { createStore, useStore } from 'zustand';
 import type { MessageDto } from '@/types/message.types';
+import { logger } from '@/lib/logger';
 
 /**
  * Chat state interface
@@ -59,7 +60,7 @@ const createChatStore = () => {
       set((state) => {
         // Validate message before adding
         if (!message || !message.id || !message.role || !message.content) {
-          console.warn('Attempted to add invalid message:', message);
+          logger.warn('Attempted to add invalid message:', message);
           return state; // Don't update state
         }
         return {

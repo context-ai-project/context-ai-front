@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useMemo, useState, type ReactNode
 import { createStore, useStore } from 'zustand';
 import type { Sector, SectorStatus, CreateSectorDto, UpdateSectorDto } from '@/types/sector.types';
 import { sectorApi } from '@/lib/api/sector.api';
+import { getErrorMessage } from '@/lib/api/error-handler';
 
 // ── Store types ──────────────────────────────────────────────────────────────
 
@@ -93,12 +94,6 @@ function applyStatusChange(sectors: Sector[], id: string, status: SectorStatus):
   return sectors.map((s) =>
     s.id === id ? { ...s, status, updatedAt: new Date().toISOString() } : s,
   );
-}
-
-/** Extract a human-readable error message from an unknown error */
-function getErrorMessage(error: unknown): string {
-  if (error instanceof Error) return error.message;
-  return 'An unexpected error occurred';
 }
 
 // ── Store factory ────────────────────────────────────────────────────────────

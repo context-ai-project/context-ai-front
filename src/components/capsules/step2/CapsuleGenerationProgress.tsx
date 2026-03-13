@@ -5,6 +5,7 @@ import { Loader2, Volume2, Upload, Image, Clapperboard } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import type { CapsuleStatus } from '@/lib/api/capsule.api';
 import { useGenerationProgress, useCurrentCapsule } from '@/stores/capsule.store';
+import { PROGRESS_IMAGES_DONE, PROGRESS_AUDIO_DONE } from '@/constants/validation';
 
 interface CapsuleGenerationProgressProps {
   status: CapsuleStatus;
@@ -12,13 +13,13 @@ interface CapsuleGenerationProgressProps {
 
 function getVideoStageInfo(status: CapsuleStatus, progress: number, t: (key: string) => string) {
   if (status === 'RENDERING') return { Icon: Clapperboard, label: t('assemblingVideo') };
-  if (progress < 40) return { Icon: Image, label: t('generatingImages') };
-  if (progress < 80) return { Icon: Volume2, label: t('generatingAudio') };
+  if (progress < PROGRESS_IMAGES_DONE) return { Icon: Image, label: t('generatingImages') };
+  if (progress < PROGRESS_AUDIO_DONE) return { Icon: Volume2, label: t('generatingAudio') };
   return { Icon: Upload, label: t('uploading') };
 }
 
 function getAudioStageInfo(progress: number, t: (key: string) => string) {
-  if (progress >= 80) return { Icon: Upload, label: t('uploading') };
+  if (progress >= PROGRESS_AUDIO_DONE) return { Icon: Upload, label: t('uploading') };
   return { Icon: Volume2, label: t('synthesizing') };
 }
 

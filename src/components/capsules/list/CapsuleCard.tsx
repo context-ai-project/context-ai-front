@@ -15,17 +15,10 @@ import { CapsuleStatusBadge } from '@/components/capsules/shared/CapsuleStatusBa
 import { CapsuleTypeBadge } from '@/components/capsules/shared/CapsuleTypeBadge';
 import { CapsuleLanguageBadge } from '@/components/capsules/shared/CapsuleLanguageBadge';
 import { routes } from '@/lib/routes';
+import { formatDuration } from '@/lib/utils/format-duration';
+import { formatDate } from '@/lib/utils/format-date';
+import { RESUMABLE_STATUSES } from '@/constants/capsule-status';
 import type { CapsuleDto } from '@/lib/api/capsule.api';
-
-/** Format duration in seconds to m:ss */
-function formatDuration(seconds: number): string {
-  const m = Math.floor(seconds / 60);
-  const s = String(seconds % 60).padStart(2, '0');
-  return `${m}:${s} min`;
-}
-
-/** Statuses that allow resuming the creation wizard */
-const RESUMABLE_STATUSES = new Set(['DRAFT', 'FAILED']);
 
 interface CapsuleCardProps {
   capsule: CapsuleDto;
@@ -81,7 +74,7 @@ export function CapsuleCard({
                 <span />
               )}
               <p className="text-muted-foreground text-xs">
-                {new Date(capsule.createdAt).toLocaleDateString()}
+                {formatDate(capsule.createdAt, locale)}
               </p>
             </div>
           </CardContent>

@@ -9,6 +9,7 @@ import {
   type CapsuleType,
   type VoiceInfoDto,
 } from '@/lib/api/capsule.api';
+import { getErrorMessage } from '@/lib/api/error-handler';
 
 // ── Polling interval ──────────────────────────────────────────────────────
 
@@ -110,11 +111,6 @@ const DEFAULT_WIZARD_STATE: CapsuleWizardState = {
 };
 
 // ── Pure helpers ──────────────────────────────────────────────────────────
-
-function getErrorMessage(error: unknown): string {
-  if (error instanceof Error) return error.message;
-  return 'An unexpected error occurred';
-}
 
 /** Toggle an id in an array (add if absent, remove if present) */
 function toggleId(ids: string[], id: string): string[] {

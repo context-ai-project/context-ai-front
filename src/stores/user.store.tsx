@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import { createStore, useStore } from 'zustand';
+import { logger } from '@/lib/logger';
 
 /**
  * User state interface
@@ -74,7 +75,7 @@ export function UserStoreProvider({ children }: { children: ReactNode }) {
           return createUserStore(parsed);
         }
       } catch (error) {
-        console.warn('Failed to load user data from sessionStorage:', error);
+        logger.warn('Failed to load user data from sessionStorage:', error);
       }
     }
     return createUserStore();
@@ -98,7 +99,7 @@ export function UserStoreProvider({ children }: { children: ReactNode }) {
           }
           previousSectorId = currentSectorId;
         } catch (error) {
-          console.warn('Failed to save user data to sessionStorage:', error);
+          logger.warn('Failed to save user data to sessionStorage:', error);
         }
       }
     });

@@ -10,24 +10,19 @@ import { Card, CardContent } from '@/components/ui/card';
 import { CapsuleStatusBadge } from '@/components/capsules/shared/CapsuleStatusBadge';
 import { CapsuleTypeBadge } from '@/components/capsules/shared/CapsuleTypeBadge';
 import { CapsuleLanguageBadge } from '@/components/capsules/shared/CapsuleLanguageBadge';
-import { CapsuleAudioPlayer } from './CapsuleAudioPlayer';
-import { CapsuleVideoPlayer } from './CapsuleVideoPlayer';
+import { CapsuleMediaPlayer } from './CapsuleMediaPlayer';
 import { DeleteCapsuleDialog } from '@/components/capsules/list/DeleteCapsuleDialog';
 import { capsuleApi, type CapsuleDto } from '@/lib/api/capsule.api';
 import { routes } from '@/lib/routes';
+import { formatDuration } from '@/lib/utils/format-duration';
+import { formatDate } from '@/lib/utils/format-date';
 import { useSession } from 'next-auth/react';
 import { getUserRole } from '@/lib/utils/get-user-role';
 import { hasPermission, CAN_CREATE_CAPSULES, CAN_DELETE_CAPSULES } from '@/constants/permissions';
+import { RESUMABLE_STATUSES, isPublishable, isArchivable } from '@/constants/capsule-status';
 
 interface CapsulePlayerViewProps {
   capsuleId: string;
-}
-
-/** Format duration in seconds to m:ss */
-function formatDuration(seconds: number): string {
-  const m = Math.floor(seconds / 60);
-  const s = String(seconds % 60).padStart(2, '0');
-  return `${m}:${s} min`;
 }
 
 export function CapsulePlayerView({ capsuleId }: CapsulePlayerViewProps) {
@@ -52,7 +47,8 @@ export function CapsulePlayerView({ capsuleId }: CapsulePlayerViewProps) {
         setIsLoading(false);
       })
       .catch((err: unknown) => {
-        setError(err instanceof Error ? err.message : 'Failed to load capsule.');
+        setError(err instanceof Error ? err.message : 'Failed to load capsule');
+
         setIsLoading(false);
       });
   }, [capsuleId]);
@@ -126,7 +122,7 @@ export function CapsulePlayerView({ capsuleId }: CapsulePlayerViewProps) {
           </div>
           {(canManage || canDelete) && (
             <div className="flex items-center gap-2">
-              {canManage && (capsule.status === 'DRAFT' || capsule.status === 'FAILED') && (
+              {canManage && RESUMABLE_STATUSES.has(capsule.status) && (
                 <Link href={routes.capsuleResume(locale, capsule.id)}>
                   <Button size="sm" variant="outline" disabled={isActing}>
                     <PlayCircle className="mr-2 h-4 w-4" />
@@ -134,12 +130,12 @@ export function CapsulePlayerView({ capsuleId }: CapsulePlayerViewProps) {
                   </Button>
                 </Link>
               )}
-              {canManage && capsule.status === 'COMPLETED' && (
+              {canManage && isPublishable(capsule.status) && (
                 <Button size="sm" onClick={handlePublish} disabled={isActing}>
                   {t('actions.publish')}
                 </Button>
               )}
-              {canManage && (capsule.status === 'ACTIVE' || capsule.status === 'COMPLETED') && (
+              {canManage && isArchivable(capsule.status) && (
                 <Button size="sm" variant="outline" onClick={handleArchive} disabled={isActing}>
                   {t('actions.archive')}
                 </Button>
@@ -160,11 +156,11 @@ export function CapsulePlayerView({ capsuleId }: CapsulePlayerViewProps) {
         <h1 className="text-foreground text-2xl font-bold">{capsule.title}</h1>
       </div>
 
-      {/* Video player — videoUrl holds the GCS storage path; signed URL fetched inside component */}
-      {capsule.videoUrl && <CapsuleVideoPlayer capsuleId={capsule.id} />}
-
-      {/* Audio player — audioUrl holds the GCS storage path; signed URL fetched inside component */}
-      {capsule.audioUrl && !capsule.videoUrl && <CapsuleAudioPlayer capsuleId={capsule.id} />}
+      {/* Media player — signed URL fetched inside component */}
+      {capsule.videoUrl && <CapsuleMediaPlayer capsuleId={capsule.id} type="video" />}
+      {capsule.audioUrl && !capsule.videoUrl && (
+        <CapsuleMediaPlayer capsuleId={capsule.id} type="audio" />
+      )}
 
       {/* Metadata */}
       <Card>
@@ -193,9 +189,7 @@ export function CapsulePlayerView({ capsuleId }: CapsulePlayerViewProps) {
           )}
           <div>
             <p className="text-muted-foreground text-xs">{t('player.createdAt')}</p>
-            <p className="text-foreground font-medium">
-              {new Date(capsule.createdAt).toLocaleDateString()}
-            </p>
+            <p className="text-foreground font-medium">{formatDate(capsule.createdAt, locale)}</p>
           </div>
         </CardContent>
       </Card>

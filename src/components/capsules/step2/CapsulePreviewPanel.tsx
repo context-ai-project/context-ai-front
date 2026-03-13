@@ -14,12 +14,7 @@ import {
   useGenerateAudio,
 } from '@/stores/capsule.store';
 import { capsuleApi } from '@/lib/api/capsule.api';
-
-function formatDuration(seconds: number): string {
-  const m = Math.floor(seconds / 60);
-  const s = String(seconds % 60).padStart(2, '0');
-  return `${m}:${s} min`;
-}
+import { formatDuration } from '@/lib/utils/format-duration';
 
 export function CapsulePreviewPanel() {
   const t = useTranslations('capsules.wizard');

@@ -13,6 +13,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { notificationApi, type NotificationResponse } from '@/lib/api/notification.api';
+import { UNREAD_BADGE_MAX } from '@/constants/validation';
 
 /** Polling interval for fetching unread count (60 seconds) */
 const POLL_INTERVAL_MS = 60_000;
@@ -213,7 +214,7 @@ export function NotificationBell() {
           <Bell className="h-4 w-4" />
           {unreadCount > 0 && (
             <span className="bg-destructive text-destructive-foreground absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-bold">
-              {unreadCount > 99 ? '99+' : unreadCount}
+              {unreadCount > UNREAD_BADGE_MAX ? `${UNREAD_BADGE_MAX}+` : unreadCount}
             </span>
           )}
         </Button>

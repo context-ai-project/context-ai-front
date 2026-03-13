@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { adminApi, type AdminUserResponse } from '@/lib/api/admin.api';
+import { InlineError } from '@/components/shared/InlineError';
 
 interface ToggleUserStatusDialogProps {
   open: boolean;
@@ -61,11 +62,7 @@ export function ToggleUserStatusDialog({
         <div className="flex flex-col gap-4">
           <p className="text-muted-foreground text-sm">{message}</p>
 
-          {error && (
-            <div className="border-destructive/30 bg-destructive/5 text-destructive rounded-md border p-2 text-sm">
-              {error}
-            </div>
-          )}
+          {error && <InlineError message={error} />}
 
           <div className="flex justify-end gap-2">
             <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isSaving}>
