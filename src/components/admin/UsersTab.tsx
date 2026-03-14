@@ -17,6 +17,8 @@ import {
 import { getUserInitials } from '@/lib/utils/get-user-initials';
 import type { AdminUserResponse } from '@/lib/api/admin.api';
 import type { Sector } from '@/types/sector.types';
+import { InlineError } from '@/components/shared/InlineError';
+import { formatDate } from '@/lib/utils/format-date';
 import { ChangeRoleDialog } from './ChangeRoleDialog';
 import { ToggleUserStatusDialog } from './ToggleUserStatusDialog';
 import { InviteUserDialog } from './InviteUserDialog';
@@ -107,11 +109,7 @@ export function UsersTab({
       </div>
 
       {/* Error banner */}
-      {error && (
-        <div className="border-destructive/30 bg-destructive/5 text-destructive mb-4 rounded-md border p-3 text-sm">
-          {error}
-        </div>
-      )}
+      {error && <InlineError message={error} className="mb-4" />}
 
       {/* Loading state */}
       {isLoading && users.length === 0 && (
@@ -199,11 +197,7 @@ export function UsersTab({
 
                         {/* Joined */}
                         <td className="text-muted-foreground px-5 py-3">
-                          {new Date(user.createdAt).toLocaleDateString('en-US', {
-                            month: 'short',
-                            day: 'numeric',
-                            year: 'numeric',
-                          })}
+                          {formatDate(user.createdAt)}
                         </td>
 
                         {/* Actions */}

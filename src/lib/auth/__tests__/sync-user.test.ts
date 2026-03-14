@@ -1,8 +1,13 @@
 import { syncUserWithBackend, extractProfileData } from '../sync-user';
 
-// Silence console in tests
-vi.spyOn(console, 'warn').mockImplementation(() => {});
-const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+const loggerErrorSpy = vi.fn();
+vi.mock('@/lib/logger', () => ({
+  logger: {
+    warn: vi.fn(),
+    error: (...args: unknown[]) => loggerErrorSpy(...args),
+    info: vi.fn(),
+  },
+}));
 
 // We mock fetch per-test to avoid pollution
 const originalFetch = global.fetch;
@@ -60,7 +65,7 @@ describe('syncUserWithBackend', () => {
     const result = await syncUserWithBackend(validProfile);
 
     expect(result).toBeNull();
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
+    expect(loggerErrorSpy).toHaveBeenCalledWith(
       expect.stringContaining('INTERNAL_API_KEY is not configured'),
     );
   });

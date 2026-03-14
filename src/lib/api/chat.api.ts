@@ -65,7 +65,8 @@ export const chatApi = {
   },
 
   /**
-   * Get list of conversations for a user
+   * Get list of conversations for a user.
+   * @internal Prepared for future Conversations UI — no production consumer yet.
    */
   getConversations: async (
     userId: string,
@@ -86,7 +87,8 @@ export const chatApi = {
   },
 
   /**
-   * Get a specific conversation by ID
+   * Get a specific conversation by ID.
+   * @internal Prepared for future Conversations UI — no production consumer yet.
    */
   getConversation: async (conversationId: string, userId: string): Promise<ConversationDetail> => {
     const params = new URLSearchParams({ userId: encodeURIComponent(userId) });
@@ -96,7 +98,8 @@ export const chatApi = {
   },
 
   /**
-   * Delete a conversation (soft delete)
+   * Delete a conversation (soft delete).
+   * @internal Prepared for future Conversations UI — no production consumer yet.
    */
   deleteConversation: async (conversationId: string, userId: string): Promise<void> => {
     const params = new URLSearchParams({ userId: encodeURIComponent(userId) });

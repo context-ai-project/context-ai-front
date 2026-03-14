@@ -11,6 +11,7 @@ import {
   useSelectedDocumentIds,
   useToggleDocument,
 } from '@/stores/capsule.store';
+import { formatDate } from '@/lib/utils/format-date';
 
 /** Only documents in these statuses are usable for capsule generation */
 const USABLE_STATUSES = new Set<KnowledgeSourceDto['status']>(['COMPLETED']);
@@ -115,7 +116,7 @@ export function CapsuleDocumentList() {
                   <FileText className="text-muted-foreground h-4 w-4 shrink-0" />
                   <span className="flex-1 truncate font-medium">{doc.title}</span>
                   <span className="text-muted-foreground shrink-0 text-xs">
-                    {new Date(doc.createdAt).toLocaleDateString()}
+                    {formatDate(doc.createdAt)}
                   </span>
                 </button>
               </li>

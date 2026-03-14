@@ -8,30 +8,9 @@ import { MarkdownRenderer } from '@/components/shared/MarkdownRenderer';
 import { StructuredResponse } from '@/components/chat/StructuredResponse';
 import { SourceList } from './SourceList';
 import { TypingIndicator } from './TypingIndicator';
-import { format } from 'date-fns';
 import { useTranslations } from 'next-intl';
-
-/** Normalize for comparison: trim, collapse spaces, lowercase. Avoids ReDoS. */
-function normalizeLine(s: string): string {
-  return s.trim().replace(/\s+/g, ' ').toLowerCase();
-}
-
-/** Removes internal "type: info" lines. Uses string checks instead of backtracking regex. */
-function sanitizeAssistantContent(text: string): string {
-  if (!text?.trim()) return text;
-  return text
-    .split('\n')
-    .filter((line) => !isTypeInfoOnlyLine(line))
-    .join('\n');
-}
-
-function isTypeInfoOnlyLine(line: string): boolean {
-  let t = line.trim();
-  const c = t.charAt(0);
-  if (c === '•' || c === '-' || c === '*') t = t.slice(1).trim();
-  const n = normalizeLine(t);
-  return n === 'type: info' || n === '"type":"info"';
-}
+import { sanitizeContent } from '@/lib/utils/chat-sanitize';
+import { formatDateTime } from '@/lib/utils/format-date';
 
 interface MessageListProps {
   messages: MessageDto[];
@@ -55,7 +34,7 @@ function MessageContent({ message, isAssistant }: { message: MessageDto; isAssis
   if (isAssistant) {
     return (
       <MarkdownRenderer
-        content={sanitizeAssistantContent(message.content)}
+        content={sanitizeContent(message.content)}
         className="text-chat-bubble-assistant-foreground"
         data-testid="markdown-content"
       />
@@ -135,7 +114,7 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
                     isUser ? 'text-chat-bubble-user-muted' : 'text-chat-bubble-assistant-muted',
                   )}
                 >
-                  {format(new Date(message.createdAt), 'MMM dd, HH:mm')}
+                  {formatDateTime(message.createdAt)}
                 </span>
               </div>
             </div>

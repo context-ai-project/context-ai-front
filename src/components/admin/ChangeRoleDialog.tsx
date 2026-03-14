@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { InlineError } from '@/components/shared/InlineError';
 import {
   Select,
   SelectContent,
@@ -78,11 +79,7 @@ export function ChangeRoleDialog({ open, onOpenChange, user, onSuccess }: Change
             </SelectContent>
           </Select>
 
-          {error && (
-            <div className="border-destructive/30 bg-destructive/5 text-destructive rounded-md border p-2 text-sm">
-              {error}
-            </div>
-          )}
+          {error && <InlineError message={error} />}
 
           <div className="flex justify-end gap-2">
             <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isSaving}>

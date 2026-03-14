@@ -7,6 +7,7 @@ import { MessageList } from './MessageList';
 import { MessageInput } from './MessageInput';
 import { EmptyState } from './EmptyState';
 import { ErrorState } from './ErrorState';
+import { useLocale } from 'next-intl';
 import { useChatStore } from '@/stores/chat.store';
 import { useCurrentSectorId } from '@/stores/user.store';
 import { chatApi } from '@/lib/api/chat.api';
@@ -20,6 +21,7 @@ import { DEFAULT_SECTOR_ID } from '@/constants/sectors';
  */
 export function ChatContainer() {
   const { data: session } = useSession();
+  const locale = useLocale();
   const currentSectorId = useCurrentSectorId();
   const {
     messages,
@@ -64,6 +66,7 @@ export function ChatContainer() {
         conversationId: conversationId || undefined,
         sectorId: currentSectorId || DEFAULT_SECTOR_ID,
         query: messageContent,
+        language: locale,
       });
 
       // Validate backend response

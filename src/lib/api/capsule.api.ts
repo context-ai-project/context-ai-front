@@ -9,11 +9,18 @@ import { apiClient } from './client';
 
 // ── Enums ──────────────────────────────────────────────────────────────────
 
-export type CapsuleType = 'VIDEO' | 'AUDIO' | 'BOTH';
+export type CapsuleType = 'VIDEO' | 'AUDIO';
 
-export type CapsuleStatus = 'DRAFT' | 'GENERATING' | 'COMPLETED' | 'ACTIVE' | 'FAILED' | 'ARCHIVED';
+export type CapsuleStatus =
+  | 'DRAFT'
+  | 'GENERATING_ASSETS'
+  | 'RENDERING'
+  | 'COMPLETED'
+  | 'ACTIVE'
+  | 'FAILED'
+  | 'ARCHIVED';
 
-export type CapsuleGenerationStep = 'SCRIPT' | 'AUDIO' | 'VIDEO' | 'POSTPROCESS';
+export type CapsuleGenerationStep = 'SCRIPT' | 'AUDIO' | 'IMAGES' | 'RENDERING';
 
 // ── DTOs ───────────────────────────────────────────────────────────────────
 
@@ -75,6 +82,7 @@ export interface CapsuleStatusResponseDto {
   progress?: number;
   errorMessage?: string;
   audioUrl?: string;
+  videoUrl?: string;
 }
 
 /** Response DTO for the capsule generation quota endpoint */
@@ -215,13 +223,13 @@ export const capsuleApi = {
    * Trigger the full audio generation pipeline (ElevenLabs TTS + GCS upload).
    * Returns 202 Accepted with no body — poll getCapsuleStatus() for progress.
    */
-  generateAudio: async (id: string, voiceId: string): Promise<void> => {
-    await apiClient.post<void>(`/capsules/${encodeURIComponent(id)}/generate`, { voiceId });
+  generateAudio: async (id: string, voiceId: string, script?: string): Promise<void> => {
+    await apiClient.post<void>(`/capsules/${encodeURIComponent(id)}/generate`, { voiceId, script });
   },
 
   /**
    * Poll the generation status of a capsule.
-   * Used while status === 'GENERATING' to track pipeline progress.
+   * Used while status is GENERATING_ASSETS or RENDERING to track pipeline progress.
    */
   getCapsuleStatus: async (id: string): Promise<CapsuleStatusResponseDto> => {
     return apiClient.get<CapsuleStatusResponseDto>(`/capsules/${encodeURIComponent(id)}/status`);
@@ -270,6 +278,7 @@ export const capsuleApi = {
 
   /**
    * Search the ElevenLabs shared voice library.
+   * @internal Prepared for future Voice Browser UI — no production consumer yet.
    */
   searchSharedVoices: async (query: string): Promise<SharedVoiceInfoDto[]> => {
     return apiClient.get<SharedVoiceInfoDto[]>(

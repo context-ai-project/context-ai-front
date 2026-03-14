@@ -1,6 +1,7 @@
 import NextAuth from 'next-auth';
 import Auth0Provider from 'next-auth/providers/auth0';
 import { syncUserWithBackend, extractProfileData } from '@/lib/auth/sync-user';
+import { logger } from '@/lib/logger';
 
 /**
  * NextAuth.js v5 configuration with Auth0 provider
@@ -57,7 +58,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
       // If userId is not available, log warning
       if (!token.userId) {
-        console.warn('[NextAuth] Session created without userId - user sync may have failed');
+        logger.warn('[NextAuth] Session created without userId - user sync may have failed');
       }
 
       return session;

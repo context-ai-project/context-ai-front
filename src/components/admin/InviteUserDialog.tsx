@@ -14,6 +14,12 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog';
 import { invitationApi } from '@/lib/api/invitation.api';
+import { InlineError } from '@/components/shared/InlineError';
+import {
+  EMAIL_MAX_LENGTH,
+  NAME_MIN_LENGTH,
+  SUCCESS_DIALOG_CLOSE_DELAY_MS,
+} from '@/constants/validation';
 import type { Sector } from '@/types/sector.types';
 
 /**
@@ -22,7 +28,7 @@ import type { Sector } from '@/types/sector.types';
  */
 function isValidEmail(email: string): boolean {
   const trimmed = email.trim();
-  if (trimmed.length === 0 || trimmed.length > 254) return false;
+  if (trimmed.length === 0 || trimmed.length > EMAIL_MAX_LENGTH) return false;
   const atIndex = trimmed.indexOf('@');
   if (atIndex < 1) return false;
   const dotIndex = trimmed.lastIndexOf('.');
@@ -77,7 +83,7 @@ export function InviteUserDialog({
     setSuccessMessage(null);
 
     // Client-side validation
-    if (!name.trim() || name.trim().length < 2) {
+    if (!name.trim() || name.trim().length < NAME_MIN_LENGTH) {
       setError(t('invite.errorInvalidEmail'));
       return;
     }
@@ -104,7 +110,7 @@ export function InviteUserDialog({
       setTimeout(() => {
         onOpenChange(false);
         onSuccess?.();
-      }, 1500);
+      }, SUCCESS_DIALOG_CLOSE_DELAY_MS);
     } catch (err: unknown) {
       if (err instanceof Error) {
         // Map known backend error messages
@@ -199,11 +205,7 @@ export function InviteUserDialog({
           )}
 
           {/* Error message */}
-          {error && (
-            <div className="border-destructive/30 bg-destructive/5 text-destructive rounded-md border p-2 text-sm">
-              {error}
-            </div>
-          )}
+          {error && <InlineError message={error} />}
 
           {/* Action buttons */}
           <div className="flex justify-end gap-2">

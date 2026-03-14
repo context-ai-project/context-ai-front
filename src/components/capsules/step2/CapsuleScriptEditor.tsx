@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Loader2, Sparkles } from 'lucide-react';
@@ -10,13 +10,18 @@ import {
   useIsGeneratingScript,
   useGenerateScript,
 } from '@/stores/capsule.store';
+import { countWords, MAX_SCRIPT_WORDS } from '@/lib/utils/word-count';
 
 export function CapsuleScriptEditor() {
   const t = useTranslations('capsules.wizard');
+  const locale = useLocale();
   const script = useCapsuleScript();
   const setScript = useSetScript();
   const isGeneratingScript = useIsGeneratingScript();
   const generateScript = useGenerateScript();
+
+  const wordCount = countWords(script);
+  const isOverLimit = wordCount > MAX_SCRIPT_WORDS;
 
   return (
     <div className="flex flex-col gap-2">
@@ -28,7 +33,7 @@ export function CapsuleScriptEditor() {
           type="button"
           size="sm"
           variant="outline"
-          onClick={generateScript}
+          onClick={() => generateScript(locale)}
           disabled={isGeneratingScript}
         >
           {isGeneratingScript ? (
@@ -50,9 +55,19 @@ export function CapsuleScriptEditor() {
         onChange={(e) => setScript(e.target.value)}
         placeholder={t('scriptPlaceholder')}
         rows={14}
-        className="resize-none font-mono text-sm"
+        className={`resize-none font-mono text-sm ${isOverLimit ? 'border-destructive focus-visible:ring-destructive' : ''}`}
         disabled={isGeneratingScript}
       />
+      <div className="flex items-center justify-between">
+        <p
+          className={`text-xs ${isOverLimit ? 'text-destructive font-medium' : 'text-muted-foreground'}`}
+        >
+          {wordCount} / {MAX_SCRIPT_WORDS} {t('words')}
+        </p>
+        {isOverLimit && (
+          <p className="text-destructive text-xs font-medium">{t('scriptTooLong')}</p>
+        )}
+      </div>
     </div>
   );
 }

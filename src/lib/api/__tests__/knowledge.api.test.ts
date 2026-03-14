@@ -110,11 +110,9 @@ describe('knowledgeApi', () => {
       const mockResponse: UploadDocumentResponse = {
         sourceId: 'new-source-1',
         title: 'Test Doc',
-        sectorId: 'sector-1',
-        sourceType: 'PDF',
+        fragmentCount: 10,
+        contentSize: 2048,
         status: 'COMPLETED',
-        totalFragments: 10,
-        processingTimeMs: 500,
       };
 
       mockPostFormData.mockResolvedValueOnce(mockResponse);
@@ -142,11 +140,9 @@ describe('knowledgeApi', () => {
       mockPostFormData.mockResolvedValueOnce({
         sourceId: 's1',
         title: 'T',
-        sectorId: 's',
-        sourceType: 'PDF',
+        fragmentCount: 1,
+        contentSize: 512,
         status: 'COMPLETED',
-        totalFragments: 1,
-        processingTimeMs: 100,
       });
 
       const file = new File(['content'], 'test.pdf', { type: 'application/pdf' });

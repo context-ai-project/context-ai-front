@@ -4,6 +4,7 @@ import type { StructuredRagResponse } from '@/types/message.types';
 import { MarkdownRenderer } from '@/components/shared/MarkdownRenderer';
 import { cn } from '@/lib/utils';
 import { Info, ListOrdered, AlertTriangle, Lightbulb } from 'lucide-react';
+import { isInternalTypeLine, sanitizeContent } from '@/lib/utils/chat-sanitize';
 
 const SECTION_ICONS = {
   info: Info,
@@ -28,34 +29,6 @@ interface StructuredResponseProps {
  * Renders a structured RAG response with summary, sections, key points, and related topics.
  * Section types (info, steps, warning, tip) get distinct visual treatment.
  */
-/** Normalize string for safe comparison: trim, collapse spaces, lowercase. Avoids ReDoS. */
-function normalizeForCompare(s: string): string {
-  return s.trim().replace(/\s+/g, ' ').toLowerCase();
-}
-
-/** Hide internal "type: info" entries. Uses string comparison instead of backtracking regex. */
-function isInternalTypeLine(value: string): boolean {
-  const n = normalizeForCompare(value);
-  return n === 'type: info' || n === '"type":"info"';
-}
-
-function isTypeInfoOnlyLine(line: string): boolean {
-  let t = line.trim();
-  const bullet = t.charAt(0);
-  if (bullet === '•' || bullet === '-' || bullet === '*') t = t.slice(1).trim();
-  const n = normalizeForCompare(t);
-  return n === 'type: info' || n === '"type":"info"';
-}
-
-/** Remove lines that are only "type: info" (or bullet variants). Non-backtracking. */
-function sanitizeStructuredText(text: string): string {
-  if (!text?.trim()) return text;
-  return text
-    .split('\n')
-    .filter((line) => !isTypeInfoOnlyLine(line))
-    .join('\n');
-}
-
 export function StructuredResponse({ data, className }: StructuredResponseProps) {
   const { summary, sections, keyPoints, relatedTopics } = data;
   const filteredKeyPoints = keyPoints?.filter((p) => !isInternalTypeLine(p));
@@ -64,7 +37,7 @@ export function StructuredResponse({ data, className }: StructuredResponseProps)
     <div className={cn('space-y-4', className)} data-testid="structured-response">
       {/* Brief summary */}
       <div className="text-sm leading-relaxed" data-testid="structured-summary">
-        <MarkdownRenderer content={sanitizeStructuredText(summary)} />
+        <MarkdownRenderer content={sanitizeContent(summary)} />
       </div>
 
       {/* Sections with type-based styling */}
@@ -84,7 +57,7 @@ export function StructuredResponse({ data, className }: StructuredResponseProps)
                   <h4 className="text-sm font-semibold">{section.title}</h4>
                 </div>
                 <div className="text-sm leading-relaxed">
-                  <MarkdownRenderer content={sanitizeStructuredText(section.content)} />
+                  <MarkdownRenderer content={sanitizeContent(section.content)} />
                 </div>
               </div>
             );

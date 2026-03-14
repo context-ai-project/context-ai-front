@@ -1,6 +1,6 @@
 'use client';
 
-import { Headphones, Video, Layers } from 'lucide-react';
+import { Headphones, Video } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import type { CapsuleType } from '@/lib/api/capsule.api';
 
@@ -11,13 +11,11 @@ interface CapsuleTypeBadgeProps {
 const TYPE_ICON: Record<CapsuleType, React.ElementType> = {
   AUDIO: Headphones,
   VIDEO: Video,
-  BOTH: Layers,
 };
 
 const TYPE_LABEL: Record<CapsuleType, string> = {
   AUDIO: 'Audio',
   VIDEO: 'Video',
-  BOTH: 'Audio + Video',
 };
 
 export function CapsuleTypeBadge({ type }: CapsuleTypeBadgeProps) {
