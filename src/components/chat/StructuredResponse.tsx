@@ -29,34 +29,6 @@ interface StructuredResponseProps {
  * Renders a structured RAG response with summary, sections, key points, and related topics.
  * Section types (info, steps, warning, tip) get distinct visual treatment.
  */
-/** Normalize string for safe comparison: trim, collapse spaces, lowercase. Avoids ReDoS. */
-function normalizeForCompare(s: string): string {
-  return s.trim().replace(/\s+/g, ' ').toLowerCase();
-}
-
-/** Hide internal "type: info" entries. Uses string comparison instead of backtracking regex. */
-function isInternalTypeLine(value: string): boolean {
-  const n = normalizeForCompare(value);
-  return n === 'type: info' || n === '"type":"info"';
-}
-
-function isTypeInfoOnlyLine(line: string): boolean {
-  let t = line.trim();
-  const bullet = t.charAt(0);
-  if (bullet === '•' || bullet === '-' || bullet === '*') t = t.slice(1).trim();
-  const n = normalizeForCompare(t);
-  return n === 'type: info' || n === '"type":"info"';
-}
-
-/** Remove lines that are only "type: info" (or bullet variants). Non-backtracking. */
-function sanitizeStructuredText(text: string): string {
-  if (!text?.trim()) return text;
-  return text
-    .split('\n')
-    .filter((line) => !isTypeInfoOnlyLine(line))
-    .join('\n');
-}
-
 export function StructuredResponse({ data, className }: StructuredResponseProps) {
   const { summary, sections, keyPoints, relatedTopics } = data;
   const filteredKeyPoints = keyPoints?.filter((p) => !isInternalTypeLine(p));

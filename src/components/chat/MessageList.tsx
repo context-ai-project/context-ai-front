@@ -12,28 +12,6 @@ import { useTranslations } from 'next-intl';
 import { sanitizeContent } from '@/lib/utils/chat-sanitize';
 import { formatDateTime } from '@/lib/utils/format-date';
 
-/** Normalize for comparison: trim, collapse spaces, lowercase. Avoids ReDoS. */
-function normalizeLine(s: string): string {
-  return s.trim().replace(/\s+/g, ' ').toLowerCase();
-}
-
-/** Removes internal "type: info" lines. Uses string checks instead of backtracking regex. */
-function sanitizeAssistantContent(text: string): string {
-  if (!text?.trim()) return text;
-  return text
-    .split('\n')
-    .filter((line) => !isTypeInfoOnlyLine(line))
-    .join('\n');
-}
-
-function isTypeInfoOnlyLine(line: string): boolean {
-  let t = line.trim();
-  const c = t.charAt(0);
-  if (c === '•' || c === '-' || c === '*') t = t.slice(1).trim();
-  const n = normalizeLine(t);
-  return n === 'type: info' || n === '"type":"info"';
-}
-
 interface MessageListProps {
   messages: MessageDto[];
   isLoading: boolean;
