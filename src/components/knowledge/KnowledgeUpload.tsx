@@ -288,8 +288,7 @@ export function KnowledgeUpload() {
                 <span>
                   {t('success')}{' '}
                   {t('successDetails', {
-                    fragments: result.totalFragments,
-                    time: result.processingTimeMs,
+                    fragments: result.fragmentCount,
                   })}
                 </span>
               </div>

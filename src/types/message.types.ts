@@ -125,6 +125,7 @@ export interface ChatQueryDto {
   conversationId?: string;
   sectorId: string;
   query: string; // Backend expects 'query', not 'message'
+  language?: string;
 }
 
 /**

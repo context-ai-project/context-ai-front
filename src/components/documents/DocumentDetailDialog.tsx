@@ -13,7 +13,6 @@ import {
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { MarkdownRenderer } from '@/components/shared/MarkdownRenderer';
 import { knowledgeApi } from '@/lib/api/knowledge.api';
@@ -21,9 +20,6 @@ import type { KnowledgeSourceDto, KnowledgeSourceDetailDto } from '@/lib/api/kno
 import { useAllSectors } from '@/stores/sector.store';
 import { TYPE_ICONS, STATUS_BADGE_VARIANTS } from '@/constants/document-mappings';
 import { formatDate } from '@/lib/utils/format-date';
-
-/** Maximum content length shown before truncation */
-const MAX_PREVIEW_CHARS = 8000;
 
 /** Minimum line length to trigger paragraph splitting */
 const LONG_LINE_THRESHOLD = 200;
@@ -157,11 +153,7 @@ export function DocumentDetailDialog({ document, open, onOpenChange }: DocumentD
   const sectorName = allSectors.find((s) => s.id === document.sectorId)?.name ?? 'Unknown';
 
   const rawContent = detail?.content ?? null;
-  const truncated =
-    rawContent && rawContent.length > MAX_PREVIEW_CHARS
-      ? rawContent.slice(0, MAX_PREVIEW_CHARS) + '…'
-      : rawContent;
-  const contentPreview = truncated ? normalizeDocumentContent(truncated) : null;
+  const contentPreview = rawContent ? normalizeDocumentContent(rawContent) : null;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -229,13 +221,13 @@ export function DocumentDetailDialog({ document, open, onOpenChange }: DocumentD
 
           {/* Rich content preview */}
           {!isLoading && !loadError && contentPreview && (
-            <ScrollArea className="h-[400px] rounded-md border bg-white p-6">
+            <div className="h-[400px] overflow-auto rounded-md border bg-white p-6">
               <MarkdownRenderer
                 content={contentPreview}
                 className="text-foreground"
                 data-testid="document-content"
               />
-            </ScrollArea>
+            </div>
           )}
 
           {/* No content */}

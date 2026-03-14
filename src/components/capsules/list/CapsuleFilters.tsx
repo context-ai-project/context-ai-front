@@ -22,14 +22,15 @@ interface CapsuleFiltersProps {
 
 const STATUSES: CapsuleStatus[] = [
   'DRAFT',
-  'GENERATING',
+  'GENERATING_ASSETS',
+  'RENDERING',
   'COMPLETED',
   'ACTIVE',
   'FAILED',
   'ARCHIVED',
 ];
 
-const TYPES: CapsuleType[] = ['AUDIO', 'VIDEO', 'BOTH'];
+const TYPES: CapsuleType[] = ['AUDIO', 'VIDEO'];
 
 export function CapsuleFilters({ filters, onChange }: CapsuleFiltersProps) {
   const t = useTranslations('capsules');

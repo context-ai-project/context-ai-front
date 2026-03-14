@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { createStore, useStore } from 'zustand';
 import {
   capsuleApi,
@@ -9,11 +9,15 @@ import {
   type CapsuleType,
   type VoiceInfoDto,
 } from '@/lib/api/capsule.api';
+import { getErrorMessage } from '@/lib/api/error-handler';
 
 // ── Polling interval ──────────────────────────────────────────────────────
 
-/** How often (ms) to poll the status endpoint while generation is running */
-const POLL_INTERVAL_MS = 3_000;
+/** How often (ms) to poll the status endpoint while audio generation is running */
+const AUDIO_POLL_INTERVAL_MS = 3_000;
+
+/** Longer poll interval for video (3-8 min generation time) */
+const VIDEO_POLL_INTERVAL_MS = 10_000;
 
 // ── Store types ───────────────────────────────────────────────────────────
 
@@ -74,7 +78,7 @@ interface CapsuleWizardActions {
   /** Fetch available ElevenLabs voices */
   loadVoices: () => Promise<void>;
   /** Generate narration script via Gemini RAG */
-  generateScript: () => Promise<void>;
+  generateScript: (language: string) => Promise<void>;
   /** Trigger ElevenLabs audio pipeline and start polling */
   generateAudio: () => Promise<void>;
   /** Poll the generation status endpoint once */
@@ -108,11 +112,6 @@ const DEFAULT_WIZARD_STATE: CapsuleWizardState = {
 
 // ── Pure helpers ──────────────────────────────────────────────────────────
 
-function getErrorMessage(error: unknown): string {
-  if (error instanceof Error) return error.message;
-  return 'An unexpected error occurred';
-}
-
 /** Toggle an id in an array (add if absent, remove if present) */
 function toggleId(ids: string[], id: string): string[] {
   return ids.includes(id) ? ids.filter((x) => x !== id) : [...ids, id];
@@ -123,13 +122,24 @@ function toggleId(ids: string[], id: string): string[] {
 type SetFn = (partial: Partial<CapsuleStoreState>) => void;
 type GetFn = () => CapsuleStoreState;
 
+let activePollTimer: ReturnType<typeof setTimeout> | null = null;
+
+function cancelPolling(): void {
+  if (activePollTimer !== null) {
+    clearTimeout(activePollTimer);
+    activePollTimer = null;
+  }
+}
+
 /**
  * Polls the generation status endpoint until the capsule reaches a terminal state.
- * Extracted at module level to avoid exceeding SonarJS max function nesting depth.
+ * Uses a cancellable setTimeout so navigation away cleans up safely.
  */
 async function pollGenerationStatus(id: string, set: SetFn, get: GetFn): Promise<void> {
-  const { isGeneratingAudio } = get();
+  const { isGeneratingAudio, capsuleType } = get();
   if (!isGeneratingAudio) return;
+
+  const pollInterval = capsuleType === 'VIDEO' ? VIDEO_POLL_INTERVAL_MS : AUDIO_POLL_INTERVAL_MS;
 
   try {
     const status = await capsuleApi.getCapsuleStatus(id);
@@ -146,18 +156,18 @@ async function pollGenerationStatus(id: string, set: SetFn, get: GetFn): Promise
     } else if (status.status === 'FAILED') {
       set({
         isGeneratingAudio: false,
-        error: status.errorMessage ?? 'Audio generation failed.',
+        error: status.errorMessage ?? 'Generation failed.',
         generationProgress: 0,
       });
     } else {
-      setTimeout(() => {
+      activePollTimer = setTimeout(() => {
         pollGenerationStatus(id, set, get).catch(() => {
-          set({ isGeneratingAudio: false, error: 'Polling failed.' });
+          /* swallow — component may be unmounted */
         });
-      }, POLL_INTERVAL_MS);
+      }, pollInterval);
     }
-  } catch (error: unknown) {
-    set({ isGeneratingAudio: false, error: getErrorMessage(error) });
+  } catch {
+    /* swallow network errors silently — backend keeps processing */
   }
 }
 
@@ -215,6 +225,12 @@ const createCapsuleStore = () => {
           generationStatus: capsule.status,
           currentStep: 2,
           isCreating: false,
+          script: '',
+          selectedVoiceId: null,
+          error: null,
+          isGeneratingAudio: false,
+          isGeneratingScript: false,
+          generationProgress: 0,
         });
       } catch (error: unknown) {
         set({ error: getErrorMessage(error), isCreating: false });
@@ -223,7 +239,10 @@ const createCapsuleStore = () => {
 
     previousStep: () => set({ currentStep: 1, error: null }),
 
-    resetWizard: () => set(DEFAULT_WIZARD_STATE),
+    resetWizard: () => {
+      cancelPolling();
+      set(DEFAULT_WIZARD_STATE);
+    },
 
     resumeWizard: (capsule) => {
       const sourceIds = (capsule.sources ?? []).map((s) => s.id);
@@ -255,13 +274,13 @@ const createCapsuleStore = () => {
       }
     },
 
-    generateScript: async () => {
+    generateScript: async (language: string) => {
       const { currentCapsuleId } = get();
       if (!currentCapsuleId) return;
 
       set({ isGeneratingScript: true, error: null });
       try {
-        const result = await capsuleApi.generateScript(currentCapsuleId);
+        const result = await capsuleApi.generateScript(currentCapsuleId, language);
         set({ script: result.script, isGeneratingScript: false });
       } catch (error: unknown) {
         set({ error: getErrorMessage(error), isGeneratingScript: false });
@@ -277,19 +296,18 @@ const createCapsuleStore = () => {
 
       set({
         isGeneratingAudio: true,
-        generationStatus: 'GENERATING',
+        generationStatus: 'GENERATING_ASSETS',
         generationProgress: 0,
         error: null,
       });
       try {
-        // Persist manual script edits before generating
+        // Persist voice selection
         await capsuleApi.updateCapsule(currentCapsuleId, {
-          script: script.trim(),
           audioVoiceId: selectedVoiceId,
         });
 
-        // Kick off the generation pipeline
-        await capsuleApi.generateAudio(currentCapsuleId, selectedVoiceId);
+        // Kick off the generation pipeline (script is sent atomically)
+        await capsuleApi.generateAudio(currentCapsuleId, selectedVoiceId, script.trim());
 
         // Start polling
         await pollGenerationStatus(currentCapsuleId, set, get);
@@ -337,6 +355,12 @@ const CapsuleStoreContext = createContext<CapsuleStore | null>(null);
  */
 export function CapsuleStoreProvider({ children }: { children: ReactNode }) {
   const [store] = useState(createCapsuleStore);
+
+  useEffect(() => {
+    return () => {
+      cancelPolling();
+    };
+  }, []);
 
   return <CapsuleStoreContext.Provider value={store}>{children}</CapsuleStoreContext.Provider>;
 }

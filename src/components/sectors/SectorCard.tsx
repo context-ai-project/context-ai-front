@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import type { Sector } from '@/types/sector.types';
 import { SectorIconRenderer } from './sector-icons';
+import { formatDate } from '@/lib/utils/format-date';
 
 interface SectorCardProps {
   sector: Sector;
@@ -22,11 +23,7 @@ export function SectorCard({ sector, onClick }: SectorCardProps) {
   const t = useTranslations('sectors');
   const isActive = sector.status === 'active';
 
-  const formattedDate = new Date(sector.updatedAt).toLocaleDateString(undefined, {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  });
+  const formattedDate = formatDate(sector.updatedAt);
 
   return (
     <Card

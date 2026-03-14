@@ -70,7 +70,8 @@ export function getErrorMessage(error: unknown): string {
 }
 
 /**
- * Type guard to check if an error is an APIError
+ * Type guard to check if an error is an APIError.
+ * @internal Currently only used in tests — consider removing if no production consumer is added.
  */
 export function isApiError(error: unknown): error is APIError {
   return error instanceof APIError;

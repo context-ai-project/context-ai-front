@@ -144,10 +144,14 @@ describe('Capsule API', () => {
 
   describe('getCapsuleStatus', () => {
     it('calls GET status', async () => {
-      mockGet.mockResolvedValueOnce({ capsuleId: 'cap-1', status: 'GENERATING', progress: 50 });
+      mockGet.mockResolvedValueOnce({
+        capsuleId: 'cap-1',
+        status: 'GENERATING_ASSETS',
+        progress: 50,
+      });
       const result = await capsuleApi.getCapsuleStatus('cap-1');
       expect(mockGet).toHaveBeenCalledWith('/capsules/cap-1/status');
-      expect(result.status).toBe('GENERATING');
+      expect(result.status).toBe('GENERATING_ASSETS');
     });
   });
 

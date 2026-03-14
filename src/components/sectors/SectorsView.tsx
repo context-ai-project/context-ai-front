@@ -6,6 +6,7 @@ import { Plus, Search, FolderOpen, Power, Trash2, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { InlineError } from '@/components/shared/InlineError';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -123,11 +124,7 @@ export function SectorsView() {
       </div>
 
       {/* Error banner */}
-      {error && (
-        <div className="border-destructive/30 bg-destructive/5 text-destructive mb-4 rounded-md border p-3 text-sm">
-          {error}
-        </div>
-      )}
+      {error && <InlineError message={error} className="mb-4" />}
 
       {/* Loading state */}
       {isLoading && sectors.length === 0 && (

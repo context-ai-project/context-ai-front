@@ -13,30 +13,12 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { CapsuleStatusBadge } from '@/components/capsules/shared/CapsuleStatusBadge';
 import { CapsuleTypeBadge } from '@/components/capsules/shared/CapsuleTypeBadge';
+import { CapsuleLanguageBadge } from '@/components/capsules/shared/CapsuleLanguageBadge';
 import { routes } from '@/lib/routes';
+import { formatDuration } from '@/lib/utils/format-duration';
+import { formatDate } from '@/lib/utils/format-date';
+import { RESUMABLE_STATUSES } from '@/constants/capsule-status';
 import type { CapsuleDto } from '@/lib/api/capsule.api';
-
-/** Format duration in seconds to m:ss */
-function formatDuration(seconds: number): string {
-  const m = Math.floor(seconds / 60);
-  const s = String(seconds % 60).padStart(2, '0');
-  return `${m}:${s} min`;
-}
-
-/** Derive a display label and flag emoji from a BCP-47 language code */
-function getLanguageDisplay(language: string): { flag: string; label: string } {
-  const code = language.toLowerCase();
-  if (code.startsWith('es')) return { flag: '🇪🇸', label: 'ES' };
-  if (code.startsWith('en')) return { flag: '🇬🇧', label: 'EN' };
-  if (code.startsWith('fr')) return { flag: '🇫🇷', label: 'FR' };
-  if (code.startsWith('de')) return { flag: '🇩🇪', label: 'DE' };
-  if (code.startsWith('pt')) return { flag: '🇵🇹', label: 'PT' };
-  if (code.startsWith('it')) return { flag: '🇮🇹', label: 'IT' };
-  return { flag: '🌐', label: language.slice(0, 5).toUpperCase() };
-}
-
-/** Statuses that allow resuming the creation wizard */
-const RESUMABLE_STATUSES = new Set(['DRAFT', 'FAILED']);
 
 interface CapsuleCardProps {
   capsule: CapsuleDto;
@@ -73,19 +55,7 @@ export function CapsuleCard({
             {/* Type badge + language badge */}
             <div className="flex items-center gap-2">
               <CapsuleTypeBadge type={capsule.type} />
-              {capsule.language &&
-                (() => {
-                  const { flag, label } = getLanguageDisplay(capsule.language);
-                  return (
-                    <span
-                      className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-medium"
-                      title={capsule.language}
-                    >
-                      <span aria-hidden="true">{flag}</span>
-                      {label}
-                    </span>
-                  );
-                })()}
+              {capsule.language && <CapsuleLanguageBadge language={capsule.language} />}
             </div>
 
             {/* Sector name */}
@@ -104,7 +74,7 @@ export function CapsuleCard({
                 <span />
               )}
               <p className="text-muted-foreground text-xs">
-                {new Date(capsule.createdAt).toLocaleDateString()}
+                {formatDate(capsule.createdAt, locale)}
               </p>
             </div>
           </CardContent>

@@ -270,7 +270,7 @@ describe('CapsuleStore', () => {
       const { result } = renderHook(() => ({ generateScript: useGenerateScript() }), {
         wrapper: Wrapper,
       });
-      await act(async () => result.current.generateScript());
+      await act(async () => result.current.generateScript('en'));
       expect(mockGenerateScript).not.toHaveBeenCalled();
     });
     it('calls API and updates script when capsule exists', async () => {
@@ -292,8 +292,8 @@ describe('CapsuleStore', () => {
         result.current.setDocIds(['d1']);
       });
       await act(async () => result.current.nextStep());
-      await act(async () => result.current.generateScript());
-      expect(mockGenerateScript).toHaveBeenCalledWith('cap-1');
+      await act(async () => result.current.generateScript('es'));
+      expect(mockGenerateScript).toHaveBeenCalledWith('cap-1', 'es');
     });
   });
 });

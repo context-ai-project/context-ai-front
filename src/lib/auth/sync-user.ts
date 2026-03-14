@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { logger } from '@/lib/logger';
 
 /** Schema for validating the /users/sync API response */
 const userSyncResponseSchema = z.object({
@@ -35,12 +36,12 @@ export async function syncUserWithBackend(profile: UserSyncProfile): Promise<Syn
 
   const internalApiKey = process.env.INTERNAL_API_KEY;
   if (!internalApiKey) {
-    console.error('[NextAuth] INTERNAL_API_KEY is not configured — cannot sync user');
+    logger.error('[NextAuth] INTERNAL_API_KEY is not configured — cannot sync user');
     return null;
   }
 
   try {
-    console.warn('[NextAuth] Syncing user with backend:', {
+    logger.info('[NextAuth] Syncing user with backend:', {
       url: syncUrl,
       auth0UserId: profile.sub,
     });
@@ -63,7 +64,7 @@ export async function syncUserWithBackend(profile: UserSyncProfile): Promise<Syn
       const parsed = userSyncResponseSchema.safeParse(rawData);
 
       if (parsed.success) {
-        console.warn('[NextAuth] User synced successfully:', {
+        logger.info('[NextAuth] User synced successfully:', {
           userId: parsed.data.id,
           roles: parsed.data.roles,
           isActive: parsed.data.isActive,
@@ -75,19 +76,19 @@ export async function syncUserWithBackend(profile: UserSyncProfile): Promise<Syn
         };
       }
 
-      console.error('[NextAuth] Invalid /users/sync response:', parsed.error.format());
+      logger.error('[NextAuth] Invalid /users/sync response:', parsed.error.format());
       return null;
     }
 
     const errorText = await response.text();
-    console.error('[NextAuth] Failed to sync user:', {
+    logger.error('[NextAuth] Failed to sync user:', {
       status: response.status,
       statusText: response.statusText,
       error: errorText,
     });
     return null;
   } catch (error) {
-    console.error('[NextAuth] Error syncing user:', error);
+    logger.error('[NextAuth] Error syncing user:', error);
     return null;
   }
 }
