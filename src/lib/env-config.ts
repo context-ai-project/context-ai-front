@@ -192,7 +192,7 @@ export function validateEnvironment(): void {
   if (isDev) {
     console.warn(
       `[env-config] ⚠️  Environment validation warnings (${errors.length}):\n${report}\n` +
-        'Some features may not work correctly. See .env.example for reference.',
+        'Some features may not work correctly. See env.local.example for reference.',
     );
   } else {
     throw new Error(

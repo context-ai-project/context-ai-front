@@ -42,7 +42,7 @@ if [ -n "$MISSING" ]; then
   echo "${RED}❌ Missing required environment variables:${NC}${MISSING}"
   echo ""
   echo "${YELLOW}💡 Provide them via docker-compose environment or docker run -e flags.${NC}"
-  echo "${YELLOW}   See .env.example for the full list.${NC}"
+  echo "${YELLOW}   See env.local.example for the full list.${NC}"
   exit 1
 fi
 
