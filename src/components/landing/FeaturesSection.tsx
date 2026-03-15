@@ -9,8 +9,8 @@ const featureIcons: Record<string, LucideIcon> = {
   ingestion: FileText,
   qa: Brain,
   capsules: MessageSquare,
-  analytics: BarChart3,
   access: Shield,
+  analytics: BarChart3,
 };
 
 /**
@@ -20,7 +20,7 @@ const featureIcons: Record<string, LucideIcon> = {
 export function FeaturesSection() {
   const t = useTranslations('landing.features');
 
-  const featureKeys = ['sectors', 'ingestion', 'qa', 'capsules', 'analytics', 'access'] as const;
+  const featureKeys = ['sectors', 'ingestion', 'qa', 'capsules', 'access', 'analytics'] as const;
 
   return (
     <section id="features" className="px-6 py-24">
@@ -35,13 +35,21 @@ export function FeaturesSection() {
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {featureKeys.map((key) => {
             const Icon = featureIcons[key];
+            const isComingSoon = key === 'analytics';
             return (
               <div
                 key={key}
                 className="bg-card border-border hover:border-primary/30 hover:bg-accent/50 group rounded-xl border p-6 transition-colors"
               >
-                <div className="bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground mb-4 flex h-10 w-10 items-center justify-center rounded-lg transition-colors">
-                  <Icon className="h-5 w-5" />
+                <div className="mb-4 flex items-start justify-between">
+                  <div className="bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground flex h-10 w-10 items-center justify-center rounded-lg transition-colors">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  {isComingSoon && (
+                    <span className="bg-primary text-primary-foreground rounded-full px-2.5 py-0.5 text-xs font-medium">
+                      {t('comingSoon')}
+                    </span>
+                  )}
                 </div>
                 <h3 className="text-foreground mb-2 text-lg font-semibold">
                   {t(`items.${key}.title`)}

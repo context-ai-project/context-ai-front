@@ -19,7 +19,6 @@ export function UseCasesSection() {
   const t = useTranslations('landing.useCases');
 
   const useCaseKeys = ['onboarding', 'retention', 'crossFunctional', 'quality'] as const;
-
   return (
     <section id="use-cases" className="px-6 py-24">
       <div className="mx-auto max-w-7xl">
@@ -33,15 +32,23 @@ export function UseCasesSection() {
         <div className="grid gap-6 md:grid-cols-2">
           {useCaseKeys.map((key) => {
             const Icon = useCaseIcons[key];
+            const isComingSoon = key === 'quality';
             return (
               <div key={key} className="bg-card border-border flex gap-5 rounded-xl border p-6">
                 <div className="bg-primary/10 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl">
                   <Icon className="text-primary h-6 w-6" />
                 </div>
                 <div>
-                  <span className="text-primary text-xs font-medium tracking-wider uppercase">
-                    {t(`items.${key}.persona`)}
-                  </span>
+                  <div className="flex items-center gap-3">
+                    <span className="text-primary text-xs font-medium tracking-wider uppercase">
+                      {t(`items.${key}.persona`)}
+                    </span>
+                    {isComingSoon && (
+                      <span className="bg-primary text-primary-foreground rounded-full px-2.5 py-0.5 text-xs font-medium">
+                        {t('comingSoon')}
+                      </span>
+                    )}
+                  </div>
                   <h3 className="text-foreground mt-1 mb-2 text-lg font-semibold">
                     {t(`items.${key}.title`)}
                   </h3>
