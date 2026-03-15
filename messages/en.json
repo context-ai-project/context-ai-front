@@ -299,6 +299,7 @@
     "features": {
       "title": "Everything You Need to Scale Knowledge",
       "subtitle": "Purpose-built for startups where everyone wears multiple hats and knowledge is the most valuable — and vulnerable — asset.",
+      "comingSoon": "Coming Soon",
       "items": {
         "sectors": {
           "title": "Knowledge Sectors",
@@ -347,6 +348,7 @@
     "useCases": {
       "title": "Built for Real Startup Challenges",
       "subtitle": "Every feature addresses a pain point we experienced firsthand in our own fast-moving team.",
+      "comingSoon": "Coming Soon",
       "items": {
         "onboarding": {
           "persona": "For New Hires",

@@ -2,6 +2,9 @@
   "name": "context-ai-front",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -87,5 +90,14 @@
     "src/**/*.{json,css,md}": [
       "prettier --write"
     ]
+  },
+  "pnpm": {
+    "overrides": {
+      "rollup": "^4.59.0",
+      "minimatch": "^10.2.3",
+      "serialize-javascript": "^7.0.3",
+      "flatted": "^3.4.0",
+      "undici": "^7.24.0"
+    }
   }
 }

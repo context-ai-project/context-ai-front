@@ -299,6 +299,7 @@
     "features": {
       "title": "Todo lo que Necesitas para Escalar el Conocimiento",
       "subtitle": "Diseñado específicamente para startups donde todos cumplen múltiples roles y el conocimiento es el activo más valioso — y vulnerable.",
+      "comingSoon": "Próximamente",
       "items": {
         "sectors": {
           "title": "Sectores de Conocimiento",
@@ -347,6 +348,7 @@
     "useCases": {
       "title": "Diseñado para Desafíos Reales de Startups",
       "subtitle": "Cada funcionalidad aborda un punto de dolor que experimentamos de primera mano en nuestro propio equipo en rápido movimiento.",
+      "comingSoon": "Próximamente",
       "items": {
         "onboarding": {
           "persona": "Para Nuevos Empleados",

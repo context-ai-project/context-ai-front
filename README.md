@@ -149,6 +149,7 @@ pnpm install
 
 ```bash
 cp env.local.example .env.local
+# Si solo existe .env.example en tu rama: cp .env.example .env.local
 # Editar .env.local con tus credenciales (ver sección Configuración)
 ```
 
@@ -189,15 +190,18 @@ Edita `.env.local` con tus credenciales:
 
 ```env
 # Auth0 Configuration
-AUTH0_SECRET='generate-with-openssl-rand-hex-32'
+AUTH_SECRET='generate-with-openssl-rand-hex-32'    # Secreto para NextAuth.js v5 (session encryption)
 AUTH0_BASE_URL='http://localhost:3000'
 AUTH0_ISSUER_BASE_URL='https://YOUR_AUTH0_DOMAIN'
 AUTH0_CLIENT_ID='YOUR_AUTH0_CLIENT_ID'
 AUTH0_CLIENT_SECRET='YOUR_AUTH0_CLIENT_SECRET'
-AUTH0_AUDIENCE='YOUR_API_IDENTIFIER'
+AUTH0_AUDIENCE='https://api.contextai.com'          # Debe coincidir con el identifier de tu API en Auth0
 
-# API Configuration
-NEXT_PUBLIC_API_URL='http://localhost:3001'
+# API Configuration — IMPORTANTE: incluir el prefijo /api/v1
+NEXT_PUBLIC_API_URL='http://localhost:3001/api/v1'
+
+# Internal key — debe ser EXACTAMENTE la misma que INTERNAL_API_KEY en context-ai-api/.env
+INTERNAL_API_KEY='el-mismo-valor-generado-con-openssl'
 
 # Sentry (Opcional)
 NEXT_PUBLIC_SENTRY_DSN=''
@@ -206,12 +210,18 @@ SENTRY_AUTH_TOKEN=''
 
 ### 2. Auth0 Setup
 
-1. Crear aplicación en [Auth0 Dashboard](https://manage.auth0.com/)
-2. Configurar Allowed Callback URLs:
-   - `http://localhost:3000/api/auth/callback/auth0`
-3. Configurar Allowed Logout URLs:
-   - `http://localhost:3000`
-4. Copiar credenciales a `.env.local`
+El frontend necesita una aplicación **Regular Web Application** en Auth0, distinta a la M2M del backend.
+
+> Para la guía completa de Auth0 (tenant, API, aplicación frontend), consulta [`context-ai-api/docs/AUTH0_SETUP.md`](../context-ai-api/docs/AUTH0_SETUP.md).
+
+Pasos resumidos:
+1. En [Auth0 Dashboard](https://manage.auth0.com/) → **Applications** → **Create Application**
+2. Tipo: **Regular Web Application**
+3. Configurar en la pestaña **Settings**:
+   - **Allowed Callback URLs**: `http://localhost:3000/api/auth/callback/auth0`
+   - **Allowed Logout URLs**: `http://localhost:3000`
+   - **Allowed Web Origins**: `http://localhost:3000`
+4. Copiar **Client ID** y **Client Secret** al `.env`
 
 ## 🧪 Testing
 
