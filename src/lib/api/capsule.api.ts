@@ -220,11 +220,19 @@ export const capsuleApi = {
   },
 
   /**
-   * Trigger the full audio generation pipeline (ElevenLabs TTS + GCS upload).
-   * Returns 202 Accepted with no body — poll getCapsuleStatus() for progress.
+   * Trigger the full audio/video generation pipeline (script→scenes, TTS/Imagen, etc.).
+   * Backend may retry on 429 (Gemini/Vertex), so we use a longer timeout (120s).
+   * Poll getCapsuleStatus() for progress.
    */
   generateAudio: async (id: string, voiceId: string, script?: string): Promise<void> => {
-    await apiClient.post<void>(`/capsules/${encodeURIComponent(id)}/generate`, { voiceId, script });
+    const GENERATE_TIMEOUT_MS = 120_000;
+    await apiClient.post<void>(
+      `/capsules/${encodeURIComponent(id)}/generate`,
+      { voiceId, script },
+      {
+        timeout: GENERATE_TIMEOUT_MS,
+      },
+    );
   },
 
   /**

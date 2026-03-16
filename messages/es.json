@@ -660,6 +660,7 @@
     "status": {
       "draft": "Borrador",
       "generating_assets": "Generando recursos",
+      "generatingAssets": "Generando recursos",
       "rendering": "Ensamblando video",
       "completed": "Completada",
       "active": "Activa",

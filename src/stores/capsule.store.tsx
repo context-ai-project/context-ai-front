@@ -9,7 +9,7 @@ import {
   type CapsuleType,
   type VoiceInfoDto,
 } from '@/lib/api/capsule.api';
-import { getErrorMessage } from '@/lib/api/error-handler';
+import { APIError, categorizeError, ErrorType, getErrorMessage } from '@/lib/api/error-handler';
 
 // ── Polling interval ──────────────────────────────────────────────────────
 
@@ -312,6 +312,17 @@ const createCapsuleStore = () => {
         // Start polling
         await pollGenerationStatus(currentCapsuleId, set, get);
       } catch (error: unknown) {
+        // Timeout or server error: backend may still be retrying (e.g. Gemini 429). Keep polling
+        // so we don't show "Request timed out" when the video will complete successfully.
+        const isRetryable =
+          error instanceof APIError &&
+          (categorizeError(error) === ErrorType.TIMEOUT ||
+            categorizeError(error) === ErrorType.SERVER);
+        if (isRetryable) {
+          set({ error: null });
+          await pollGenerationStatus(currentCapsuleId, set, get);
+          return;
+        }
         set({
           error: getErrorMessage(error),
           isGeneratingAudio: false,
