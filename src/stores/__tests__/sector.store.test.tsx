@@ -1,4 +1,4 @@
-import { renderHook, act } from '@testing-library/react';
+import { renderHook, act, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import {
   SectorStoreProvider,
@@ -97,7 +97,7 @@ describe('SectorStore', () => {
         { wrapper: Wrapper },
       );
 
-      await vi.waitFor(() => {
+      await waitFor(() => {
         expect(result.current.sectors).toEqual(MOCK_SECTORS);
       });
       expect(mockListSectors).toHaveBeenCalledOnce();
@@ -114,7 +114,7 @@ describe('SectorStore', () => {
         { wrapper: Wrapper },
       );
 
-      await vi.waitFor(() => {
+      await waitFor(() => {
         expect(result.current.error).toBe('Network error');
       });
     });
@@ -132,7 +132,7 @@ describe('SectorStore', () => {
         { wrapper: Wrapper },
       );
 
-      await vi.waitFor(() => {
+      await waitFor(() => {
         expect(result.current.all).toHaveLength(3);
       });
 
@@ -149,7 +149,7 @@ describe('SectorStore', () => {
         { wrapper: Wrapper },
       );
 
-      await vi.waitFor(() => {
+      await waitFor(() => {
         expect(result.current.all).toHaveLength(3);
       });
 
@@ -165,7 +165,7 @@ describe('SectorStore', () => {
         { wrapper: Wrapper },
       );
 
-      await vi.waitFor(() => {
+      await waitFor(() => {
         expect(result.current.all).toHaveLength(3);
       });
 
@@ -201,7 +201,7 @@ describe('SectorStore', () => {
         { wrapper: Wrapper },
       );
 
-      await vi.waitFor(() => {
+      await waitFor(() => {
         expect(result.current.sectors).toHaveLength(3);
       });
 
@@ -237,7 +237,7 @@ describe('SectorStore', () => {
         { wrapper: Wrapper },
       );
 
-      await vi.waitFor(() => {
+      await waitFor(() => {
         expect(result.current.sectors).toHaveLength(3);
       });
 
@@ -263,7 +263,7 @@ describe('SectorStore', () => {
         { wrapper: Wrapper },
       );
 
-      await vi.waitFor(() => {
+      await waitFor(() => {
         expect(result.current.sectors).toHaveLength(3);
       });
 
@@ -290,7 +290,7 @@ describe('SectorStore', () => {
         { wrapper: Wrapper },
       );
 
-      await vi.waitFor(() => {
+      await waitFor(() => {
         expect(result.current.sectors).toHaveLength(3);
       });
 
@@ -314,7 +314,7 @@ describe('SectorStore', () => {
         { wrapper: Wrapper },
       );
 
-      await vi.waitFor(() => {
+      await waitFor(() => {
         expect(result.current.sectors).toHaveLength(3);
       });
 
@@ -332,7 +332,7 @@ describe('SectorStore', () => {
         { wrapper: Wrapper },
       );
 
-      await vi.waitFor(() => {
+      await waitFor(() => {
         expect(result.current.sectors).toHaveLength(3);
       });
 
@@ -352,7 +352,7 @@ describe('SectorStore', () => {
         { wrapper: Wrapper },
       );
 
-      await vi.waitFor(() => {
+      await waitFor(() => {
         expect(result.current.sectors).toHaveLength(3);
       });
 
@@ -369,7 +369,7 @@ describe('SectorStore', () => {
         { wrapper: Wrapper },
       );
 
-      await vi.waitFor(() => {
+      await waitFor(() => {
         expect(result.current.sectors).toHaveLength(3);
       });
 
@@ -401,7 +401,7 @@ describe('SectorStore', () => {
         { wrapper: Wrapper },
       );
 
-      await vi.waitFor(() => {
+      await waitFor(() => {
         expect(result.current.sectors).toHaveLength(3);
       });
 
