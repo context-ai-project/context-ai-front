@@ -135,10 +135,14 @@ describe('Capsule API', () => {
   });
 
   describe('generateAudio', () => {
-    it('calls POST generate with voiceId', async () => {
+    it('calls POST generate with voiceId and 120s timeout', async () => {
       mockPost.mockResolvedValueOnce(undefined);
       await capsuleApi.generateAudio('cap-1', 'voice-1');
-      expect(mockPost).toHaveBeenCalledWith('/capsules/cap-1/generate', { voiceId: 'voice-1' });
+      expect(mockPost).toHaveBeenCalledWith(
+        '/capsules/cap-1/generate',
+        { voiceId: 'voice-1' },
+        { timeout: 120_000 },
+      );
     });
   });
 
