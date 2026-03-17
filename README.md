@@ -48,6 +48,12 @@ El frontend se comunica con el backend (`context-ai-api`) mediante API REST, uti
 | **Diseño Responsive** | Interfaz adaptativa para escritorio y móvil con sidebar colapsable y navegación responsive. |
 | **Accesibilidad (a11y)** | Cumplimiento de estándares WCAG con validación mediante eslint-plugin-jsx-a11y y tests con vitest-axe. |
 | **Monitoreo de Errores** | Integración con Sentry para captura y seguimiento de errores en producción. |
+| **Cápsulas de audio y vídeo** | Creación de cápsulas mediante wizard (tipo audio/vídeo, sector, documentos, guion generado por IA, selección de voz, generación y reproducción). Rutas: `/capsules`, `/capsules/create`, `/capsules/[id]`, `/capsules/[id]/resume`. |
+| **Gestión de sectores** | CRUD de sectores (activación/desactivación). Ruta `/sectors`. Visible en sidebar según permisos. |
+| **Notificaciones in-app** | Campana de notificaciones, marcado como leídas y contador. Integrada en el layout protegido. |
+| **Invitaciones (admin)** | Flujo de invitación por correo para administradores. Parte del área Admin. |
+| **Panel de administración** | Gestión de usuarios (roles, estado), invitaciones y estadísticas. Ruta `/admin`. Visible en sidebar para rol admin. |
+| **Página de documentos** | Listado de documentos de la base de conocimiento con búsqueda/filtros. Rutas `/documents` y `/knowledge/upload` para subida. |
 
 ## 🚀 Stack Tecnológico
 
@@ -149,7 +155,6 @@ pnpm install
 
 ```bash
 cp env.local.example .env.local
-# Si solo existe .env.example en tu rama: cp .env.example .env.local
 # Editar .env.local con tus credenciales (ver sección Configuración)
 ```
 
@@ -193,6 +198,7 @@ Edita `.env.local` con tus credenciales:
 AUTH_SECRET='generate-with-openssl-rand-hex-32'    # Secreto para NextAuth.js v5 (session encryption)
 AUTH0_BASE_URL='http://localhost:3000'
 AUTH0_ISSUER_BASE_URL='https://YOUR_AUTH0_DOMAIN'
+AUTH0_ISSUER='https://YOUR_AUTH0_DOMAIN'            # Mismo valor que AUTH0_ISSUER_BASE_URL (NextAuth.js v5)
 AUTH0_CLIENT_ID='YOUR_AUTH0_CLIENT_ID'
 AUTH0_CLIENT_SECRET='YOUR_AUTH0_CLIENT_SECRET'
 AUTH0_AUDIENCE='https://api.contextai.com'          # Debe coincidir con el identifier de tu API en Auth0
@@ -278,7 +284,11 @@ context-ai-front/
 │   │   │   ├── (protected)/         # Route group: Rutas protegidas
 │   │   │   │   ├── chat/            # Chat IA con RAG
 │   │   │   │   ├── dashboard/       # Dashboard de métricas
-│   │   │   │   ├── knowledge/       # Gestión de conocimiento
+│   │   │   │   ├── documents/       # Listado de documentos
+│   │   │   │   ├── knowledge/       # Subida y gestión de conocimiento
+│   │   │   │   ├── sectors/         # CRUD de sectores
+│   │   │   │   ├── capsules/        # Cápsulas audio/vídeo (listado, crear, reproducir, reanudar)
+│   │   │   │   ├── admin/           # Panel de administración (usuarios, invitaciones, stats)
 │   │   │   │   └── layout.tsx       # Layout con sidebar
 │   │   │   ├── auth/                # Páginas NextAuth (signin, error)
 │   │   │   ├── layout.tsx           # Layout con providers i18n
@@ -290,7 +300,11 @@ context-ai-front/
 │   ├── components/
 │   │   ├── chat/                    # Chat: mensajes, input, fuentes, markdown
 │   │   ├── dashboard/               # Sidebar y navegación
-│   │   ├── knowledge/               # Gestión de documentos
+│   │   ├── knowledge/               # Gestión y subida de documentos
+│   │   ├── documents/               # Listado y detalle de documentos
+│   │   ├── capsules/                # Cápsulas: wizard, listado, reproductores, cuota
+│   │   ├── sectors/                 # SectorsView, SectorFormDialog, SectorCard
+│   │   ├── notifications/           # NotificationBell
 │   │   ├── landing/                 # Landing: hero, features, CTA
 │   │   ├── shared/                  # Navbar, ErrorBoundary, LanguageSelector
 │   │   ├── user/                    # UserProfile, SectorSelector, Logout
@@ -301,18 +315,19 @@ context-ai-front/
 │   │   ├── use-toast.ts             # Sistema de notificaciones
 │   │   └── useCurrentUser.ts        # Hook de usuario autenticado
 │   ├── lib/
-│   │   ├── api/                     # API clients (chat, user, error handler)
+│   │   ├── api/                     # API clients: client, chat, user, admin, sector, knowledge, invitation, notification, capsule, stats, error-handler
 │   │   ├── providers/               # TanStack Query provider
 │   │   ├── utils/                   # Utilidades (image config, cn)
-│   │   ├── auth0.config.ts          # Configuración Auth0
 │   │   └── env-config.ts            # Validación de variables de entorno
 │   ├── stores/                      # Zustand stores
 │   │   ├── chat.store.tsx           # Estado del chat
-│   │   └── user.store.tsx           # Estado del usuario
+│   │   ├── user.store.tsx           # Estado del usuario
+│   │   ├── sector.store.tsx         # Estado de sectores
+│   │   └── capsule.store.tsx        # Estado de cápsulas
 │   ├── constants/                   # Constantes de la aplicación
 │   ├── types/                       # Tipos TypeScript compartidos
 │   ├── test/                        # Setup y utilidades de testing
-│   ├── auth.ts                      # Configuración NextAuth.js v5
+│   ├── auth.ts                      # Configuración NextAuth.js v5 (Auth0)
 │   ├── i18n.ts                      # Configuración next-intl
 │   └── instrumentation.ts           # Sentry instrumentation
 ├── e2e/                             # Tests Playwright E2E
