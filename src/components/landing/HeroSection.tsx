@@ -45,7 +45,7 @@ export function HeroSection() {
             </Link>
           </Button>
           <Button size="lg" variant="outline" className="bg-transparent px-8" asChild>
-            <Link href={signInHref}>{t('cta.secondary')}</Link>
+            <a href="#demo">{t('cta.secondary')}</a>
           </Button>
         </div>
       </div>

@@ -278,6 +278,7 @@
     "nav": {
       "features": "Features",
       "howItWorks": "How It Works",
+      "demo": "Demo",
       "useCases": "Use Cases",
       "signIn": "Sign In",
       "getStarted": "Get Started",
@@ -369,6 +370,20 @@
           "persona": "For HR & Managers",
           "title": "Documentation Quality",
           "description": "Sentiment analytics reveal which docs help and which confuse. Continuously improve your knowledge base with data."
+        }
+      }
+    },
+    "demo": {
+      "title": "See It in Action",
+      "subtitle": "Watch how Context.ai transforms your documents into an intelligent knowledge base and auto-generates multimedia capsules.",
+      "items": {
+        "rag": {
+          "title": "AI-Powered Q&A (RAG)",
+          "description": "Upload your docs, ask questions in natural language, and get answers grounded in your company knowledge — with source citations."
+        },
+        "capsule": {
+          "title": "Multimedia Capsule Generation",
+          "description": "Turn any document into a narrated audio or video capsule in minutes. Perfect for onboarding and async learning."
         }
       }
     },
