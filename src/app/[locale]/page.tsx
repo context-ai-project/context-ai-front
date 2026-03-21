@@ -2,6 +2,7 @@ import { LandingNavbar } from '@/components/landing/LandingNavbar';
 import { HeroSection } from '@/components/landing/HeroSection';
 import { FeaturesSection } from '@/components/landing/FeaturesSection';
 import { HowItWorksSection } from '@/components/landing/HowItWorksSection';
+import { DemoSection } from '@/components/landing/DemoSection';
 import { UseCasesSection } from '@/components/landing/UseCasesSection';
 import { CTASection, Footer } from '@/components/landing/CtaFooter';
 
@@ -24,6 +25,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         <HeroSection />
         <FeaturesSection />
         <HowItWorksSection />
+        <DemoSection />
         <UseCasesSection />
         <CTASection />
       </main>

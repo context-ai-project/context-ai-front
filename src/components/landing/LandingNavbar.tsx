@@ -13,6 +13,7 @@ import { routes } from '@/lib/routes';
 const NAV_LINKS = [
   { href: '#features', labelKey: 'features' },
   { href: '#how-it-works', labelKey: 'howItWorks' },
+  { href: '#demo', labelKey: 'demo' },
   { href: '#use-cases', labelKey: 'useCases' },
 ] as const;
 

@@ -278,6 +278,7 @@
     "nav": {
       "features": "Funcionalidades",
       "howItWorks": "Cómo Funciona",
+      "demo": "Demo",
       "useCases": "Casos de Uso",
       "signIn": "Iniciar Sesión",
       "getStarted": "Comenzar",
@@ -369,6 +370,20 @@
           "persona": "Para RRHH y Gerentes",
           "title": "Calidad de Documentación",
           "description": "El análisis de sentimiento revela qué docs ayudan y cuáles confunden. Mejora continuamente tu base de conocimiento con datos."
+        }
+      }
+    },
+    "demo": {
+      "title": "Míralo en Acción",
+      "subtitle": "Descubre cómo Context.ai convierte tus documentos en una base de conocimiento inteligente y genera cápsulas multimedia automáticamente.",
+      "items": {
+        "rag": {
+          "title": "Preguntas y Respuestas con IA (RAG)",
+          "description": "Sube tus documentos, haz preguntas en lenguaje natural y obtén respuestas basadas en el conocimiento de tu empresa — con citas de fuentes."
+        },
+        "capsule": {
+          "title": "Generación de Cápsulas Multimedia",
+          "description": "Convierte cualquier documento en una cápsula de audio o video narrada en minutos. Ideal para onboarding y aprendizaje asincrónico."
         }
       }
     },
