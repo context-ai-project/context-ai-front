@@ -22,6 +22,7 @@ test.describe('Landing Page — Content & Layout', () => {
     // Navigation links (desktop)
     await expect(page.locator('nav').getByText('Features').first()).toBeVisible();
     await expect(page.locator('nav').getByText('How It Works').first()).toBeVisible();
+    await expect(page.locator('nav').getByText('Demo').first()).toBeVisible();
     await expect(page.locator('nav').getByText('Use Cases').first()).toBeVisible();
   });
 
@@ -44,7 +45,7 @@ test.describe('Landing Page — Content & Layout', () => {
     await expect(page.getByText('Everything You Need to Scale Knowledge')).toBeVisible();
     await expect(page.getByText('Knowledge Sectors')).toBeVisible();
     await expect(page.getByText('Multimodal Ingestion')).toBeVisible();
-    await expect(page.getByText('AI-Powered Q&A')).toBeVisible();
+    await expect(page.getByText('AI-Powered Q&A', { exact: true })).toBeVisible();
   });
 
   test('should render the How It Works section', async ({ page }) => {
